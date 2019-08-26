@@ -1,0 +1,15 @@
+<use name="FWCore/Framework"/>
+<use name="FWCore/PluginManager"/>
+<use name="FWCore/ParameterSet"/>
+<use name="PhysicsTools/UtilAlgos"/>
+<use name="FWCore/ServiceRegistry"/> 
+<use name="RecoMuon/TrackingTools"/>
+<use name="TrackingTools/TransientTrack"/>
+<use name="DataFormats/MuonReco"/>
+<use name="DataFormats/TrackReco"/>
+<use name="DataFormats/VertexReco"/> 
+<use name="DataFormats/HLTReco"/>
+<use name="FWCore/Common"/>
+<use name="HLTrigger/HLTcore"/>
+ 
+<flags EDM_PLUGIN="1"/>
