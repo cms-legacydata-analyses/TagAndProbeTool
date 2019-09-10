@@ -1,14 +1,15 @@
 # TagAndProbeSummerStudents2019
 
-
-
 **Introduction**
+
 This is a simple example of the **TagAndProbe** method using datasets of CMS Open Data. The main goal of this project is to make a simple example code applying the Tag and Probe methods, since the official TagAndProbe tool is complex. In this project, we did a more  easy-to-understand code for CMS Open Data users.
 
 **About the Tag and Probe**
+
 The Tag and Probe method consists in calculating the efficiency of the data itself without the dependency on the simulations, and with a small or easily subtracted, fake rate [2]. For that, this method uses known resonances (e.g J/$\psi$, Z, $\Upsilon$) to select particle of a desired type and probe the efficiency of this particle in a determined selection criteria.
 
 **Tags and Probes objects**
+
 In the Tag and Probe method, one needs two objects:
 
 - **Tag**: It is an object that passes a set of very tight selection criteria designed to isolate the required particle type (usually an electron or muon). And the fake rate for passing tag selection criteria should be very small ($<1\%$).
@@ -44,5 +45,6 @@ $$
 In this first work, we will focus on the first step of the process: extracting the sample for the efficiency computation. The workflow representing this first step can be seen in the figure \ref{fig:Tag_Probe}.
 
 **about the structure**
+
 To acess the data you must use the CMSSW, the structure that have the analysis enviroment
 We use the J/$\psi$ resonance in this example and make an output tree (root file) with the same content as the CMSSW **TagAndProbe** method.
