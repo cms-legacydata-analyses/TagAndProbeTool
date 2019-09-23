@@ -38,9 +38,7 @@ $$
 
 The exact definition of each efficiency component is not relevant for this first work, but one have to to know that the total efficiency is the product of the the sequential efficiencies. The estimate of this total efficiency is important, with the luminosity, to calculate the cross section of a determined process:
 
-$$
- \sigma = \frac{N}{\int L dt} = \frac{N_{measured}}{\epsilon \int L dt}
-$$
+$$\sigma = \frac{N}{\int L dt} = \frac{N_{measured}}{\epsilon \int L dt}$$
 
 In this first work, we will focus on the first step of the process: extracting the sample for the efficiency computation. The workflow representing this first step can be seen in the figure \ref{fig:Tag_Probe}.
 
