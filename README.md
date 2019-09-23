@@ -48,28 +48,35 @@ Launch the CMS analysis environment.
 
 Create a working directory for the analyzer and go to that directory 
 
-`$ mkdir TagAndProbe`
+`$ mkdir TagAndProbeSample`
 
-At this point you must copy this Git to your area using the command:
+At this point, you must copy this Git to your area using the command:
 
-`$ git clone -b master <remote_repo>`
+`$ git clone -b master git@github.com:cms-legacydata-analyses/TagAndProbe.git`
 
-`$ cmsenv`
+Go this directory e compile the code:
+
+`$ cd TagAndProbe`
+
+`$ scram b`
+
+After that go to test folder and run the python file:
+
+`$ cmsRun TagAndProbe_Model_Trigger.py`
+
+Wait and you see a root file, named TagAndProbe2019.root, that will be created. You can open this file and see its  containts:
+
+`$ root -l TagAndProbe2019.root`
+
+`$ new TBrownser`
+
+We use the J/$\psi$ resonance in this example and make an output tree (root file) with the same content as the CMSSW **TagAndProbe** method. If you want study another resonance, just open the config file (TagAndProbe_Model_Trigger.py) and modify the range of mass in the line 43 and 44:
+
+ < minResonanceMass = cms.double(2.8),# in GeV
+   maxResonanceMass = cms.double(3.4)# in GeV 
+ >
 
 
-
-Compile the code:
-
-cd DemoAnalyzer
-scram b
-
-
-
-
-
-
-
-
-We use the J/$\psi$ resonance in this example and make an output tree (root file) with the same content as the CMSSW **TagAndProbe** method.
+	
 
 
