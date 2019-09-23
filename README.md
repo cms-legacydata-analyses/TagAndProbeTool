@@ -75,7 +75,7 @@ We use the J/$\psi$ resonance in this example and make an output tree (root file
 	minResonanceMass = cms.double(2.8),# in GeV
 	maxResonanceMass = cms.double(3.4)# in GeV
 
-
+You can change the trigger in the line 36 and the dataset files in the 14.
 
 
 
