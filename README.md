@@ -19,14 +19,24 @@ You must use the CMS SHELL in the CMS Open Data VM 1.5.1 version as you can see 
 If you are having problem with virtual machine you can use the [Docker Container](https://www.docker.com/resources/what-container). The instruction of installation are in this [page](https://docs.docker.com/install/).
 
 As you can see in the page, you can fetch a CMSSW image, and create and start a container using the docker run command:
-`$ docker run --name opendata -it clelange/cmssw:5_3_32 /bin/bash` 
+
+`$ docker run --name opendata -it clelange/cmssw:5_3_32 /bin/bash`
+
 but with that you will not be able to use ROOT. To do so, you must use the command:
-`$ sudo docker run --name opendata -it -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix clelange/cmssw:5_3_32 /bin/bash`  
+
+`$ sudo docker run --name opendata -it -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix clelange/cmssw:5_3_32 /bin/bash`
+
 and you will able to use ROOT. To list the containers you created use the command:
-`$ sudo docker container ls -a` 
+
+`$ sudo docker container ls -a`
+
 To open a container, just use the command with the ID of the container that tou can see in hte list of the containers you crearted.
-`$ sudo docker start <ID_Container>` 
-`$ sudo docker attach <ID_Container>` 
+
+`$ sudo docker start <ID_Container>`
+
+`$ sudo docker attach <ID_Container>`
+
+
 
 
 
