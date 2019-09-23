@@ -36,7 +36,32 @@ To open a container, just use the command with the ID of the container that tou 
 
 `$ sudo docker attach <ID_Container>`
 
+Now lets create the CMSSW structure. In this example we are using the CMSSW_5_3_32. After you emulate you CMS Open Data ova with success, you must created a CMSSW environment and change to the CMSSW_5_3_32/src/ directory(Notice that you use the container you do not need to use the the commands below): 
 
+`$ cmsrel CMSSW_5_3_32`
+
+`$ cd CMSSW_5_3_32/src/`
+
+Launch the CMS analysis environment.
+
+`$ cmsenv`
+
+Create a working directory for the analyzer and go to that directory 
+
+`$ mkdir TagAndProbe`
+
+At this point you must copy this Git to your area using the command:
+
+`$ git clone -b master <remote_repo>`
+
+`$ cmsenv`
+
+
+
+Compile the code:
+
+cd DemoAnalyzer
+scram b
 
 
 
