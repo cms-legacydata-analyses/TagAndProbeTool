@@ -1,4 +1,4 @@
-# TagAndProbeSummerStudents2019
+# TagAndProbe 2019
 
 **Introduction**
 
@@ -7,9 +7,9 @@ This is a simple example of the **TagAndProbe** method using datasets of CMS Ope
 https://twiki.cern.ch/twiki/bin/view/Sandbox/TestTopic11111203
 
 
-**about the structure**
+**About the Structure**
 
-To access the data you must use the CMSSW, the structure that have the analysis enviroment. To do so, you have two ways:
+To access the data you must use the CMSSW, the structure that have the analysis environment. To do so, you have two ways:
 
  - **Using Vitual Machine**: You have to download the [VM Virtual Box](https://www.virtualbox.org/wiki/Download_Old_Builds). Make sure that the version you downloaded is working with your CMS VM Image. You can read more [here](http://opendata-dev.web.cern.ch/docs/cms-virtual-machine-2011). You must use the CMS SHELL in the CMS Open Data VM 1.5.1 version as you can see [here](http://opendata-dev.web.cern.ch/docs/cms-getting-started-2011). With other versions (CMS-OpenData-1.2.0" or "CMS-OpenData-1.3.0) you can use the normal terminal.
 
@@ -22,7 +22,7 @@ and you will able to use ROOT. To list the containers you created use the comman
 
 `$ sudo docker container ls -a`
 
-To open a container, just use the command with the ID of the container that tou can see in hte list of the containers you crearted.
+To open a container, just use the command with the ID of the container that you can see the list of the containers you created.
 
 `$ sudo docker start <ID_Container>`
 
@@ -52,11 +52,11 @@ Go to this directory that you copied from Git and compile the code:
 
 `$ scram b`
 
-After that go to  `test` folder and run the python file:
+After that go to `test` folder and run the python file:
 
 `$ cmsRun TagAndProbe_Model_Trigger.py`
 
-Wait and you will see a root file, named TagAndProbe2019.root, that will be created. You can open this file and see its  containts:
+Wait and you will see a root file, named TagAndProbe2019.root, that will be created. You can open this file and see its contents:
 
 `$ root -l TagAndProbe2019.root`
 
