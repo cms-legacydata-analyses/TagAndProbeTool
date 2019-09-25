@@ -1,21 +1,8 @@
-//ACESS DATA WITH TRIGGER
+//Tag and Probe for CMS Open Data
 // -*- C++ -*-
 //
-// Package:    TagAndProbe2019
-// Class:      TagAndProbe2019
-// 
-/**\class TagAndProbe2019 TagAndProbe2019.cc CMSOpenData2011/TagAndProbe2019/src/TagAndProbe2019.cc
-Description: [one line class summary]
-Implementation:
-[Notes on implementation]
-*/
-//
-// Original Author:  Sandro Fonseca De Souza,32 4-C14,+41227674949,
-//         Created:  Thu Apr 13 21:58:44 CEST 2017
-// $Id$
-//
-//
-
+// Original Author:  Raphael Gomes de Souza
+//      
 
 // system include files
 #include <memory>
