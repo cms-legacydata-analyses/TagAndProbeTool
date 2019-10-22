@@ -40,8 +40,8 @@ process.demo = cms.EDAnalyzer('TagAndProbe2019',
 	# RECO Configs
 	minMuPt = cms.double(2.0),# in GeV
 	maxMuEta = cms.double(2.4),
-	minResonanceMass = cms.double(2.8),# in GeV
-	maxResonanceMass = cms.double(3.4)# in GeV 
+	minResonanceMass = cms.double(2.5),# in GeV
+	maxResonanceMass = cms.double(3.5)# in GeV 
 )
 
 
