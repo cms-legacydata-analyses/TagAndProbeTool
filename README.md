@@ -76,6 +76,15 @@ and the triggers in the line 36:
 	PathName = cms.untracked.vstring(["HLT_Dimuon10_Jpsi_Barrel_v","HLT_Dimuon7_PsiPrime_v"]), 
 
 	
+**MC PU reweighting script**
+
+
+	`$ ./addNVtxWeight -h (help menu)`
+
+**MC PU reweighting script example**
+
+
+`$ ./addNVtxWeight "TnPTreeJPsi_17Nov2017_Charmonium_Run2017Bv1_Full_GoldenJSON_skimmed.root TnPTreeJPsi_17Nov2017_Charmonium_Run2017Cv1_Full_GoldenJSON_skimmed.root TnPTreeJPsi_17Nov2017_Charmonium_Run2017Dv1_Full_GoldenJSON_skimmed.root TnPTreeJPsi_17Nov2017_Charmonium_Run2017Ev1_Full_GoldenJSON_skimmed.root TnPTreeJPsi_17Nov2017_Charmonium_Run2017Fv1_Full_GoldenJSON_skimmed.root" "tnpJPsi_MC_JpsiPt8_TuneCUEP8M1_13TeV_pythia8_Jan2018_skimmed.root" tnpJPsi_MC_JpsiPt8_TuneCUEP8M1_13TeV_pythia8_VtxWeight_Run2017BCDEF_Jan2018_skimmed.root`
 
 
 
