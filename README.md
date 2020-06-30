@@ -1,4 +1,4 @@
-# TagAndProbe 2019
+# TagAndProbe package using Legacy Open Data samples
 
 **Introduction**
 
@@ -86,7 +86,9 @@ and the triggers in the line 36:
 
 `$ ./addNVtxWeight "TnPTreeJPsi_17Nov2017_Charmonium_Run2017Bv1_Full_GoldenJSON_skimmed.root TnPTreeJPsi_17Nov2017_Charmonium_Run2017Cv1_Full_GoldenJSON_skimmed.root TnPTreeJPsi_17Nov2017_Charmonium_Run2017Dv1_Full_GoldenJSON_skimmed.root TnPTreeJPsi_17Nov2017_Charmonium_Run2017Ev1_Full_GoldenJSON_skimmed.root TnPTreeJPsi_17Nov2017_Charmonium_Run2017Fv1_Full_GoldenJSON_skimmed.root" "tnpJPsi_MC_JpsiPt8_TuneCUEP8M1_13TeV_pythia8_Jan2018_skimmed.root" tnpJPsi_MC_JpsiPt8_TuneCUEP8M1_13TeV_pythia8_VtxWeight_Run2017BCDEF_Jan2018_skimmed.root`
 
+**Recipe to produce ntuples using condor**
 
+[recipe tutorial] (https://twiki.cern.ch/twiki/pub/CMS/UERJLIPInternshipProgram2020/Condor_tagprobeRecipe.pdf)
 
 
 
