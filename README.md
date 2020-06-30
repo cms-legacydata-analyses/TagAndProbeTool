@@ -88,7 +88,7 @@ and the triggers in the line 36:
 
 **Recipe to produce ntuples using condor**
 
-[recipe tutorial] (https://twiki.cern.ch/twiki/pub/CMS/UERJLIPInternshipProgram2020/Condor_tagprobeRecipe.pdf)
+[Recipe Tutorial](https://twiki.cern.ch/twiki/pub/CMS/UERJLIPInternshipProgram2020/Condor_tagprobeRecipe.pdf)
 
 
 
