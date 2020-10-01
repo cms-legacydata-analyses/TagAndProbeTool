@@ -76,15 +76,6 @@ and the triggers in the line 36:
 	PathName = cms.untracked.vstring(["HLT_Dimuon10_Jpsi_Barrel_v","HLT_Dimuon7_PsiPrime_v"]), 
 
 	
-**MC PU reweighting script**
-
-
-	`$ ./addNVtxWeight -h (help menu)`
-
-**MC PU reweighting script example**
-
-
-`$./addNVtxWeight "Run2011AMuOnia_mergeNtuple.root" "JPsiToMuMu_mergeMCNtuple.root" JPsiToMuMu_mergeMCNtuple_VtxWeight_data.root`
 
 **Recipe to produce ntuples using condor**
 
