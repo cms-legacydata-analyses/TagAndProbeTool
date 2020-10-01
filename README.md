@@ -44,7 +44,7 @@ Create a working directory for the analyzer and go to that directory
 
 At this point, you must copy this Git to your area using the command:
 
-`$git clone git@github.com:sandrofonseca/TagAndProbe.git`
+`$ git clone git@github.com:sandrofonseca/TagAndProbe.git`
 
 Go to this directory that you copied from Git and compile the code:
 
