@@ -11,15 +11,15 @@ void Efficiency()
     //We start by declaring the nature of our dataset. (Is the data real or simulated?)
     bool DataIsMC   = false;
     //Which Muon Id do you want to study?
-    //string MuonId   = "PassingProbeTrackingMuon";
+    string MuonId   = "PassingProbeTrackingMuon";
     //string MuonId   = "PassingProbeStandAloneMuon";
-    string MuonId   = "PassingProbeGlobalMuon";
+    //string MuonId   = "PassingProbeGlobalMuon";
     //Which quantity do you want to use?
     
     /*-----------------------------------I N S E R T    C O D E    H E R E-----------------------------------*/
-    //string quantity = "Pt";     double bins[] = {0., 2.0, 3.4, 4.0, 4.4, 4.7, 5.0, 5.6, 5.8, 6.0, 6.2, 6.4, 6.6, 6.8, 7.3, 9.5, 13.0, 17.0, 40.};
+    string quantity = "Pt";     double bins[] = {0., 2.0, 3.4, 4.0, 4.4, 4.7, 5.0, 5.6, 5.8, 6.0, 6.2, 6.4, 6.6, 6.8, 7.3, 9.5, 13.0, 17.0, 40.};
     //string quantity = "Eta";    double bins[] = {-2.4, -1.8, -1.4, -1.2, -1.0, -0.8, -0.5, -0.2, 0, 0.2, 0.5, 0.8, 1.0, 1.2, 1.4, 1.8, 2.4};
-    string quantity = "Phi";    double bins[] = {-3.0, -1.8, -1.6, -1.2, -1.0, -0.7, -0.4, -0.2, 0, 0.2, 0.4, 0.7, 1.0, 1.2, 1.6, 1.8, 3.0};
+    //string quantity = "Phi";    double bins[] = {-3.0, -1.8, -1.6, -1.2, -1.0, -0.7, -0.4, -0.2, 0, 0.2, 0.4, 0.7, 1.0, 1.2, 1.6, 1.8, 3.0};
     int bin_n = sizeof(bins)/sizeof(*bins) - 1;
      /*------------------------------------------------------------------------------------------------------*/
     
