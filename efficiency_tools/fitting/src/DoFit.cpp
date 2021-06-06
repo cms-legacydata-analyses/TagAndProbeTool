@@ -10,7 +10,7 @@ double* doFit(string condition, string MuonID_str, string quant, double* init_co
     if (MuonID_str == "PassingProbeGlobalMuon")
         MuonID_file = "globalMuon";
         
-    TFile *file0       = TFile::Open(("DATA/Upsilon/" + MuonID_file + "/T&P_UPSILON_DATA_MC.root").c_str());
+    TFile *file0       = TFile::Open(("DATA/Upsilon/" + MuonID_file + "/T&P_UPSILON_DATA.root").c_str());
     TTree *DataTree    = (TTree*)file0->Get(("UPSILON_DATA"));
     
     double _mmin = 9;  double _mmax = 10.8;
