@@ -143,8 +143,8 @@ void compare_plot(TFile *file0, TFile *file1, const char* path, string quantity)
 //Compare efficiency
 void compare_efficiency(string quantity, string run2011, string MC)
 {
-    TFile *file1 = TFile::Open(run2011.c_str());
-    TFile *file0 = TFile::Open(MC.c_str());
+    TFile *file0 = TFile::Open(run2011.c_str());
+    TFile *file1 = TFile::Open(MC.c_str());
 
     if (file0 == NULL || file1 == NULL)
     {
