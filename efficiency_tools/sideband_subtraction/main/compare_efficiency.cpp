@@ -338,7 +338,7 @@ void compare_eff_plot(TEfficiency* pEff0, TEfficiency* pEff1, string resultName,
 }
 
 //Compare efficiency
-void pair_compare_efficiency()
+void compare_efficiency()
 {
 	for (int i = 0; i < 9; i++)
 	{
