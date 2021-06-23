@@ -50,25 +50,25 @@ const char* sid_run_jpsi[][2] = {
 };
 
 const char* fit_run_upsilon[][2] = {
-	{"../../fitting/Efficiency Result/Tracker/pT/Efficiency_Run2011.root",     "Efficiency"},
+	{"../../fitting/Efficiency Result/Tracker/Pt/Efficiency_Run2011.root",     "Efficiency"},
 	{"../../fitting/Efficiency Result/Tracker/Eta/Efficiency_Run2011.root",    "Efficiency"},
 	{"../../fitting/Efficiency Result/Tracker/Phi/Efficiency_Run2011.root",    "Efficiency"},
-	{"../../fitting/Efficiency Result/Standalone/pT/Efficiency_Run2011.root",  "Efficiency"},
+	{"../../fitting/Efficiency Result/Standalone/Pt/Efficiency_Run2011.root",  "Efficiency"},
 	{"../../fitting/Efficiency Result/Standalone/Eta/Efficiency_Run2011.root", "Efficiency"},
 	{"../../fitting/Efficiency Result/Standalone/Phi/Efficiency_Run2011.root", "Efficiency"},
-	{"../../fitting/Efficiency Result/Global/pT/Efficiency_Run2011.root",      "Efficiency"},
+	{"../../fitting/Efficiency Result/Global/Pt/Efficiency_Run2011.root",      "Efficiency"},
 	{"../../fitting/Efficiency Result/Global/Eta/Efficiency_Run2011.root",     "Efficiency"},
 	{"../../fitting/Efficiency Result/Global/Phi/Efficiency_Run2011.root",     "Efficiency"}
 };
 
 const char* fit_run_jpsi[][2] = {
-	{"../../fitting/Efficiency Result/Tracker/pT/Efficiency_Run2011.root",     "Efficiency"},
+	{"../../fitting/Efficiency Result/Tracker/Pt/Efficiency_Run2011.root",     "Efficiency"},
 	{"../../fitting/Efficiency Result/Tracker/Eta/Efficiency_Run2011.root",    "Efficiency"},
 	{"../../fitting/Efficiency Result/Tracker/Phi/Efficiency_Run2011.root",    "Efficiency"},
-	{"../../fitting/Efficiency Result/Standalone/pT/Efficiency_Run2011.root",  "Efficiency"},
+	{"../../fitting/Efficiency Result/Standalone/Pt/Efficiency_Run2011.root",  "Efficiency"},
 	{"../../fitting/Efficiency Result/Standalone/Eta/Efficiency_Run2011.root", "Efficiency"},
 	{"../../fitting/Efficiency Result/Standalone/Phi/Efficiency_Run2011.root", "Efficiency"},
-	{"../../fitting/Efficiency Result/Global/pT/Efficiency_Run2011.root",      "Efficiency"},
+	{"../../fitting/Efficiency Result/Global/Pt/Efficiency_Run2011.root",      "Efficiency"},
 	{"../../fitting/Efficiency Result/Global/Eta/Efficiency_Run2011.root",     "Efficiency"},
 	{"../../fitting/Efficiency Result/Global/Phi/Efficiency_Run2011.root",     "Efficiency"}
 };
@@ -100,27 +100,27 @@ const char* sid_mc_jpsi[][2] = {
 };
 
 const char* fit_mc_upsilon[][2] = {
-	{"../../fitting/Efficiency Result/Tracker/pT/Efficiency_Run2011.root",     "Efficiency"},
-	{"../../fitting/Efficiency Result/Tracker/Eta/Efficiency_Run2011.root",    "Efficiency"},
-	{"../../fitting/Efficiency Result/Tracker/Phi/Efficiency_Run2011.root",    "Efficiency"},
-	{"../../fitting/Efficiency Result/Standalone/pT/Efficiency_Run2011.root",  "Efficiency"},
-	{"../../fitting/Efficiency Result/Standalone/Eta/Efficiency_Run2011.root", "Efficiency"},
-	{"../../fitting/Efficiency Result/Standalone/Phi/Efficiency_Run2011.root", "Efficiency"},
-	{"../../fitting/Efficiency Result/Global/pT/Efficiency_Run2011.root",      "Efficiency"},
-	{"../../fitting/Efficiency Result/Global/Eta/Efficiency_Run2011.root",     "Efficiency"},
-	{"../../fitting/Efficiency Result/Global/Phi/Efficiency_Run2011.root",     "Efficiency"}
+	{"../../fitting/Efficiency Result/Tracker/Pt/Efficiency_MC.root",     "Efficiency"},
+	{"../../fitting/Efficiency Result/Tracker/Eta/Efficiency_MC.root",    "Efficiency"},
+	{"../../fitting/Efficiency Result/Tracker/Phi/Efficiency_MC.root",    "Efficiency"},
+	{"../../fitting/Efficiency Result/Standalone/Pt/Efficiency_MC.root",  "Efficiency"},
+	{"../../fitting/Efficiency Result/Standalone/Eta/Efficiency_MC.root", "Efficiency"},
+	{"../../fitting/Efficiency Result/Standalone/Phi/Efficiency_MC.root", "Efficiency"},
+	{"../../fitting/Efficiency Result/Global/Pt/Efficiency_MC.root",      "Efficiency"},
+	{"../../fitting/Efficiency Result/Global/Eta/Efficiency_MC.root",     "Efficiency"},
+	{"../../fitting/Efficiency Result/Global/Phi/Efficiency_MC.root",     "Efficiency"}
 };
 
 const char* fit_mc_jpsi[][2] = {
-	{"../../fitting/Efficiency Result/Tracker/pT/Efficiency_Run2011.root",     "Efficiency"},
-	{"../../fitting/Efficiency Result/Tracker/Eta/Efficiency_Run2011.root",    "Efficiency"},
-	{"../../fitting/Efficiency Result/Tracker/Phi/Efficiency_Run2011.root",    "Efficiency"},
-	{"../../fitting/Efficiency Result/Standalone/pT/Efficiency_Run2011.root",  "Efficiency"},
-	{"../../fitting/Efficiency Result/Standalone/Eta/Efficiency_Run2011.root", "Efficiency"},
-	{"../../fitting/Efficiency Result/Standalone/Phi/Efficiency_Run2011.root", "Efficiency"},
-	{"../../fitting/Efficiency Result/Global/pT/Efficiency_Run2011.root",      "Efficiency"},
-	{"../../fitting/Efficiency Result/Global/Eta/Efficiency_Run2011.root",     "Efficiency"},
-	{"../../fitting/Efficiency Result/Global/Phi/Efficiency_Run2011.root",     "Efficiency"}
+	{"../../fitting/Efficiency Result/Tracker/Pt/Efficiency_MC.root",     "Efficiency"},
+	{"../../fitting/Efficiency Result/Tracker/Eta/Efficiency_MC.root",    "Efficiency"},
+	{"../../fitting/Efficiency Result/Tracker/Phi/Efficiency_MC.root",    "Efficiency"},
+	{"../../fitting/Efficiency Result/Standalone/Pt/Efficiency_MC.root",  "Efficiency"},
+	{"../../fitting/Efficiency Result/Standalone/Eta/Efficiency_MC.root", "Efficiency"},
+	{"../../fitting/Efficiency Result/Standalone/Phi/Efficiency_MC.root", "Efficiency"},
+	{"../../fitting/Efficiency Result/Global/Pt/Efficiency_MC.root",      "Efficiency"},
+	{"../../fitting/Efficiency Result/Global/Eta/Efficiency_MC.root",     "Efficiency"},
+	{"../../fitting/Efficiency Result/Global/Phi/Efficiency_MC.root",     "Efficiency"}
 };
 
 //How comparisons will be saved
