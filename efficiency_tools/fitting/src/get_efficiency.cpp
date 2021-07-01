@@ -24,7 +24,7 @@ TEfficiency* get_efficiency(TH1F* ALL, TH1F* PASS, string quantity, string MuonI
 		file_path += string("Run2011_");
 	else
 		file_path += string("MC_");
-	file_path += MuonId.substr(7, -1);
+	file_path += MuonId.substr(7, -1) + ".root";
 	
 	TFile* pFile = new TFile(file_path.c_str(),"recreate");
 	TEfficiency* pEff = new TEfficiency();
