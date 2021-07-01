@@ -83,7 +83,7 @@ void Efficiency()
 	//-----------------------------------------------------------------//
 	
 	//If all of the fits seem correct we can proceed to generate the efficiency
-	get_efficiency(yield_ALL, yield_PASS, quantity, DataIsMC);
+	get_efficiency(yield_ALL, yield_PASS, quantity, MuonId, DataIsMC);
 	 
 	//In case you want to change the fit on a specific, comment the loop and "result saving" code and uncomment the following function
 	//change_bin(/*bin number you want to redo*/, /*condition (you can copy the title from the generated fit .pdf)*/, MuonId, quantity, DataIsMC, init_conditions);

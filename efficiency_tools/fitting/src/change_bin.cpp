@@ -22,5 +22,5 @@ void change_bin(int bin_iD, string condition, string MuonId, string quantity, bo
 	hist_pass->SetDirectory(gDirectory);
 	EfficiencyFile->Write();
 	
-	get_efficiency(hist_all, hist_pass, quantity, DataIsMc);
+	get_efficiency(hist_all, hist_pass, quantity, MuonId, DataIsMc);
 }
