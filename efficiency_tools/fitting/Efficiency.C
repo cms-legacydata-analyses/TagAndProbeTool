@@ -1,19 +1,45 @@
 #include "src/compare_efficiency.C"
-#include "src/DoFit.cpp"
+
+
+//Change if you need
+#include "src/dofits/DoFit_Upsilon.cpp"
+
 #include "src/get_conditions.cpp"
 #include "src/get_efficiency.cpp"
 #include "src/change_bin.cpp"
 #include "src/make_hist.cpp"
 #include "src/McYield.cpp"
 
+
+void createFolder(const char* folderPath, bool deleteOld = false)
+{
+	//Delete old directory for saving files
+	if (deleteOld == true)
+		gSystem->Exec((string("rm -r ") + string(folderPath)).c_str());
+
+	//Check if dir exists and create
+	if (gSystem->AccessPathName(folderPath))
+		if (gSystem->mkdir(folderPath, true))
+		{
+			cerr << "\"" << folderPath << "\" path could not be found and could not be created ERROR\n";
+			cerr << "Try to create manually this folder path\n";
+			abort();
+		}
+		else
+			cout << "\"" << folderPath << "\" directory created OK\n";
+	else
+		cout << "\"" << folderPath << "\" directory OK\n";
+}
+
 void Efficiency()
 {
 	//We start by declaring the nature of our dataset. (Is the data real or simulated?)
 	bool DataIsMC   = false;
+
 	//Which Muon Id do you want to study?
-	string MuonId   = "PassingProbeTrackingMuon";
-	//string MuonId   = "PassingProbeStandAloneMuon";
-	//string MuonId   = "PassingProbeGlobalMuon";
+	string MuonId   = "trackerMuon";
+	//string MuonId   = "standaloneMuon";
+	//string MuonId   = "globalMuon";
 	//Which quantity do you want to use?
 	
 	/*-----------------------------------I N S E R T    C O D E    H E R E-----------------------------------*/
@@ -23,20 +49,8 @@ void Efficiency()
 	int bin_n = sizeof(bins)/sizeof(*bins) - 1;
 	 /*------------------------------------------------------------------------------------------------------*/
 	
-	
-	//Now we must choose initial conditions in order to fit our data
-	double *init_conditions = new double[4];
-	/*-----------------------------------I N S E R T    C O D E    H E R E-----------------------------------*/
-	init_conditions[0] = 9.46030;
-	init_conditions[1] = 10.02326;
-	init_conditions[2] = 10.3552;
-	init_conditions[3] = 0.08;
-	/*------------------------------------------------------------------------------------------------------*/
-	
-	
 	string* conditions = get_conditions(bin_n, bins, "ProbeMuon_" + quantity);
 	double ** yields_n_errs = new double*[bin_n];
-
 
 	//-------------------------------------
 	// Do Fit
@@ -44,22 +58,7 @@ void Efficiency()
 
 	//Path where is going to save results 
 	const char* directoryToSave = "fit_result/";
-
-	//Delete old directory for saving files
-	gSystem->Exec((string("rm -r ") + string(directoryToSave)).c_str());
-
-	//Check if dir exists and create
-	if (gSystem->AccessPathName(directoryToSave))
-		if (gSystem->mkdir(directoryToSave, true))
-		{
-			cerr << "\"" << directoryToSave << "\" path could not be found and could not be created ERROR\n";
-			cerr << "Try to create manually this folder path\n";
-			abort();
-		}
-		else
-			cout << "\"" << directoryToSave << "\" directory created OK\n";
-	else
-		cout << "\"" << directoryToSave << "\" directory OK\n";
+	createFolder(directoryToSave, true);
 	
 	// Loop for every bin and fit it
 	for (int i = 0; i < bin_n; i++)
@@ -67,7 +66,7 @@ void Efficiency()
 		if (DataIsMC)
 			yields_n_errs[i] = McYield(conditions[i], quantity);
 		else
-			yields_n_errs[i] = doFit(conditions[i], MuonId, quantity, init_conditions, directoryToSave);
+			yields_n_errs[i] = doFit(conditions[i], MuonId, quantity, directoryToSave);
 			//doFit returns: [yield_all, yield_pass, err_all, err_pass]
 	}
 	

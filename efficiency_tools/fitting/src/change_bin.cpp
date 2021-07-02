@@ -1,6 +1,6 @@
 
 
-void change_bin(int bin_iD, string condition, string MuonId, string quantity, bool DataIsMc, double* init_conditions, string hist_file = "Histograms.root")
+void change_bin(int bin_iD, string condition, string MuonId, string quantity, bool DataIsMc, string hist_file = "Histograms.root")
 {
 	TFile *_file0 = TFile::Open(hist_file.c_str());
 	
@@ -9,7 +9,7 @@ void change_bin(int bin_iD, string condition, string MuonId, string quantity, bo
 	
 	double * values = new double[4];
 	
-	values = doFit(condition, MuonId, quantity, init_conditions);
+	values = doFit(condition, MuonId, quantity);
 	
 	hist_all->SetBinContent(bin_iD, values[0]);
 	hist_all->SetBinError(bin_iD, values[2]);

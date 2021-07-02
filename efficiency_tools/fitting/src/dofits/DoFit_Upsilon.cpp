@@ -1,21 +1,28 @@
 using namespace RooFit;
 
-double* doFit(string condition, string MuonID_str, string quant, double* init_conditions, const char* savePath = NULL) // RETURNS ARRAY WITH [yield_all, yield_pass, err_all, err_pass]    ->   OUTPUT ARRAY
+double* doFit(string condition, string MuonId, string quant, const char* savePath = NULL) // RETURNS ARRAY WITH [yield_all, yield_pass, err_all, err_pass]    ->   OUTPUT ARRAY
 {
-	string MuonID_file = "";
-	if (MuonID_str == "PassingProbeTrackingMuon")
-		MuonID_file = "trackerMuon";
-	if (MuonID_str == "PassingProbeStandAloneMuon")
-		MuonID_file = "standaloneMuon";
-	if (MuonID_str == "PassingProbeGlobalMuon")
-		MuonID_file = "globalMuon";
+	string MuonId_str = "";
+	if (MuonId == "trackerMuon")
+		MuonId_str = "PassingProbeTrackingMuon";
+	if (MuonId == "standaloneMuon")
+		MuonId_str = "PassingProbeStandAloneMuon";
+	if (MuonId == "globalMuon")
+		MuonId_str = "PassingProbeGlobalMuon";
 		
-	TFile *file0       = TFile::Open(("DATA/Upsilon/" + MuonID_file + "/T&P_UPSILON_DATA.root").c_str());
+	TFile *file0       = TFile::Open(("DATA/Upsilon/" + MuonId + "/T&P_UPSILON_DATA.root").c_str());
 	TTree *DataTree    = (TTree*)file0->Get(("UPSILON_DATA"));
+
+	//Now we must choose initial conditions in order to fit our data
+	double *init_conditions = new double[4];
+	init_conditions[0] = 9.46030;
+	init_conditions[1] = 10.02326;
+	init_conditions[2] = 10.3552;
+	init_conditions[3] = 0.08;
 	
 	double _mmin = 9;  double _mmax = 10.8;
 	
-	RooRealVar MuonID(MuonID_str.c_str(), MuonID_str.c_str(), 0, 1); //Muon_Id
+	RooRealVar MuonId_var(MuonId_str.c_str(), MuonId_str.c_str(), 0, 1); //Muon_Id
 	
 	RooRealVar InvariantMass("InvariantMass", "InvariantMass", _mmin, _mmax);
 	
@@ -35,10 +42,10 @@ double* doFit(string condition, string MuonID_str, string quant, double* init_co
 	RooRealVar quantity(("ProbeMuon_" + quant).c_str(), ("ProbeMuon_" + quant).c_str(), limits[0], limits[1]);
 	
 	RooFormulaVar* redeuce = new RooFormulaVar("PPTM", condition.c_str(), RooArgList(quantity));
-	RooDataSet *Data_ALL    = new RooDataSet("DATA", "DATA", DataTree, RooArgSet(InvariantMass, MuonID, quantity),*redeuce);
-	RooFormulaVar* cutvar = new RooFormulaVar("PPTM", (condition + " && " + MuonID_str + " == 1").c_str() , RooArgList(MuonID, quantity));
+	RooDataSet *Data_ALL    = new RooDataSet("DATA", "DATA", DataTree, RooArgSet(InvariantMass, MuonId_var, quantity),*redeuce);
+	RooFormulaVar* cutvar = new RooFormulaVar("PPTM", (condition + " && " + MuonId_str + " == 1").c_str() , RooArgList(MuonId_var, quantity));
 
-	RooDataSet *Data_PASSING = new RooDataSet("DATA_PASS", "DATA_PASS", DataTree, RooArgSet(InvariantMass, MuonID, quantity), *cutvar);//
+	RooDataSet *Data_PASSING = new RooDataSet("DATA_PASS", "DATA_PASS", DataTree, RooArgSet(InvariantMass, MuonId_var, quantity), *cutvar);
 	
 	RooDataHist* dh_ALL     = Data_ALL->binnedClone();
 	RooDataHist* dh_PASSING = Data_PASSING->binnedClone();
