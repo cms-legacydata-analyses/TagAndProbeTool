@@ -1,5 +1,8 @@
 using namespace RooFit;
 
+//We start by declaring the nature of our dataset. (Is the data real or simulated?)
+const char* output_folder_name = "Jpsi_Run_2011";
+
 double* doFit(string condition, string MuonId, string quant, const char* savePath = NULL) // RETURNS ARRAY WITH [yield_all, yield_pass, err_all, err_pass]    ->   OUTPUT ARRAY
 {
 	string MuonId_str = "";

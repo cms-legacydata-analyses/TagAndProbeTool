@@ -1,4 +1,4 @@
-TH1F* make_hist(string name, double** values, int qnt, int bin_n, Double_t* binning, bool IsDataMc, bool DRAW = false)
+TH1F* make_hist(string name, double** values, int qnt, int bin_n, Double_t* binning, bool draw = false)
 {
 	//AddBinContent
 	//HISTOGRAM NEEDS TO HAVE VARIABLE BINS
@@ -8,15 +8,16 @@ TH1F* make_hist(string name, double** values, int qnt, int bin_n, Double_t* binn
 	for (int i = 0; i < bin_n; i++)
 	{
 		hist->SetBinContent(i, values[i][qnt]);
-		if (IsDataMc == false)
-			hist->SetBinError(i, values[i][qnt+2]);
+		hist->SetBinError(i, values[i][qnt+2]);
 	}
-	if (DRAW)
+
+	if (draw)
 	{
 		TCanvas* xperiment = new TCanvas;
 		xperiment->cd();
 		hist->Draw();
 	}
+	
 	return hist;
 }
 

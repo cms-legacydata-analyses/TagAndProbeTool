@@ -1,6 +1,6 @@
 
 
-void change_bin(int bin_iD, string condition, string MuonId, string quantity, bool DataIsMc, string hist_file = "Histograms.root")
+void change_bin(int bin_iD, string condition, string MuonId, string quantity, string hist_file = "Histograms.root")
 {
 	TFile *_file0 = TFile::Open(hist_file.c_str());
 	
@@ -22,5 +22,5 @@ void change_bin(int bin_iD, string condition, string MuonId, string quantity, bo
 	hist_pass->SetDirectory(gDirectory);
 	EfficiencyFile->Write();
 	
-	get_efficiency(hist_all, hist_pass, quantity, MuonId, DataIsMc);
+	get_efficiency(hist_all, hist_pass, quantity, MuonId);
 }

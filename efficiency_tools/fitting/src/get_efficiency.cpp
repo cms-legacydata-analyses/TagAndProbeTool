@@ -1,38 +1,23 @@
 
 
-TEfficiency* get_efficiency(TH1F* ALL, TH1F* PASS, string quantity, string MuonId, bool DataIsMc)
+TEfficiency* get_efficiency(TH1F* ALL, TH1F* PASS, string quantity, string MuonId)
 {
 	//Path where is going to save efficiency 
-	const char* directoryToSave = "efficiency_result/";
+	string directoryToSave = string("efficiency_result/") + output_folder_name + string("/");
+	create_folder(directoryToSave.c_str());
 
-	//Check if dir exists and create
-	if (gSystem->AccessPathName(directoryToSave))
-		if (gSystem->mkdir(directoryToSave, true))
-		{
-			cerr << "\"" << directoryToSave << "\" path could not be found and could not be created ERROR\n";
-			cerr << "Try to create manually this folder path\n";
-			abort();
-		}
-		else
-			cout << "\"" << directoryToSave << "\" directory created OK\n";
-	else
-		cout << "\"" << directoryToSave << "\" directory OK\n";
-
-	//Create name of output file
-	string file_path = string(directoryToSave);
-	if (DataIsMc == true)
-		file_path += string("Run2011_");
-	else
-		file_path += string("MC_");
-	file_path += MuonId + ".root";
+	//Path to output file
+	string file_path = directoryToSave + MuonId + ".root";
 	
-	TFile* pFile = new TFile(file_path.c_str(),"recreate");
 	TEfficiency* pEff = new TEfficiency();
 	pEff->SetName("Efficiency");
 	pEff->SetPassedHistogram(*PASS, "f");
 	pEff->SetTotalHistogram (*ALL,"f");
 	
+	TFile* pFile = new TFile(file_path.c_str(),"recreate");
 	pEff->SetDirectory(gDirectory);
+	PASS->SetDirectory(gDirectory);
+	ALL->SetDirectory (gDirectory);
 	pFile->Write();
 	
 	TCanvas* oi = new TCanvas();
