@@ -13,7 +13,7 @@ double* doFit(string condition, string MuonId, string quant, const char* savePat
 	if (MuonId == "globalMuon")
 		MuonId_str = "PassingProbeGlobalMuon";
 	
-	TFile *file0       = TFile::Open(("DATA/JPsi/" + MuonId + "/T&P_JPSI_DATA_MC.root").c_str());
+	TFile *file0       = TFile::Open(("DATA/Jpsi/" + MuonId + "/T&P_JPSI_DATA_MC.root").c_str());
 	TTree *DataTree    = (TTree*)file0->Get(("JPSI_DATA"));
 	
 	double _mmin = 2.8;  double _mmax = 3.3;
