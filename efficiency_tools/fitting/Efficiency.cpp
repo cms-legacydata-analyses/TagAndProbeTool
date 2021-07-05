@@ -1,7 +1,7 @@
 #include "src/compare_efficiency.C"
 
 //Change if you need
-#include "src/dofits/DoFit_Upsilon.cpp"
+#include "src/dofits/DoFit_Jpsi_2xGaus.cpp"
 
 #include "src/get_conditions.cpp"
 #include "src/create_folder.cpp"
