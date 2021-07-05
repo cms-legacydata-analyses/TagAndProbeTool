@@ -55,23 +55,23 @@ double* doFit(string condition, string MuonId, string quant, const char* savePat
 	   
 	// GAUSSIAN VARIABLES
 	RooRealVar mean("mean","mean",3.094);
-	RooRealVar sigma_cb("sigma_cb","sigma_cb", 0.038);
-	RooRealVar alpha("alpha", "alpha", 1.71);
-	RooRealVar n("n", "n", 3.96);
-	n.setConstant(kTRUE);
+	RooRealVar sigma1("sigma","sigma",0.05*(_mmax-_mmin),0.,0.5*(_mmax-_mmin));
+	RooRealVar sigma2("sigma_cb","sigma_cb", 0.038);
+	//RooRealVar alpha("alpha", "alpha", 1.71);
+	//RooRealVar n("n", "n", 3.96);
+	//n.setConstant(kTRUE);
 	   
 	//FIT FUNCTIONS
-	RooRealVar sigma("sigma","sigma",0.05*(_mmax-_mmin),0.,0.5*(_mmax-_mmin));
-	RooGaussian gaussian("GS","GS",InvariantMass,mean,sigma);
-	RooCBShape crystalball("CB", "CB", InvariantMass, mean, sigma_cb, alpha, n);
+	RooGaussian gaussian1("GS1","GS1",InvariantMass,mean,sigma1);
+	RooGaussian gaussian2("GS2","GS2",InvariantMass,mean,sigma2);
 	
 	double n_signal_initial_total = 50000;
 	
-	RooRealVar frac1("frac1","frac1",0.5);
+	RooRealVar frac1("frac1","frac1",0.42);
 
 	RooAddPdf* signal;
 	
-	signal      = new RooAddPdf("signal", "signal", RooArgList(gaussian, crystalball), RooArgList(frac1));
+	signal      = new RooAddPdf("signal", "signal", RooArgList(gaussian1, gaussian2), RooArgList(frac1));
 	
 	RooRealVar n_signal_total("n_signal_total","n_signal_total",n_signal_initial_total,0.,Data_ALL->sumEntries());
 	RooRealVar n_signal_total_pass("n_signal_total_pass","n_signal_total_pass",n_signal_initial_total,0.,Data_PASSING->sumEntries());
@@ -79,7 +79,7 @@ double* doFit(string condition, string MuonId, string quant, const char* savePat
 	RooAddPdf* model;
 	RooAddPdf* model_pass;
 	
-	model      = new RooAddPdf("model","model", RooArgList(*signal),RooArgList(n_signal_total));
+	model      = new RooAddPdf("model",      "model", RooArgList(*signal),RooArgList(n_signal_total));
 	model_pass = new RooAddPdf("model_pass", "model_pass", RooArgList(*signal),RooArgList(n_signal_total_pass));
 	
 	// SIMULTANEOUS FIT
@@ -136,8 +136,8 @@ double* doFit(string condition, string MuonId, string quant, const char* savePat
 
 	if (savePath != NULL)
 	{
-		c_pass->SaveAs((string(savePath) + condition + "_ALL.pdf").c_str());
-		c_all->SaveAs ((string(savePath) + condition + "_PASS.pdf").c_str());
+		c_pass->SaveAs((string(savePath) + condition + "_ALL.png").c_str());
+		c_all->SaveAs ((string(savePath) + condition + "_PASS.png").c_str());
 	}
 		
 	// DELETING ALLOCATED MEMORY
