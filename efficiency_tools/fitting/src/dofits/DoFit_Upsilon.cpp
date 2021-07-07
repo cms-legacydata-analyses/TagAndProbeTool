@@ -13,8 +13,8 @@ double* doFit(string condition, string MuonId, string quant, const char* savePat
 	if (MuonId == "globalMuon")
 		MuonId_str = "PassingProbeGlobalMuon";
 		
-	TFile *file0       = TFile::Open(("DATA/Upsilon/" + MuonId + "/T&P_UPSILON_DATA.root").c_str());
-	TTree *DataTree    = (TTree*)file0->Get(("UPSILON_DATA"));
+	TFile *file0       = TFile::Open("DATA/TagAndProbe_Upsilon_Run2011.root");
+	TTree *DataTree    = (TTree*)file0->Get(("tagandprobe"));
 
 	//Now we must choose initial conditions in order to fit our data
 	double *init_conditions = new double[4];

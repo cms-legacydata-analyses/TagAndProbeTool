@@ -13,8 +13,8 @@ double* doFit(string condition, string MuonId, string quant, const char* savePat
 	if (MuonId == "globalMuon")
 		MuonId_str = "PassingProbeGlobalMuon";
 	
-	TFile *file0       = TFile::Open(("DATA/Jpsi/" + MuonId + "/T&P_JPSI_DATA_MC.root").c_str());
-	TTree *DataTree    = (TTree*)file0->Get(("JPSI_DATA"));
+	TFile *file0       = TFile::Open("DATA/TagAndProbe_Jpsi_Run2011.root");
+	TTree *DataTree    = (TTree*)file0->Get(("tagandprobe"));
 	
 	double _mmin = 2.8;  double _mmax = 3.3;
 	
@@ -27,7 +27,7 @@ double* doFit(string condition, string MuonId, string quant, const char* savePat
 	double* limits = new double[2];
 	if (quant == "Pt") {
 		limits[0] = 0;
-		limits[1] = 60;
+		limits[1] = 40;
 	}
 	if (quant == "Eta") {
 		limits[0] = -3;
@@ -54,20 +54,25 @@ double* doFit(string condition, string MuonId, string quant, const char* savePat
 	RooPlot *frame = InvariantMass.frame(RooFit::Title("Invariant Mass"));
 	   
 	// GAUSSIAN VARIABLES
-	RooRealVar mean("mean","mean",3.094);
-	RooRealVar sigma1("sigma","sigma",0.05*(_mmax-_mmin),0.,0.5*(_mmax-_mmin));
-	RooRealVar sigma2("sigma_cb","sigma_cb", 0.038);
-	//RooRealVar alpha("alpha", "alpha", 1.71);
-	//RooRealVar n("n", "n", 3.96);
-	//n.setConstant(kTRUE);
+	RooRealVar mean("mean","mean",3.094, 3.07, 3.1);
+	RooRealVar sigma1("sigma1","sigma1",0.05*(_mmax-_mmin),0.,0.5*(_mmax-_mmin));
+	RooRealVar sigma2("sigma2","sigma2", 0.038);
 	   
 	//FIT FUNCTIONS
 	RooGaussian gaussian1("GS1","GS1",InvariantMass,mean,sigma1);
 	RooGaussian gaussian2("GS2","GS2",InvariantMass,mean,sigma2);
+
+	// BACKGROUND VARIABLES
+	RooRealVar a0("a0", "a0", 0, -10, 10);
+	RooRealVar a1("a1", "a1", 0, -10, 10);
+
+	// BACKGROUND FUNCTION
+	RooChebychev background("background","background", InvariantMass, RooArgList(a0,a1));
 	
 	double n_signal_initial_total = 50000;
+	double n_back_initial = 10000;
 	
-	RooRealVar frac1("frac1","frac1",0.42);
+	RooRealVar frac1("frac1","frac1",0.5);
 
 	RooAddPdf* signal;
 	
@@ -75,12 +80,15 @@ double* doFit(string condition, string MuonId, string quant, const char* savePat
 	
 	RooRealVar n_signal_total("n_signal_total","n_signal_total",n_signal_initial_total,0.,Data_ALL->sumEntries());
 	RooRealVar n_signal_total_pass("n_signal_total_pass","n_signal_total_pass",n_signal_initial_total,0.,Data_PASSING->sumEntries());
+
+	RooRealVar n_back("n_back","n_back",n_back_initial,0.,Data_ALL->sumEntries());
+	RooRealVar n_back_pass("n_back_pass","n_back_pass",n_back_initial,0.,Data_PASSING->sumEntries());
 	
 	RooAddPdf* model;
 	RooAddPdf* model_pass;
 	
-	model      = new RooAddPdf("model",      "model", RooArgList(*signal),RooArgList(n_signal_total));
-	model_pass = new RooAddPdf("model_pass", "model_pass", RooArgList(*signal),RooArgList(n_signal_total_pass));
+	model      = new RooAddPdf("model","model", RooArgList(*signal, background),RooArgList(n_signal_total, n_back));
+	model_pass = new RooAddPdf("model_pass", "model_pass", RooArgList(*signal, background),RooArgList(n_signal_total_pass, n_back_pass));
 	
 	// SIMULTANEOUS FIT
 	RooCategory sample("sample","sample") ;
@@ -114,8 +122,9 @@ double* doFit(string condition, string MuonId, string quant, const char* savePat
 	Data_ALL->plotOn(frame);
 	
 	model->plotOn(frame);
-	model->plotOn(frame,RooFit::Components("GS"),RooFit::LineStyle(kDashed),RooFit::LineColor(kGreen));
-	model->plotOn(frame,RooFit::Components("CB"),RooFit::LineStyle(kDashed),RooFit::LineColor(kMagenta - 5));
+	model->plotOn(frame,RooFit::Components("GS1"),RooFit::LineStyle(kDashed),RooFit::LineColor(kGreen));
+	model->plotOn(frame,RooFit::Components("GS2"),RooFit::LineStyle(kDashed),RooFit::LineColor(kMagenta - 5));
+	model->plotOn(frame,RooFit::Components("background"),RooFit::LineStyle(kDashed),RooFit::LineColor(kRed));
 	
 	c_all->cd();
 	frame->Draw("");
@@ -129,8 +138,9 @@ double* doFit(string condition, string MuonId, string quant, const char* savePat
 	Data_PASSING->plotOn(frame_pass);
 	
 	model_pass->plotOn(frame_pass);
-	model_pass->plotOn(frame_pass,RooFit::Components("GS"),RooFit::LineStyle(kDashed),RooFit::LineColor(kGreen));
-	model_pass->plotOn(frame_pass,RooFit::Components("CB"),RooFit::LineStyle(kDashed),RooFit::LineColor(kMagenta - 5));
+	model_pass->plotOn(frame_pass,RooFit::Components("GS1"),RooFit::LineStyle(kDashed),RooFit::LineColor(kGreen));
+	model_pass->plotOn(frame_pass,RooFit::Components("GS2"),RooFit::LineStyle(kDashed),RooFit::LineColor(kMagenta - 5));
+	model_pass->plotOn(frame_pass,RooFit::Components("background"),RooFit::LineStyle(kDashed),RooFit::LineColor(kRed));
 	
 	frame_pass->Draw();
 

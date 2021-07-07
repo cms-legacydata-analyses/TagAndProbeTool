@@ -13,8 +13,8 @@ double* doFit(string condition, string MuonId, string quant, const char* savePat
 	if (MuonId == "globalMuon")
 		MuonId_str = "PassingProbeGlobalMuon";
 	
-	TFile *file0       = TFile::Open(("DATA/Upsilon/" + MuonId + "/T&P_UPSILON_DATA_MC.root").c_str());
-	TTree *DataTree    = (TTree*)file0->Get(("UPSILON_DATA"));
+	TFile *file0       = TFile::Open("DATA/TagAndProbe_Upsilon_MC.root");
+	TTree *DataTree    = (TTree*)file0->Get(("tagandprobe"));
 	
 	//Window for fit
 	double _mmin = 9;  double _mmax = 10.8;
@@ -26,7 +26,7 @@ double* doFit(string condition, string MuonId, string quant, const char* savePat
 	double* limits = new double[2];
 	if (quant == "Pt") {
 		limits[0] = 0;
-		limits[1] = 60;
+		limits[1] = 40;
 	}
 	if (quant == "Eta") {
 		limits[0] = -3;
