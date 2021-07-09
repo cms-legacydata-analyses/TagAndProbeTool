@@ -7,7 +7,7 @@ TEfficiency* get_efficiency(TH1F* ALL, TH1F* PASS, string quantity, string MuonI
 	create_folder(directoryToSave.c_str());
 
 	//Path to output file
-	string file_path = directoryToSave + prefix_file_name + MuonId + ".root";
+	string file_path = directoryToSave + prefix_file_name + quantity + "_" + MuonId + ".root";
 
 	//Set axis title for efficiency plot
 	ALL->GetYaxis()->SetTitle("Efficiency");
@@ -29,8 +29,8 @@ TEfficiency* get_efficiency(TH1F* ALL, TH1F* PASS, string quantity, string MuonI
 	pEff->SetTotalHistogram (*ALL,"f");
 
 	//Set plot config
-	pEff->SetName((MuonId + string("_Efficiency") ).c_str());
-	pEff->SetTitle((string("Efficiency for ") + MuonId).c_str());
+	pEff->SetName((MuonId + string("_") + quantity + string("_Efficiency") ).c_str());
+	pEff->SetTitle((string("Efficiency for ") + MuonId + string(" ") + quantity).c_str());
 	pEff->SetLineColor(kBlack);
 	pEff->SetMarkerStyle(21);
 	pEff->SetMarkerSize(0.5);
@@ -49,6 +49,10 @@ TEfficiency* get_efficiency(TH1F* ALL, TH1F* PASS, string quantity, string MuonI
 	graph->SetMinimum(0.8);
 	graph->SetMaximum(1.2);
 	gPad->Update();
+
+	cout << "\n------------------------\n";
+	cout << "Output: " << file_path << "\n";
+	cout << "------------------------\n";
 	
 	return pEff;
 }

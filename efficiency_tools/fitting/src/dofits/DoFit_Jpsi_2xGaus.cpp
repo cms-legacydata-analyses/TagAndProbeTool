@@ -7,6 +7,7 @@ const char* output_folder_name = "Jpsi_Run_2011";
 const char* fit_functions = "2xGaussians + Chebychev";
 double _mmin = 2.8;  double _mmax = 3.3;
 double fit_bins = 0;
+string prefix_file_name = "";
 
 double* doFit(string condition, string MuonId, string quant, const char* savePath = NULL) // RETURNS ARRAY WITH [yield_all, yield_pass, err_all, err_pass]    ->   OUTPUT ARRAY
 {
