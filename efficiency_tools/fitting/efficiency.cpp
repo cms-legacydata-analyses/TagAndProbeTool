@@ -1,7 +1,7 @@
 #include "src/compare_efficiency.C"
 
 //Change if you need
-#include "src/dofits/DoFit_Jpsi_2xGaus.cpp"
+#include "src/dofits/DoFit_Jpsi.cpp"
 
 #include "src/get_conditions.cpp"
 #include "src/create_folder.cpp"
@@ -12,9 +12,14 @@
 void efficiency()
 {
 	//Which Muon Id do you want to study?
-	string MuonId   = "trackerMuon";
+	//string MuonId   = "trackerMuon";
 	//string MuonId   = "standaloneMuon";
-	//string MuonId   = "globalMuon";
+	string MuonId   = "globalMuon";
+	
+	//_mmin = 2.8; 
+	//_mmax = 3.3;
+	fit_bins = 95;
+	string prefix_file_name = "binfit95_";
 
 	//Which quantity do you want to use?
 	string quantity = "Pt";     double bins[] = {0., 2.0, 3.4, 4.0, 4.4, 4.7, 5.0, 5.6, 5.8, 6.0, 6.2, 6.4, 6.6, 6.8, 7.3, 9.5, 13.0, 17.0, 40.};
@@ -30,13 +35,13 @@ void efficiency()
 	//-------------------------------------
 
 	//Path where is going to save results 
-	const char* directoryToSave = "bin_fit_result/";
-	create_folder(directoryToSave, true);
+	const char* path_bins_fit_folder = "results/bins_fit/";
+	create_folder(path_bins_fit_folder, true);
 	
 	// Loop for every bin and fit it
 	for (int i = 0; i < bin_n; i++)
 	{
-		yields_n_errs[i] = doFit(conditions[i], MuonId, quantity, directoryToSave);
+		yields_n_errs[i] = doFit(conditions[i], MuonId, quantity, path_bins_fit_folder);
 		//doFit returns: [yield_all, yield_pass, err_all, err_pass]
 	}
 	
@@ -45,14 +50,14 @@ void efficiency()
 	
 	//----------------------SAVING RESULTS TO Histograms.root--------------------//
 	//useful if we require to change the fit on a specific set of bins
-	TFile* EfficiencyFile = TFile::Open((string(directoryToSave) + "histograms.root").c_str(),"RECREATE");
+	TFile* EfficiencyFile = TFile::Open((string(path_bins_fit_folder) + "histograms.root").c_str(),"RECREATE");
 	yield_ALL->SetDirectory(gDirectory);
 	yield_PASS->SetDirectory(gDirectory);
 	EfficiencyFile->Write();
 	//-----------------------------------------------------------------//
 	
 	//If all of the fits seem correct we can proceed to generate the efficiency
-	get_efficiency(yield_ALL, yield_PASS, quantity, MuonId);
+	get_efficiency(yield_ALL, yield_PASS, quantity, MuonId, prefix_file_name);
 	 
 	//In case you want to change the fit on a specific, comment the loop and "result saving" code and uncomment the following function
 	//change_bin(/*bin number you want to redo*/, /*condition (you can copy the title from the generated fit .pdf)*/, MuonId, quantity, init_conditions);
@@ -62,6 +67,9 @@ void efficiency()
 	//a plot that combines both results
 	//compare_efficiency(quantity, "Efficiency Result/" + quantity + "/Efficiency_MC.root", "Efficiency Result/" + quantity + "/Efficiency_Run2011.root");
 
-	cout << "\n";
-	cout << output_folder_name << " - "<< MuonId << " - " << quantity << "\n";
+	cout << "\n[Settings]\n";
+	cout << output_folder_name << " "<< MuonId << " " << quantity << "\n";
+	cout << "Fitting:     " << fit_functions << "\n";
+	cout << "Fit between: " << _mmin << " and " << _mmax << " GeV\n";
+	cout << "Bins:        " << fit_bins << "\n";
 }

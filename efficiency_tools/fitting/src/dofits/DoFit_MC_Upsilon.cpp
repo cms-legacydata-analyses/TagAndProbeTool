@@ -3,6 +3,11 @@ using namespace RooFit;
 //We start by declaring the nature of our dataset. (Is the data real or simulated?)
 const char* output_folder_name = "Upsilon1S_MC_2020";
 
+//Header of this function
+const char* fit_functions = "Gaussian + CrystalBall";
+double _mmin = 9;  double _mmax = 10.8;
+double fit_bins = 0;
+
 double* doFit(string condition, string MuonId, string quant, const char* savePath = NULL) // RETURNS ARRAY WITH [yield_all, yield_pass, err_all, err_pass]    ->   OUTPUT ARRAY
 {
 	string MuonId_str = "";
@@ -16,12 +21,12 @@ double* doFit(string condition, string MuonId, string quant, const char* savePat
 	TFile *file0       = TFile::Open("DATA/TagAndProbe_Upsilon_MC.root");
 	TTree *DataTree    = (TTree*)file0->Get(("tagandprobe"));
 	
-	//Window for fit
-	double _mmin = 9;  double _mmax = 10.8;
-	
 	RooRealVar MuonId_var(MuonId_str.c_str(), MuonId_str.c_str(), 0, 1); //Muon_Id
 	
 	RooRealVar InvariantMass("InvariantMass", "InvariantMass", _mmin, _mmax);
+	if (fit_bins != 0)
+		InvariantMass.setBins(fit_bins);
+	fit_bins = InvariantMass.getBinning().numBins();
 	
 	double* limits = new double[2];
 	if (quant == "Pt") {
@@ -54,12 +59,12 @@ double* doFit(string condition, string MuonId, string quant, const char* savePat
 	   
 	// GAUSSIAN VARIABLES
 	RooRealVar mean("mean","mean",9.46030, 9.3, 9.6);
+	RooRealVar sigma("sigma","sigma",0.05, 0., 0.18);
 	RooRealVar sigma_cb("sigma_cb","sigma_cb", 0.138, 0.01, 0.18);
 	RooRealVar alpha("alpha", "alpha", 1.71, -5., 5.);
 	RooRealVar n("n", "n", 3.96, 3., 10.);
 	   
 	//FIT FUNCTIONS
-	RooRealVar sigma("sigma","sigma",0.05, 0., 0.18);	
 	RooGaussian gaussian("GS","GS",InvariantMass,mean,sigma);
 	RooCBShape crystalball("CB", "CB", InvariantMass, mean, sigma_cb, alpha, n);
 	

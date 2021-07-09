@@ -1,13 +1,13 @@
 
 
-TEfficiency* get_efficiency(TH1F* ALL, TH1F* PASS, string quantity, string MuonId)
+TEfficiency* get_efficiency(TH1F* ALL, TH1F* PASS, string quantity, string MuonId, string prefix_file_name = "")
 {
 	//Path where is going to save efficiency 
-	string directoryToSave = string("efficiency_result/") + output_folder_name + string("/");
+	string directoryToSave = string("results/efficiencies/") + output_folder_name + string("/");
 	create_folder(directoryToSave.c_str());
 
 	//Path to output file
-	string file_path = directoryToSave + MuonId + ".root";
+	string file_path = directoryToSave + prefix_file_name + MuonId + ".root";
 
 	//Set axis title for efficiency plot
 	ALL->GetYaxis()->SetTitle("Efficiency");

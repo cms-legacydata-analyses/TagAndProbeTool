@@ -2,7 +2,7 @@ void create_folder(const char* folderPath, bool deleteOld = false)
 {
 	//Delete old directory for saving files
 	if (deleteOld == true)
-		gSystem->Exec((string("rm -r ") + string(folderPath)).c_str());
+		gSystem->Exec((string("rm -r ") + string(folderPath) + string("*")).c_str());
 
 	//Check if dir exists and create
 	if (gSystem->AccessPathName(folderPath))

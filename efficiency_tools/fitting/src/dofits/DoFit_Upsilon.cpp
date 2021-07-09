@@ -3,6 +3,11 @@ using namespace RooFit;
 //We start by declaring the nature of our dataset. (Is the data real or simulated?)
 const char* output_folder_name = "Upsilon_Run_2011";
 
+//Header of this function
+const char* fit_functions = "CrystallBall + 2xGaussians + Chebychev";
+double _mmin = 9;  double _mmax = 10.8;
+double fit_bins = 0;
+
 double* doFit(string condition, string MuonId, string quant, const char* savePath = NULL) // RETURNS ARRAY WITH [yield_all, yield_pass, err_all, err_pass]    ->   OUTPUT ARRAY
 {
 	string MuonId_str = "";
@@ -12,9 +17,16 @@ double* doFit(string condition, string MuonId, string quant, const char* savePat
 		MuonId_str = "PassingProbeStandAloneMuon";
 	if (MuonId == "globalMuon")
 		MuonId_str = "PassingProbeGlobalMuon";
-		
+	
 	TFile *file0       = TFile::Open("DATA/TagAndProbe_Upsilon_Run2011.root");
 	TTree *DataTree    = (TTree*)file0->Get(("tagandprobe"));
+	
+	RooRealVar MuonId_var(MuonId_str.c_str(), MuonId_str.c_str(), 0, 1); //Muon_Id
+	
+	RooRealVar InvariantMass("InvariantMass", "InvariantMass", _mmin, _mmax);
+	if (fit_bins != 0)
+		InvariantMass.setBins(fit_bins);ZZ
+	fit_bins = InvariantMass.getBinning().numBins();
 
 	//Now we must choose initial conditions in order to fit our data
 	double *init_conditions = new double[4];
@@ -22,12 +34,6 @@ double* doFit(string condition, string MuonId, string quant, const char* savePat
 	init_conditions[1] = 10.02326;
 	init_conditions[2] = 10.3552;
 	init_conditions[3] = 0.08;
-	
-	double _mmin = 9;  double _mmax = 10.8;
-	
-	RooRealVar MuonId_var(MuonId_str.c_str(), MuonId_str.c_str(), 0, 1); //Muon_Id
-	
-	RooRealVar InvariantMass("InvariantMass", "InvariantMass", _mmin, _mmax);
 	
 	double* limits = new double[2];
 	if (quant == "Pt") {
