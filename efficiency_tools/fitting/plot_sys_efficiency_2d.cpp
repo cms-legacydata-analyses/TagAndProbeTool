@@ -130,7 +130,7 @@ void plot_sys_efficiency_2d()
 	{
 		string conditions2 = string(" && abs(ProbeMuon_" + quantity2 + ")>" + to_string(bins2[j]  ));
 		conditions2 +=       string(" && abs(ProbeMuon_" + quantity2 + ")<" + to_string(bins2[j+1]));
-		cout << "\t\"" << conditions2 << "\": {\n"
+		cout << "\t\"" << conditions2 << "\": {\n";
 		for (int i = 0; i < bin_n1; i++)
 		{
 			string conditions1 = string(    "ProbeMuon_" + quantity1 + ">" + to_string(bins1[i]  ));
