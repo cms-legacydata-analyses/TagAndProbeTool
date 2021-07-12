@@ -6,6 +6,7 @@
 double default_min = _mmin;
 double default_max = _mmax;
 
+#include "src/get_conditions.cpp"
 #include "src/create_folder.cpp"
 #include "src/get_efficiency.cpp"
 #include "src/change_bin.cpp"
@@ -15,7 +16,6 @@ double default_max = _mmax;
 //string MuonId   = "trackerMuon";
 //string MuonId   = "standaloneMuon";
 string MuonId   = "globalMuon";
-
 bool should_loop_muon_id  = false;
 bool should_loop_settings = false;
 
@@ -24,7 +24,7 @@ string quantity = "Pt";     double bins[] = {0., 2.0, 3.4, 4.0, 4.4, 4.7, 5.0, 5
 //string quantity = "Eta";    double bins[] = {-2.4, -1.8, -1.4, -1.2, -1.0, -0.8, -0.5, -0.2, 0, 0.2, 0.5, 0.8, 1.0, 1.2, 1.4, 1.8, 2.4};
 //string quantity = "Phi";    double bins[] = {-3.0, -1.8, -1.6, -1.2, -1.0, -0.7, -0.4, -0.2, 0, 0.2, 0.4, 0.7, 1.0, 1.2, 1.6, 1.8, 3.0};
 
-void efficiency_calculus()
+void efficiency_table()
 {
 	//_mmin = 2.75;
 	//_mmax = 3.35;
@@ -35,18 +35,17 @@ void efficiency_calculus()
 	//Path where is going to save results png for every bin 
 	const char* path_bins_fit_folder = "results/bins_fit/";
 	create_folder(path_bins_fit_folder, true);
-
-	// Loop for every bin and fit it
+	
+	//Creaete condition for every bin
 	int bin_n = sizeof(bins)/sizeof(*bins) - 1;
-	double** yields_n_errs = new double*[bin_n];
+	string* conditions = get_conditions(bin_n, bins, "ProbeMuon_" + quantity);
+	double ** yields_n_errs = new double*[bin_n];
+	
+	// Loop for every bin and fit it
 	for (int i = 0; i < bin_n; i++)
 	{
-		//Creates conditions
-		string conditions = string(    "ProbeMuon_" + quantity + ">" + to_string(bins[i]  ));
-		conditions +=       string(" && ProbeMuon_" + quantity + "<" + to_string(bins[i+1]));
-
-		//Stores [yield_all, yield_pass, err_all, err_pass]
-		yields_n_errs[i] = doFit(conditions, MuonId, quantity, path_bins_fit_folder);
+		yields_n_errs[i] = doFit(conditions[i], MuonId, quantity, path_bins_fit_folder);
+		//doFit returns: [yield_all, yield_pass, err_all, err_pass]
 	}
 	
 	TH1F *yield_ALL  = make_hist("ALL" , yields_n_errs, 0, bin_n, bins);
@@ -76,82 +75,4 @@ void efficiency_calculus()
 	cout << "Fitting:     " << fit_functions << "\n";
 	cout << "Fit between: " << _mmin << " and " << _mmax << " GeV\n";
 	cout << "Bins:        " << fit_bins << "\n";
-}
-
-void loop_settings()
-{
-	string min_string = "";
-	string max_string = "";
-	for (int i = 0; i <= 4; i++)
-	{
-		switch(i)
-		{
-			case 0:
-				prefix_file_name = "nominal_";
-				break;
-			case 1:
-				_mmin = default_min - 0.05;
-				_mmax = default_max + 0.05;
-				min_string = to_string(_mmin);
-				max_string = to_string(_mmax);
-				replace(min_string.begin(), min_string.end(), '.', 'p');
-				replace(max_string.begin(), max_string.end(), '.', 'p');
-				prefix_file_name  = string("mass_") + min_string.substr(0, min_string.length()-4) + string("_");
-				prefix_file_name +=                   max_string.substr(0, max_string.length()-4) + string("_");
-				break;
-			case 2:
-				_mmin = default_min + 0.05;
-				_mmax = default_max - 0.05;	
-				min_string = to_string(_mmin);
-				max_string = to_string(_mmax);
-				replace(min_string.begin(), min_string.end(), '.', 'p');
-				replace(max_string.begin(), max_string.end(), '.', 'p');
-				prefix_file_name  = string("mass_") + min_string.substr(0, min_string.length()-4) + string("_");
-				prefix_file_name +=                   max_string.substr(0, max_string.length()-4) + string("_");
-				break;
-			case 3:
-				fit_bins = 95;
-				prefix_file_name = "binfit95_";
-				break;
-			case 4:
-				fit_bins = 105;
-				prefix_file_name = "binfit105_";
-				break;
-		}
-		efficiency_calculus();
-	}
-}
-
-void loop_muon_id()
-{
-	for (int i = 0; i <= 2; i++)
-	{
-		switch(i)
-		{
-			case 0:
-				MuonId   = "trackerMuon";
-				break;
-			case 1:
-				MuonId   = "standaloneMuon";
-				break;
-			case 2:
-				MuonId   = "globalMuon";
-				break;
-		}		
-
-		if (should_loop_settings)
-			loop_settings();
-		else
-			efficiency_calculus();
-	}
-}
-
-void efficiency()
-{
-	if (should_loop_muon_id)
-		loop_muon_id();
-	else if (should_loop_settings)
-		loop_settings();
-	else
-		efficiency_calculus();
 }

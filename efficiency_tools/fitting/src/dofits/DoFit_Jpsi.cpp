@@ -151,6 +151,9 @@ double* doFit(string condition, string MuonId, string quant, const char* savePat
 	model_pass->plotOn(frame_pass,RooFit::Components("background"),RooFit::LineStyle(kDashed),RooFit::LineColor(kRed));
 	
 	frame_pass->Draw();
+	
+	c_pass->SetLogy();
+	c_all->SetLogy();
 
 	if (savePath != NULL)
 	{
