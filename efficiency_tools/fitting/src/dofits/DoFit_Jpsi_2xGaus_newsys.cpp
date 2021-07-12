@@ -142,7 +142,7 @@ double* doFit2xGaus(string condition, string MuonId, string quant1, string quant
 	}
 		
 	// DELETING ALLOCATED MEMORY
-	delete[] limits;
+	//delete[] limits;
 	//
 	delete file0;
 	//
