@@ -123,4 +123,23 @@ void plot_sys_efficiency_2d()
 			yields_n_errs[j][i][3] = sqrt(pow(yields_n_errs_Nominal[j][i][3],2) + pow(yields_n_errs_2Gauss[j][i][3],2) + pow(yields_n_errs_MassUp[j][i][3],2) + pow(yields_n_errs_MassUp[j][i][3],2) + pow(yields_n_errs_BinUp[j][i][3],2) + pow(yields_n_errs_BinDown[j][i][3],2));
 		}
 	}
+
+	cout << "{\n";
+	//Print
+	for (int j = 0; j < bin_n2; j++)
+	{
+		string conditions2 = string(" && abs(ProbeMuon_" + quantity2 + ")>" + to_string(bins2[j]  ));
+		conditions2 +=       string(" && abs(ProbeMuon_" + quantity2 + ")<" + to_string(bins2[j+1]));
+		cout << "\t\"" << conditions2 << "\": {\n"
+		for (int i = 0; i < bin_n1; i++)
+		{
+			string conditions1 = string(    "ProbeMuon_" + quantity1 + ">" + to_string(bins1[i]  ));
+			conditions1 +=       string(" && ProbeMuon_" + quantity1 + "<" + to_string(bins1[i+1]));
+			cout << "\t\t{\"" << conditions1 << "\": [" << yields_n_errs[j][i][0] << ",";
+			cout << yields_n_errs[j][i][1] << ",";
+			cout << yields_n_errs[j][i][2] << ",";
+			cout << yields_n_errs[j][i][3] << "]},\n";
+		}
+		cout << "\t},\n";
+	}
 }
