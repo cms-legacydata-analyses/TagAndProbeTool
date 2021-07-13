@@ -1,9 +1,9 @@
-TH1F* make_hist(string name, double** values, int qnt, int bin_n, Double_t* binning, bool draw = false)
+TH1D* make_hist(string name, double** values, int qnt, int bin_n, Double_t* binning, bool draw = false)
 {
 	//AddBinContent
 	//HISTOGRAM NEEDS TO HAVE VARIABLE BINS
    
-	TH1F* hist = new TH1F(name.c_str(), name.c_str(), bin_n, binning);
+	TH1D* hist = new TH1D(name.c_str(), name.c_str(), bin_n, binning);
 
 	for (int i = 0; i < bin_n; i++)
 	{

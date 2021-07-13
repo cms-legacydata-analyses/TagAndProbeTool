@@ -1,6 +1,6 @@
 using namespace RooFit;
 
-double* doFit2xGaus(string condition, string MuonId, string quant1, string quant2, const char* savePath = NULL) // RETURNS ARRAY WITH [yield_all, yield_pass, err_all, err_pass]    ->   OUTPUT ARRAY
+double* doFit2xGaus(string condition, string MuonId, string quant, const char* savePath = NULL) // RETURNS ARRAY WITH [yield_all, yield_pass, err_all, err_pass]    ->   OUTPUT ARRAY
 {
 	string MuonId_str = "";
 	if (MuonId == "trackerMuon")
@@ -19,25 +19,30 @@ double* doFit2xGaus(string condition, string MuonId, string quant1, string quant
 	if (fit_bins != 0)
 		InvariantMass.setBins(fit_bins);
 	fit_bins = InvariantMass.getBinning().numBins();
-
-	RooRealVar quantityPt("ProbeMuon_Pt", "ProbeMuon_Pt", 0., 40.);
-	RooRealVar quantityEta("ProbeMuon_Eta", "ProbeMuon_Eta", -2.1, 2.1);
-	RooRealVar quantityPhi("ProbeMuon_Phi", "ProbeMuon_Phi", -3., 3.);
-
-	//RooRealVar quantity(("ProbeMuon_" + quant).c_str(), ("ProbeMuon_" + quant).c_str(), limits[0], limits[1]);
 	
-	cout << "Conditions: " << condition << endl;
-	RooFormulaVar* redeuce = new RooFormulaVar("PPTM", condition.c_str(), RooArgList(quantityPt, quantityEta));
-	RooDataSet *Data_ALL    = new RooDataSet("DATA", "DATA", DataTree, RooArgSet(InvariantMass, MuonId_var, quantityPt, quantityEta),*redeuce);
-
-	RooFormulaVar* cutvar = new RooFormulaVar("PPTM", (condition + " && " + MuonId_str + " == 1").c_str(), RooArgList(MuonId_var, quantityPt, quantityEta));
-	RooDataSet *Data_PASSING = new RooDataSet("DATA_PASS", "DATA_PASS", DataTree, RooArgSet(InvariantMass, MuonId_var, quantityPt, quantityEta), *cutvar);
+	double* limits = new double[2];
+	if (quant == "Pt") {
+		limits[0] = 0;
+		limits[1] = 40;
+	}
+	if (quant == "Eta") {
+		limits[0] = -3;
+		limits[1] = 3;
+	}
+	if (quant == "Phi") {
+		limits[0] = -2;
+		limits[1] = 2;
+	}
+	RooRealVar quantity(("ProbeMuon_" + quant).c_str(), ("ProbeMuon_" + quant).c_str(), limits[0], limits[1]);
 	
-	cout << "cloning1\n";
+	RooFormulaVar* redeuce = new RooFormulaVar("PPTM", condition.c_str(), RooArgList(quantity));
+	RooDataSet *Data_ALL    = new RooDataSet("DATA", "DATA", DataTree, RooArgSet(InvariantMass, MuonId_var, quantity),*redeuce);
+
+	RooFormulaVar* cutvar = new RooFormulaVar("PPTM", (condition + " && " + MuonId_str + " == 1").c_str() , RooArgList(MuonId_var, quantity));
+	RooDataSet *Data_PASSING = new RooDataSet("DATA_PASS", "DATA_PASS", DataTree, RooArgSet(InvariantMass, MuonId_var, quantity), *cutvar);
+	
 	RooDataHist* dh_ALL     = Data_ALL->binnedClone();
-	cout << "cloning2\n";
 	RooDataHist* dh_PASSING = Data_PASSING->binnedClone();
-	cout << "end\n";
 	
 	TCanvas* c_all  = new TCanvas;
 	TCanvas* c_pass = new TCanvas;

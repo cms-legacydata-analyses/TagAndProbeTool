@@ -74,8 +74,8 @@ void plot_sys_efficiency_2d()
 			_mmax = default_max;
 			fit_bins = 100;
 			prefix_file_name = "2xgaus_";
-			yields_n_errs_2Gauss[j][i] = doFit2xGaus(conditions, MuonId, quantity1, quantity2, string(path_bins_fit_folder + prefix_file_name).c_str());
-			//yields_n_errs_2Gauss[j][i] = doFit(conditions, MuonId, quantity1, quantity2, string(path_bins_fit_folder + prefix_file_name).c_str());
+			//yields_n_errs_2Gauss[j][i] = doFit2xGaus(conditions, MuonId, quantity1, quantity2, string(path_bins_fit_folder + prefix_file_name).c_str());
+			yields_n_errs_2Gauss[j][i] = doFit(conditions, MuonId, quantity1, quantity2, string(path_bins_fit_folder + prefix_file_name).c_str());
 
 			//MassUp
 			_mmin = default_min - 0.05;
@@ -117,10 +117,12 @@ void plot_sys_efficiency_2d()
 
 
 			//Calculates the result
+			/*
 			yields_n_errs[j][i][0] = yields_n_errs_Nominal[j][i][0];
 			yields_n_errs[j][i][1] = yields_n_errs_Nominal[j][i][1];
 			yields_n_errs[j][i][2] = sqrt(pow(yields_n_errs_Nominal[j][i][2],2) + pow(yields_n_errs_2Gauss[j][i][2],2) + pow(yields_n_errs_MassUp[j][i][2],2) + pow(yields_n_errs_MassUp[j][i][2],2) + pow(yields_n_errs_BinUp[j][i][2],2) + pow(yields_n_errs_BinDown[j][i][2],2));
 			yields_n_errs[j][i][3] = sqrt(pow(yields_n_errs_Nominal[j][i][3],2) + pow(yields_n_errs_2Gauss[j][i][3],2) + pow(yields_n_errs_MassUp[j][i][3],2) + pow(yields_n_errs_MassUp[j][i][3],2) + pow(yields_n_errs_BinUp[j][i][3],2) + pow(yields_n_errs_BinDown[j][i][3],2));
+			*/
 		}
 	}
 

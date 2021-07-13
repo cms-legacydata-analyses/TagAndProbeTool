@@ -1,12 +1,9 @@
-#include "src/compare_efficiency.C"
-
 //Change if you need
 #include "src/dofits/DoFit_Jpsi.cpp"
 #include "src/dofits/DoFit_Jpsi_2xGaus_newsys.cpp"
 
 #include "src/create_folder.cpp"
-#include "src/get_efficiency.cpp"
-#include "src/change_bin.cpp"
+#include "src/save_efficiency.cpp"
 #include "src/make_hist.cpp"
 
 //Which Muon Id do you want to study?
@@ -17,9 +14,12 @@ string MuonId   = "trackerMuon";
 //bool should_loop_muon_id  = false;
 
 //Which quantity do you want to use?
-string quantity = "Pt";     double bins[] = {0., 2.0, 3.4, 4.0, 4.4, 4.7, 5.0, 5.6, 5.8, 6.0, 6.2, 6.4, 6.6, 6.8, 7.3, 9.5, 13.0, 17.0, 40.};
+//string quantity = "Pt";     double bins[] = {0., 2.0, 3.4, 4.0, 4.4, 4.7, 5.0, 5.6, 5.8, 6.0, 6.2, 6.4, 6.6, 6.8, 7.3, 9.5, 13.0, 17.0, 40.};
 //string quantity = "Eta";    double bins[] = {-2.4, -1.8, -1.4, -1.2, -1.0, -0.8, -0.5, -0.2, 0, 0.2, 0.5, 0.8, 1.0, 1.2, 1.4, 1.8, 2.4};
 //string quantity = "Phi";    double bins[] = {-3.0, -1.8, -1.6, -1.2, -1.0, -0.7, -0.4, -0.2, 0, 0.2, 0.4, 0.7, 1.0, 1.2, 1.6, 1.8, 3.0};
+
+string quantity = "Pt";     double bins[] = {0.0, 2.0, 3.4, 4.0, 5.0, 6.0, 8.0, 10.0, 40.};
+//string quantity = "Eta";    double bins[] = {0.0, 0.4, 0.6, 0.95, 1.2, 1.4, 1.6, 1.8, 2.1};
 
 void plot_sys_efficiency_manual()
 {
@@ -38,7 +38,7 @@ void plot_sys_efficiency_manual()
 	double** yields_n_errs_MassDown = new double*[bin_n];
 	double** yields_n_errs_BinUp    = new double*[bin_n];
 	double** yields_n_errs_BinDown  = new double*[bin_n];
-	double** yields_n_errs = new double*[bin_n];
+	double** yields_n_errs          = new double*[bin_n];
 
 	for (int i = 0; i < bin_n; i++)
 	{
@@ -103,52 +103,53 @@ void plot_sys_efficiency_manual()
 		prefix_file_name = "binfit95_";
 		yields_n_errs_BinDown[i] = doFit(conditions, MuonId, quantity, string(path_bins_fit_folder + prefix_file_name).c_str());
 
-
 		//Calculates the result
-		yields_n_errs[i][0] = yields_n_errs_Nominal[i][0];
-		yields_n_errs[i][1] = yields_n_errs_Nominal[i][1];
-		yields_n_errs[i][2] = sqrt(yields_n_errs_Nominal[i][2] + yields_n_errs_2Gauss[i][2] + yields_n_errs_MassUp[i][2] + yields_n_errs_MassUp[i][2] + yields_n_errs_BinUp[i][2] + yields_n_errs_BinDown[i][2]);
-		yields_n_errs[i][3] = sqrt(yields_n_errs_Nominal[i][3] + yields_n_errs_2Gauss[i][3] + yields_n_errs_MassUp[i][3] + yields_n_errs_MassUp[i][3] + yields_n_errs_BinUp[i][3] + yields_n_errs_BinDown[i][3]);
+		double* result = new double[4];
+		result[0] = yields_n_errs_Nominal[i][0];
+		result[1] = yields_n_errs_Nominal[i][1];
+		result[2] = sqrt(pow(yields_n_errs_Nominal[i][2],2) + pow(yields_n_errs_2Gauss[i][2],2) + pow(yields_n_errs_MassUp[i][2],2) + pow(yields_n_errs_MassUp[i][2],2) + pow(yields_n_errs_BinUp[i][2],2) + pow(yields_n_errs_BinDown[i][2],2));
+		result[3] = sqrt(pow(yields_n_errs_Nominal[i][3],2) + pow(yields_n_errs_2Gauss[i][3],2) + pow(yields_n_errs_MassUp[i][3],2) + pow(yields_n_errs_MassUp[i][3],2) + pow(yields_n_errs_BinUp[i][3],2) + pow(yields_n_errs_BinDown[i][3],2));
+		yields_n_errs[i] = result;
 	}
-	
-	TH1F *yield_ALL  = make_hist("all" , yields_n_errs, 0, bin_n, bins);
-	TH1F *yield_PASS = make_hist("pass", yields_n_errs, 1, bin_n, bins);
-	
-	//----------------------SAVING RESULTS TO Histograms.root--------------------//
-	//useful if we require to change the fit on a specific set of bins
-	TFile* EfficiencyFile = TFile::Open((string(path_bins_fit_folder) + "histograms.root").c_str(),"RECREATE");
-	yield_ALL->SetDirectory(gDirectory);
-	yield_PASS->SetDirectory(gDirectory);
-	EfficiencyFile->Write();
-	//-----------------------------------------------------------------//
-	
-	//If all of the fits seem correct we can proceed to generate the efficiency
-	get_efficiency(yield_ALL, yield_PASS, quantity, MuonId, prefix_file_name);
-	 
-	//In case you want to change the fit on a specific, comment the loop and "result saving" code and uncomment the following function
-	//change_bin(/*bin number you want to redo*/, /*condition (you can copy the title from the generated fit .png)*/, MuonId, quantity, init_conditions);
-	//bins start on 1
-}
 
-/*
-void loop_muon_id()
-{
-	for (int i = 0; i <= 2; i++)
-	{
-		switch(i)
-		{
-			case 0:
-				MuonId   = "trackerMuon";
-				break;
-			case 1:
-				MuonId   = "standaloneMuon";
-				break;
-			case 2:
-				MuonId   = "globalMuon";
-				break;
-		}		
-		
-		plot_sys_efficiency_manual();
-	}
+	//Path where is going to save efficiency 
+	string directoryToSave = string("results/efficiencies/") + output_folder_name + string("/");
+	create_folder(directoryToSave.c_str());
+
+	//Create file
+	string file_path = directoryToSave + quantity + "_" + MuonId + ".root";
+	TFile* generatedFile = new TFile(file_path.c_str(),"recreate");
+	generatedFile->mkdir("histograms/");
+	generatedFile->   cd("histograms/");
+	
+	TH1D *yield_all           = make_hist("all"          , yields_n_errs         , 0, bin_n, bins);
+	TH1D *yield_nominal_all   = make_hist("all_nominal"  , yields_n_errs_Nominal , 0, bin_n, bins);
+	TH1D *yield_2gaus_all     = make_hist("all_2xGauss"  , yields_n_errs_2Gauss  , 0, bin_n, bins);
+	TH1D *yield_massup_all    = make_hist("all_MassUp"   , yields_n_errs_MassUp  , 0, bin_n, bins);
+	TH1D *yield_massdown_all  = make_hist("all_MassDown" , yields_n_errs_MassDown, 0, bin_n, bins);
+	TH1D *yield_binup_all     = make_hist("all_BinUp"    , yields_n_errs_BinUp   , 0, bin_n, bins);
+	TH1D *yield_bindown_all   = make_hist("all_BinDown"  , yields_n_errs_BinDown , 0, bin_n, bins);
+
+	TH1D *yield_pass          = make_hist("pass"         , yields_n_errs         , 1, bin_n, bins);
+	TH1D *yield_2gaus_pass    = make_hist("pass_2xGauss" , yields_n_errs_Nominal , 1, bin_n, bins);
+	TH1D *yield_nominal_pass  = make_hist("pass_nominal" , yields_n_errs_2Gauss  , 1, bin_n, bins);
+	TH1D *yield_massup_pass   = make_hist("pass_MassUp"  , yields_n_errs_MassUp  , 1, bin_n, bins);
+	TH1D *yield_massdown_pass = make_hist("pass_MassDown", yields_n_errs_MassDown, 1, bin_n, bins);
+	TH1D *yield_binup_pass    = make_hist("pass_BinDown" , yields_n_errs_BinUp   , 1, bin_n, bins);
+	TH1D *yield_bindown_pass  = make_hist("pass_BinDown" , yields_n_errs_BinDown , 1, bin_n, bins);
+
+	generatedFile->   cd("/");
+	get_efficiency(yield_all         , yield_pass         , quantity, MuonId, ""        , true);
+	get_efficiency(yield_nominal_all , yield_2gaus_pass   , quantity, MuonId, "Nominal" , true);
+	get_efficiency(yield_2gaus_all   , yield_nominal_pass , quantity, MuonId, "2xGauss" , true);
+	get_efficiency(yield_massup_all  , yield_massup_pass  , quantity, MuonId, "MassUp"  , true);
+	get_efficiency(yield_massdown_all, yield_massdown_pass, quantity, MuonId, "MassDown", true);
+	get_efficiency(yield_binup_all   , yield_binup_pass   , quantity, MuonId, "BinUp"   , true);
+	get_efficiency(yield_bindown_all , yield_bindown_pass , quantity, MuonId, "BinDOwn" , true);
+
+	generatedFile->Write();
+
+	cout << "\n------------------------\n";
+	cout << "Output: " << file_path;
+	cout << "\n------------------------\n";
 }
-*/

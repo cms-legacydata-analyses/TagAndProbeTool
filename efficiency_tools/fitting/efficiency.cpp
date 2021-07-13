@@ -1,4 +1,4 @@
-#include "src/compare_efficiency.C"
+#include "src/compare_efficiency.cpp"
 
 //Change if you need
 #include "src/dofits/DoFit_Jpsi.cpp"
@@ -12,17 +12,20 @@ double default_max = _mmax;
 #include "src/make_hist.cpp"
 
 //Which Muon Id do you want to study?
-//string MuonId   = "trackerMuon";
+string MuonId   = "trackerMuon";
 //string MuonId   = "standaloneMuon";
-string MuonId   = "globalMuon";
-
-bool should_loop_muon_id  = false;
-bool should_loop_settings = false;
+//string MuonId   = "globalMuon";
 
 //Which quantity do you want to use?
-string quantity = "Pt";     double bins[] = {0., 2.0, 3.4, 4.0, 4.4, 4.7, 5.0, 5.6, 5.8, 6.0, 6.2, 6.4, 6.6, 6.8, 7.3, 9.5, 13.0, 17.0, 40.};
+//string quantity = "Pt";     double bins[] = {0., 2.0, 3.4, 4.0, 4.4, 4.7, 5.0, 5.6, 5.8, 6.0, 6.2, 6.4, 6.6, 6.8, 7.3, 9.5, 13.0, 17.0, 40.};
 //string quantity = "Eta";    double bins[] = {-2.4, -1.8, -1.4, -1.2, -1.0, -0.8, -0.5, -0.2, 0, 0.2, 0.5, 0.8, 1.0, 1.2, 1.4, 1.8, 2.4};
 //string quantity = "Phi";    double bins[] = {-3.0, -1.8, -1.6, -1.2, -1.0, -0.7, -0.4, -0.2, 0, 0.2, 0.4, 0.7, 1.0, 1.2, 1.6, 1.8, 3.0};
+
+string quantity = "Pt";     double bins[] = {0.0, 2.0, 3.4, 4.0, 5.0, 6.0, 8.0, 10.0, 40.};
+//string quantity = "Eta";    double bins[] = {0.0, 0.4, 0.6, 0.95, 1.2, 1.4, 1.6, 1.8, 2.1};
+
+bool should_loop_muon_id  = false;
+bool should_loop_settings = true;
 
 void efficiency_calculus()
 {
