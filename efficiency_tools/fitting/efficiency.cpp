@@ -1,11 +1,8 @@
-#include "src/compare_efficiency.cpp"
-
 //Change if you need
-#include "src/dofits/DoFit_Upsilon.cpp"
+#include "src/dofits/DoFit_Jpsi.cpp"
 
 #include "src/create_folder.cpp"
 #include "src/get_efficiency.cpp"
-#include "src/change_bin.cpp"
 #include "src/make_hist.cpp"
 
 //Which Muon Id do you want to study?
@@ -46,26 +43,25 @@ void efficiency()
 	//Create file
 	string file_path = directoryToSave + quantity + "_" + MuonId + ".root";
 	TFile* generatedFile = new TFile(file_path.c_str(),"recreate");
+	
+	//Create histograms
 	generatedFile->mkdir("histograms/");
 	generatedFile->   cd("histograms/");
-	
 	TH1D *yield_all  = make_hist("ALL" , yields_n_errs, 0, bin_n, bins);
 	TH1D *yield_pass = make_hist("PASS", yields_n_errs, 1, bin_n, bins);
 	
+	//Create efficiencies
 	generatedFile->   cd("/");
 	get_efficiency(yield_all, yield_pass, quantity, MuonId, "", true);
-	 
-	//In case you want to change the fit on a specific, comment the loop and "result saving" code and uncomment the following function
-	//change_bin(/*bin number you want to redo*/, /*condition (you can copy the title from the generated fit .png)*/, MuonId, quantity, init_conditions);
-	//bins start on 1
+
+	//Write file
+	generatedFile->Write();
 
 	cout << "\n[Settings]\n";
 	cout << output_folder_name << " "<< MuonId << " " << quantity << "\n";
 	cout << "Fitting:     " << fit_functions << "\n";
 	cout << "Fit between: " << _mmin << " and " << _mmax << " GeV\n";
 	cout << "Bins:        " << fit_bins << "\n";
-
-	generatedFile->Write();
 
 	cout << "\n------------------------\n";
 	cout << "Output: " << file_path;
