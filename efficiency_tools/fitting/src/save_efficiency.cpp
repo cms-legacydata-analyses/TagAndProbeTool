@@ -23,10 +23,16 @@ TEfficiency* get_efficiency(TH1D* ALL, TH1D* PASS, string quantity, string MuonI
 
 	//Set plot config
 	if (prefix_name != "")
+	{
 		pEff->SetName(string(MuonId + "_" + quantity + "_" + prefix_name + "_Efficiency").c_str());
+		pEff->SetTitle(string("Efficiency for " + MuonId + " " + quantity + " (" + prefix_name + ")").c_str());
+	}
 	else
+	{
 		pEff->SetName(string(MuonId + "_" + quantity + "_Efficiency").c_str());
-	pEff->SetTitle(string("Efficiency for " + MuonId + " " + quantity + " (" + prefix_name + ")").c_str());
+		pEff->SetTitle(string("Efficiency for " + MuonId + " " + quantity).c_str());
+	}
+
 	pEff->SetLineColor(kBlack);
 	pEff->SetMarkerStyle(21);
 	pEff->SetMarkerSize(0.5);

@@ -16,9 +16,9 @@ string MuonId   = "trackerMuon";
 //Which quantity do you want to use?
 string quantity1 = "Pt";
 //double bins1[] = {0., 2.0, 3.4, 4.0, 4.4, 4.7, 5.0, 5.6, 5.8, 6.0, 6.2, 6.4, 6.6, 6.8, 7.3, 9.5, 13.0, 17.0, 40.};
-double bins1[] = {0.0, 2.0, 3.4, 4.0, 5.0, 6.0, 8.0, 10.0, 40.};
+double bins1[] = {0.0, 3.4, 4.0, 5.0, 6.0, 8.0, 10.0, 40.};
 string quantity2 = "Eta";
-double bins2[] = {0.0, 0.4, 0.6, 0.95, 1.2, 1.4, 1.6, 1.8, 2.1};
+double bins2[] = {0.0, 0.4, 0.6, 0.95, 1.2, 1.4, 1.6, 2.1};
 //double bins2[] = {0.0, 2., 3.};
 //double bins2[] = {-2.4, -1.8, -1.4, -1.2, -1.0, -0.8, -0.5, -0.2, 0, 0.2, 0.5, 0.8, 1.0, 1.2, 1.4, 1.8, 2.4};
 //string quantity = "Phi";    double bins[] = {-3.0, -1.8, -1.6, -1.2, -1.0, -0.7, -0.4, -0.2, 0, 0.2, 0.4, 0.7, 1.0, 1.2, 1.6, 1.8, 3.0};
@@ -41,16 +41,17 @@ void plot_sys_efficiency_2d()
 	double* yields_n_errs_MassDown [bin_n2][bin_n1] = {0};
 	double* yields_n_errs_BinUp    [bin_n2][bin_n1] = {0};
 	double* yields_n_errs_BinDown  [bin_n2][bin_n1] = {0};
-	double* yields_n_errs          [bin_n2][bin_n1] = {0};
 
-	cout << "Bins1: " << bin_n1 << "\n";
-	cout << "Bins2: " << bin_n2 << "\n";
+
+	double yields_final_pass[bin_n2][bin_n1];
+	double yields_final_all [bin_n2][bin_n1];
+	double errors_final_pass[bin_n2][bin_n1];
+	double errors_final_all [bin_n2][bin_n1];
 
 	for (int j = 0; j < bin_n2; j++)
 	{
 		for (int i = 0; i < bin_n1; i++)
 		{
-			cout << "Starting " << j << "," << i << "\n";
 			//Creates conditions
 			string conditions = string(    "ProbeMuon_" + quantity1 + ">" + to_string(bins1[i]  ));
 			conditions +=       string(" && ProbeMuon_" + quantity1 + "<" + to_string(bins1[i+1]));
@@ -74,8 +75,7 @@ void plot_sys_efficiency_2d()
 			_mmax = default_max;
 			fit_bins = 100;
 			prefix_file_name = "2xgaus_";
-			//yields_n_errs_2Gauss[j][i] = doFit2xGaus(conditions, MuonId, quantity1, quantity2, string(path_bins_fit_folder + prefix_file_name).c_str());
-			yields_n_errs_2Gauss[j][i] = doFit(conditions, MuonId, quantity1, quantity2, string(path_bins_fit_folder + prefix_file_name).c_str());
+			yields_n_errs_2Gauss[j][i] = doFit2xGaus(conditions, MuonId, quantity1, quantity2, string(path_bins_fit_folder + prefix_file_name).c_str());
 
 			//MassUp
 			_mmin = default_min - 0.05;
@@ -115,33 +115,58 @@ void plot_sys_efficiency_2d()
 			prefix_file_name = "binfit95_";
 			yields_n_errs_BinDown[j][i] = doFit(conditions, MuonId, quantity1, quantity2, string(path_bins_fit_folder + prefix_file_name).c_str());
 
-
-			//Calculates the result
 			/*
-			yields_n_errs[j][i][0] = yields_n_errs_Nominal[j][i][0];
-			yields_n_errs[j][i][1] = yields_n_errs_Nominal[j][i][1];
-			yields_n_errs[j][i][2] = sqrt(pow(yields_n_errs_Nominal[j][i][2],2) + pow(yields_n_errs_2Gauss[j][i][2],2) + pow(yields_n_errs_MassUp[j][i][2],2) + pow(yields_n_errs_MassUp[j][i][2],2) + pow(yields_n_errs_BinUp[j][i][2],2) + pow(yields_n_errs_BinDown[j][i][2],2));
-			yields_n_errs[j][i][3] = sqrt(pow(yields_n_errs_Nominal[j][i][3],2) + pow(yields_n_errs_2Gauss[j][i][3],2) + pow(yields_n_errs_MassUp[j][i][3],2) + pow(yields_n_errs_MassUp[j][i][3],2) + pow(yields_n_errs_BinUp[j][i][3],2) + pow(yields_n_errs_BinDown[j][i][3],2));
+			//Calculates the result
+			double* result = new double[4];
+			result[0] = yields_n_errs_Nominal[j][i][0];
+			result[1] = yields_n_errs_Nominal[j][i][1];
+			result[2] = sqrt(pow(yields_n_errs_Nominal[j][i][2],2) + pow(yields_n_errs_2Gauss[j][i][2],2) + pow(yields_n_errs_MassUp[j][i][2],2) + pow(yields_n_errs_MassUp[j][i][2],2) + pow(yields_n_errs_BinUp[j][i][2],2) + pow(yields_n_errs_BinDown[j][i][2],2));
+			result[3] = sqrt(pow(yields_n_errs_Nominal[j][i][3],2) + pow(yields_n_errs_2Gauss[j][i][3],2) + pow(yields_n_errs_MassUp[j][i][3],2) + pow(yields_n_errs_MassUp[j][i][3],2) + pow(yields_n_errs_BinUp[j][i][3],2) + pow(yields_n_errs_BinDown[j][i][3],2));
+			yields_n_errs[j][i] = result;
 			*/
+			yields_final_pass[j][i] = yields_n_errs_Nominal[j][i][0];
+			yields_final_all [j][i] = yields_n_errs_Nominal[j][i][0];
+			errors_final_pass[j][i] = sqrt(pow(yields_n_errs_Nominal[j][i][2],2) + pow(yields_n_errs_2Gauss[j][i][2],2) + pow(yields_n_errs_MassUp[j][i][2],2) + pow(yields_n_errs_MassUp[j][i][2],2) + pow(yields_n_errs_BinUp[j][i][2],2) + pow(yields_n_errs_BinDown[j][i][2],2));
+			errors_final_all [j][i] = sqrt(pow(yields_n_errs_Nominal[j][i][3],2) + pow(yields_n_errs_2Gauss[j][i][3],2) + pow(yields_n_errs_MassUp[j][i][3],2) + pow(yields_n_errs_MassUp[j][i][3],2) + pow(yields_n_errs_BinUp[j][i][3],2) + pow(yields_n_errs_BinDown[j][i][3],2));
+
 		}
 	}
 
-	cout << "{\n";
-	//Print
-	for (int j = 0; j < bin_n2; j++)
+	//Path where is going to save efficiency
+	string directoryToSave = string("results/efficiencies/") + output_folder_name + string("/");
+	create_folder(directoryToSave.c_str());
+
+	//Create file
+	string file_path = directoryToSave + quantity1 + "_" + quantity2 + "_" + MuonId + ".root";
+	TFile* generatedFile = new TFile(file_path.c_str(),"recreate");
+	generatedFile->mkdir("histograms/");
+	generatedFile->   cd("histograms/");
+	
+	TH2D* hpass = new TH2D("Pass Final", "pass_final", bin_n2, bins1, bin_n1, bins2);
+	
+	for (int i = 0; i < bin_n2; i++)
 	{
-		string conditions2 = string(" && abs(ProbeMuon_" + quantity2 + ")>" + to_string(bins2[j]  ));
-		conditions2 +=       string(" && abs(ProbeMuon_" + quantity2 + ")<" + to_string(bins2[j+1]));
-		cout << "\t\"" << conditions2 << "\": {\n";
-		for (int i = 0; i < bin_n1; i++)
+		for (int j = 0; j < bin_n1; j++)
 		{
-			string conditions1 = string(    "ProbeMuon_" + quantity1 + ">" + to_string(bins1[i]  ));
-			conditions1 +=       string(" && ProbeMuon_" + quantity1 + "<" + to_string(bins1[i+1]));
-			cout << "\t\t{\"" << conditions1 << "\": [" << yields_n_errs[j][i][0] << ",";
-			cout << yields_n_errs[j][i][1] << ",";
-			cout << yields_n_errs[j][i][2] << ",";
-			cout << yields_n_errs[j][i][3] << "]},\n";
+			hpass->SetBinContent(i,j,yields_final_pass[i][j]);
+			hpass->SetBinError  (i,j,errors_final_pass[i][j]);
 		}
-		cout << "\t},\n";
 	}
+
+	TH2D* hall = new TH2D("All Final", "all_final", bin_n2, bins1, bin_n1, bins2);
+	
+	for (int i = 0; i < bin_n2; i++)
+	{
+		for (int j = 0; j < bin_n1; j++)
+		{
+			hall->SetBinContent(i,j,yields_final_pass[i][j]);
+			hall->SetBinError  (i,j,errors_final_pass[i][j]);
+		}
+	}
+
+	generatedFile->Write();
+
+	cout << "\n------------------------\n";
+	cout << "Output: " << file_path;
+	cout << "\n------------------------\n";
 }

@@ -1,6 +1,6 @@
 
 
-TEfficiency* get_efficiency(TH1F* ALL, TH1F* PASS, string quantity, string MuonId, string prefix_file_name = "")
+TEfficiency* get_efficiency(TH1D* ALL, TH1D* PASS, string quantity, string MuonId, string prefix_file_name = "")
 {
 	//Path where is going to save efficiency 
 	string directoryToSave = string("results/efficiencies/") + output_folder_name + string("/");

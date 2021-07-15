@@ -18,8 +18,8 @@ string MuonId   = "trackerMuon";
 //string quantity = "Eta";    double bins[] = {-2.4, -1.8, -1.4, -1.2, -1.0, -0.8, -0.5, -0.2, 0, 0.2, 0.5, 0.8, 1.0, 1.2, 1.4, 1.8, 2.4};
 //string quantity = "Phi";    double bins[] = {-3.0, -1.8, -1.6, -1.2, -1.0, -0.7, -0.4, -0.2, 0, 0.2, 0.4, 0.7, 1.0, 1.2, 1.6, 1.8, 3.0};
 
-string quantity = "Pt";     double bins[] = {0.0, 2.0, 3.4, 4.0, 5.0, 6.0, 8.0, 10.0, 40.};
-//string quantity = "Eta";    double bins[] = {0.0, 0.4, 0.6, 0.95, 1.2, 1.4, 1.6, 1.8, 2.1};
+//string quantity = "Pt";     double bins[] = {0.0, 2.0, 3.4, 4.0, 5.0, 6.0, 8.0, 10.0, 40.};
+string quantity = "Eta";    double bins[] = {0.0, 0.4, 0.6, 0.95, 1.2, 1.4, 1.6, 1.8, 2.1};
 
 void plot_sys_efficiency_manual()
 {
@@ -145,7 +145,7 @@ void plot_sys_efficiency_manual()
 	get_efficiency(yield_massup_all  , yield_massup_pass  , quantity, MuonId, "MassUp"  , true);
 	get_efficiency(yield_massdown_all, yield_massdown_pass, quantity, MuonId, "MassDown", true);
 	get_efficiency(yield_binup_all   , yield_binup_pass   , quantity, MuonId, "BinUp"   , true);
-	get_efficiency(yield_bindown_all , yield_bindown_pass , quantity, MuonId, "BinDOwn" , true);
+	get_efficiency(yield_bindown_all , yield_bindown_pass , quantity, MuonId, "BinDown" , true);
 
 	generatedFile->Write();
 
