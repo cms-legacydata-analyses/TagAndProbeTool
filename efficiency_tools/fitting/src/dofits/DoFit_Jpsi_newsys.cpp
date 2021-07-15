@@ -4,9 +4,11 @@ using namespace RooFit;
 const char* output_folder_name = "Jpsi_Run_2011";
 
 //Header of this function
-const char* fit_functions = "Gaussian + CrystalBall + Chebychev";
 double _mmin = 2.8;  double _mmax = 3.3;
-double fit_bins = 0;
+double fit_bins = 0; //Let it 0 if dont want to change
+
+// Information for output at the end of run
+const char* fit_functions = "Gaussian + CrystalBall + Chebychev";
 string prefix_file_name = "";
 
 double* doFit(string condition, string MuonId, const char* savePath = NULL) // RETURNS ARRAY WITH [yield_all, yield_pass, err_all, err_pass]    ->   OUTPUT ARRAY

@@ -4,12 +4,12 @@ void change_bin(int bin_iD, string condition, string MuonId, string quantity, st
 {
 	TFile *_file0 = TFile::Open(hist_file.c_str());
 	
-	TH1F *hist_all  = (TH1F*)_file0->Get("ALL");
-	TH1F *hist_pass = (TH1F*)_file0->Get("PASS");
+	TH1D *hist_all  = (TH1D*)_file0->Get("ALL");
+	TH1D *hist_pass = (TH1D*)_file0->Get("PASS");
 	
 	double * values = new double[4];
 	
-	values = doFit(condition, MuonId, quantity);
+	values = doFit(condition, quantity);
 	
 	hist_all->SetBinContent(bin_iD, values[0]);
 	hist_all->SetBinError(bin_iD, values[2]);

@@ -4,20 +4,19 @@ using namespace RooFit;
 const char* output_folder_name = "Jpsi_Run_2011";
 
 //Header of this function
-const char* fit_functions = "Gaussian + CrystalBall + Chebychev";
 double _mmin = 2.8;  double _mmax = 3.3;
-double fit_bins = 0;
+double fit_bins = 0; //Let it 0 if dont want to change
+
+// Information for output at the end of run
+const char* fit_functions = "Gaussian + CrystalBall + Chebychev";
 string prefix_file_name = "";
 
-double* doFit(string condition, string MuonId, string quant, const char* savePath = NULL) // RETURNS ARRAY WITH [yield_all, yield_pass, err_all, err_pass]    ->   OUTPUT ARRAY
+double* doFit(string condition, string MuonId, const char* savePath = NULL) // RETURNS ARRAY WITH [yield_all, yield_pass, err_all, err_pass]
 {
 	string MuonId_str = "";
-	if (MuonId == "trackerMuon")
-		MuonId_str = "PassingProbeTrackingMuon";
-	if (MuonId == "standaloneMuon")
-		MuonId_str = "PassingProbeStandAloneMuon";
-	if (MuonId == "globalMuon")
-		MuonId_str = "PassingProbeGlobalMuon";
+	if      (MuonId == "trackerMuon")    MuonId_str = "PassingProbeTrackingMuon";
+	else if (MuonId == "standaloneMuon") MuonId_str = "PassingProbeStandAloneMuon";
+	else if (MuonId == "globalMuon")     MuonId_str = "PassingProbeGlobalMuon";
 	
 	TFile *file0       = TFile::Open("DATA/TagAndProbe_Jpsi_Run2011.root");
 	TTree *DataTree    = (TTree*)file0->Get(("tagandprobe"));
@@ -28,30 +27,19 @@ double* doFit(string condition, string MuonId, string quant, const char* savePat
 	if (fit_bins != 0)
 		InvariantMass.setBins(fit_bins);
 	fit_bins = InvariantMass.getBinning().numBins();
-	
-	double* limits = new double[2];
-	if (quant == "Pt") {
-		limits[0] = 0;
-		limits[1] = 40;
-	}
-	if (quant == "Eta") {
-		limits[0] = -3;
-		limits[1] = 3;
-	}
-	if (quant == "Phi") {
-		limits[0] = -2;
-		limits[1] = 2;
-	}
-	RooRealVar quantity(("ProbeMuon_" + quant).c_str(), ("ProbeMuon_" + quant).c_str(), limits[0], limits[1]);
-	
-	RooFormulaVar* redeuce = new RooFormulaVar("PPTM", condition.c_str(), RooArgList(quantity));
-	RooDataSet *Data_ALL    = new RooDataSet("DATA", "DATA", DataTree, RooArgSet(InvariantMass, MuonId_var, quantity),*redeuce);
 
-	RooFormulaVar* cutvar = new RooFormulaVar("PPTM", (condition + " && " + MuonId_str + " == 1").c_str() , RooArgList(MuonId_var, quantity));
-	RooDataSet *Data_PASSING = new RooDataSet("DATA_PASS", "DATA_PASS", DataTree, RooArgSet(InvariantMass, MuonId_var, quantity), *cutvar);
+	RooRealVar quantityPt("ProbeMuon_Pt", "ProbeMuon_Pt", 0., 40.);
+	RooRealVar quantityEta("ProbeMuon_Eta", "ProbeMuon_Eta", -2.4, 2.4);
+	RooRealVar quantityPhi("ProbeMuon_Phi", "ProbeMuon_Phi", -TMath::Pi(), TMath::Pi());
+
+	RooFormulaVar* redeuce   = new RooFormulaVar("PPTM_cond", condition.c_str(), RooArgList(quantityPt, quantityEta, quantityPhi));
+	RooDataSet *Data_ALL     = new RooDataSet("DATA", "DATA", DataTree, RooArgSet(InvariantMass, MuonId_var, quantityPt, quantityEta, quantityPhi),*redeuce);
+
+	RooFormulaVar* cutvar    = new RooFormulaVar("PPTM_mounid", (MuonId_str + "==1").c_str(), RooArgList(MuonId_var));
+	RooDataSet *Data_PASSING = new RooDataSet("DATA_PASS", "DATA_PASS", Data_ALL, RooArgSet(InvariantMass, MuonId_var, quantityPt, quantityEta, quantityPhi), *cutvar);
 	
-	RooDataHist* dh_ALL     = Data_ALL->binnedClone();
-	RooDataHist* dh_PASSING = Data_PASSING->binnedClone();
+	RooDataHist* dh_ALL     = new RooDataHist(Data_ALL->GetName(),    Data_ALL->GetTitle(),     RooArgSet(InvariantMass), *Data_ALL);
+	RooDataHist* dh_PASSING = new RooDataHist(Data_PASSING->GetName(),Data_PASSING->GetTitle(), RooArgSet(InvariantMass), *Data_PASSING);
 	
 	TCanvas* c_all  = new TCanvas;
 	TCanvas* c_pass = new TCanvas;
@@ -162,8 +150,6 @@ double* doFit(string condition, string MuonId, string quant, const char* savePat
 	}
 		
 	// DELETING ALLOCATED MEMORY
-	delete[] limits;
-	//
 	delete file0;
 	//
 	delete Data_ALL;
