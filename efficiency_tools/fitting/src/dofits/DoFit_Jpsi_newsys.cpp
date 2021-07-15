@@ -9,7 +9,7 @@ double _mmin = 2.8;  double _mmax = 3.3;
 double fit_bins = 0;
 string prefix_file_name = "";
 
-double* doFit(string condition, string MuonId, string quant1, string quant2, const char* savePath = NULL) // RETURNS ARRAY WITH [yield_all, yield_pass, err_all, err_pass]    ->   OUTPUT ARRAY
+double* doFit(string condition, string MuonId, const char* savePath = NULL) // RETURNS ARRAY WITH [yield_all, yield_pass, err_all, err_pass]    ->   OUTPUT ARRAY
 {
 	string MuonId_str = "";
 	if (MuonId == "trackerMuon")

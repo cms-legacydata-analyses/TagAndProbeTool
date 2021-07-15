@@ -1,6 +1,6 @@
 using namespace RooFit;
 
-double* doFit2xGaus(string condition, string MuonId, string quant1, string quant2, const char* savePath = NULL) // RETURNS ARRAY WITH [yield_all, yield_pass, err_all, err_pass]    ->   OUTPUT ARRAY
+double* doFit2xGaus(string condition, string MuonId, const char* savePath = NULL) // RETURNS ARRAY WITH [yield_all, yield_pass, err_all, err_pass]    ->   OUTPUT ARRAY
 {
 	string MuonId_str = "";
 	if (MuonId == "trackerMuon")
