@@ -125,7 +125,7 @@ void plot_sys_efficiency_2d()
 			yields_n_errs[j][i] = result;
 			*/
 			yields_final_pass[j][i] = yields_n_errs_Nominal[j][i][0];
-			yields_final_all [j][i] = yields_n_errs_Nominal[j][i][0];
+			yields_final_all [j][i] = yields_n_errs_Nominal[j][i][1];
 			errors_final_pass[j][i] = sqrt(pow(yields_n_errs_Nominal[j][i][2],2) + pow(yields_n_errs_2Gauss[j][i][2],2) + pow(yields_n_errs_MassUp[j][i][2],2) + pow(yields_n_errs_MassUp[j][i][2],2) + pow(yields_n_errs_BinUp[j][i][2],2) + pow(yields_n_errs_BinDown[j][i][2],2));
 			errors_final_all [j][i] = sqrt(pow(yields_n_errs_Nominal[j][i][3],2) + pow(yields_n_errs_2Gauss[j][i][3],2) + pow(yields_n_errs_MassUp[j][i][3],2) + pow(yields_n_errs_MassUp[j][i][3],2) + pow(yields_n_errs_BinUp[j][i][3],2) + pow(yields_n_errs_BinDown[j][i][3],2));
 
@@ -141,9 +141,8 @@ void plot_sys_efficiency_2d()
 	TFile* generatedFile = new TFile(file_path.c_str(),"recreate");
 	generatedFile->mkdir("histograms/");
 	generatedFile->   cd("histograms/");
-	
+
 	TH2D* hpass = new TH2D("Pass Final", "pass_final", bin_n2, bins1, bin_n1, bins2);
-	
 	for (int i = 0; i < bin_n2; i++)
 	{
 		for (int j = 0; j < bin_n1; j++)
@@ -154,13 +153,12 @@ void plot_sys_efficiency_2d()
 	}
 
 	TH2D* hall = new TH2D("All Final", "all_final", bin_n2, bins1, bin_n1, bins2);
-	
 	for (int i = 0; i < bin_n2; i++)
 	{
 		for (int j = 0; j < bin_n1; j++)
 		{
-			hall->SetBinContent(i,j,yields_final_pass[i][j]);
-			hall->SetBinError  (i,j,errors_final_pass[i][j]);
+			hall->SetBinContent(i,j,yields_final_all[i][j]);
+			hall->SetBinError  (i,j,errors_final_all[i][j]);
 		}
 	}
 
