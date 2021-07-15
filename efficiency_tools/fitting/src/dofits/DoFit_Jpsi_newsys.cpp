@@ -30,8 +30,8 @@ double* doFit(string condition, string MuonId, const char* savePath = NULL) // R
 	fit_bins = InvariantMass.getBinning().numBins();
 
 	RooRealVar quantityPt("ProbeMuon_Pt", "ProbeMuon_Pt", 0., 40.);
-	RooRealVar quantityEta("ProbeMuon_Eta", "ProbeMuon_Eta", -2.1, 2.1);
-	RooRealVar quantityPhi("ProbeMuon_Phi", "ProbeMuon_Phi", -3., 3.);
+	RooRealVar quantityEta("ProbeMuon_Eta", "ProbeMuon_Eta", -2.4, 2.4);
+	RooRealVar quantityPhi("ProbeMuon_Phi", "ProbeMuon_Phi", -TMath::Pi(), TMath::Pi());
 
 	RooFormulaVar* redeuce   = new RooFormulaVar("PPTM_cond", condition.c_str(), RooArgList(quantityPt, quantityEta, quantityPhi));
 	RooDataSet *Data_ALL     = new RooDataSet("DATA", "DATA", DataTree, RooArgSet(InvariantMass, MuonId_var, quantityPt, quantityEta, quantityPhi),*redeuce);
