@@ -1,6 +1,6 @@
 //Change if you need
 #include "src/dofits/DoFit_Jpsi.cpp"
-#include "src/dofits/DoFit_Jpsi_2xGaus_newsys.cpp"
+#include "src/dofits/DoFit_Jpsi_2xGaus_for_systematic.cpp"
 
 #include "src/create_folder.cpp"
 #include "src/get_efficiency.cpp"
