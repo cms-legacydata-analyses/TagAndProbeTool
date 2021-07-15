@@ -3,8 +3,7 @@
 #include "src/dofits/DoFit_Jpsi_2xGaus_newsys.cpp"
 
 #include "src/create_folder.cpp"
-#include "src/get_efficiency.cpp"
-#include "src/make_hist.cpp"
+#include "src/create_TH2D.cpp"
 
 //Which Muon Id do you want to study?
 string MuonId   = "trackerMuon";
@@ -18,8 +17,7 @@ string quantity1 = "Pt";
 //double bins1[] = {0., 2.0, 3.4, 4.0, 4.4, 4.7, 5.0, 5.6, 5.8, 6.0, 6.2, 6.4, 6.6, 6.8, 7.3, 9.5, 13.0, 17.0, 40.};
 double bins1[] = {0.0, 3.4, 4.0, 5.0, 6.0, 8.0, 40.};
 string quantity2 = "Eta";
-double bins2[] = {0.0, 0.4, 0.6, 0.95, 1.2, 1.4, 2.1};
-//double bins2[] = {0.0, 2., 3.};
+double bins2[] = {0.0, 0.4, 0.6, 0.95, 1.2, 1.4, 2.4};
 //double bins2[] = {-2.4, -1.8, -1.4, -1.2, -1.0, -0.8, -0.5, -0.2, 0, 0.2, 0.5, 0.8, 1.0, 1.2, 1.4, 1.8, 2.4};
 //string quantity = "Phi";    double bins[] = {-3.0, -1.8, -1.6, -1.2, -1.0, -0.7, -0.4, -0.2, 0, 0.2, 0.4, 0.7, 1.0, 1.2, 1.6, 1.8, 3.0};
 
@@ -43,13 +41,25 @@ void plot_sys_efficiency_2d()
 	double* yields_n_errs_BinDown  [bin_n2][bin_n1] = {0};
 
 
+	/*
 	double yields_final_pass[bin_n2][bin_n1];
 	double yields_final_all [bin_n2][bin_n1];
 	double errors_final_pass[bin_n2][bin_n1];
 	double errors_final_all [bin_n2][bin_n1];
+	*/
+
+	double** yields_final_pass = new double*[bin_n2];
+	double** yields_final_all  = new double*[bin_n2];
+	double** errors_final_pass = new double*[bin_n2];
+	double** errors_final_all  = new double*[bin_n2];
 
 	for (int j = 0; j < bin_n2; j++)
 	{
+		yields_final_pass[j] = new double[bin_n1];
+		yields_final_all [j] = new double[bin_n1];
+		errors_final_pass[j] = new double[bin_n1];
+		errors_final_all [j] = new double[bin_n1];
+
 		for (int i = 0; i < bin_n1; i++)
 		{
 			//Creates conditions
@@ -115,15 +125,7 @@ void plot_sys_efficiency_2d()
 			prefix_file_name = "binfit95_";
 			yields_n_errs_BinDown[j][i] = doFit(conditions, MuonId, string(path_bins_fit_folder + prefix_file_name).c_str());
 
-			/*
 			//Calculates the result
-			double* result = new double[4];
-			result[0] = yields_n_errs_Nominal[j][i][0];
-			result[1] = yields_n_errs_Nominal[j][i][1];
-			result[2] = sqrt(pow(yields_n_errs_Nominal[j][i][2],2) + pow(yields_n_errs_2Gauss[j][i][2],2) + pow(yields_n_errs_MassUp[j][i][2],2) + pow(yields_n_errs_MassUp[j][i][2],2) + pow(yields_n_errs_BinUp[j][i][2],2) + pow(yields_n_errs_BinDown[j][i][2],2));
-			result[3] = sqrt(pow(yields_n_errs_Nominal[j][i][3],2) + pow(yields_n_errs_2Gauss[j][i][3],2) + pow(yields_n_errs_MassUp[j][i][3],2) + pow(yields_n_errs_MassUp[j][i][3],2) + pow(yields_n_errs_BinUp[j][i][3],2) + pow(yields_n_errs_BinDown[j][i][3],2));
-			yields_n_errs[j][i] = result;
-			*/
 			yields_final_pass[j][i] = yields_n_errs_Nominal[j][i][0];
 			yields_final_all [j][i] = yields_n_errs_Nominal[j][i][1];
 			errors_final_pass[j][i] = sqrt(pow(yields_n_errs_Nominal[j][i][2],2) + pow(yields_n_errs_2Gauss[j][i][2],2) + pow(yields_n_errs_MassUp[j][i][2],2) + pow(yields_n_errs_MassUp[j][i][2],2) + pow(yields_n_errs_BinUp[j][i][2],2) + pow(yields_n_errs_BinDown[j][i][2],2));
@@ -142,25 +144,8 @@ void plot_sys_efficiency_2d()
 	generatedFile->mkdir("histograms/");
 	generatedFile->   cd("histograms/");
 
-	TH2D* hpass = new TH2D("Pass Final", "pass_final", bin_n2, bins1, bin_n1, bins2);
-	for (int i = 0; i < bin_n2; i++)
-	{
-		for (int j = 0; j < bin_n1; j++)
-		{
-			hpass->SetBinContent(i,j,yields_final_pass[i][j]);
-			hpass->SetBinError  (i,j,errors_final_pass[i][j]);
-		}
-	}
-
-	TH2D* hall = new TH2D("All Final", "all_final", bin_n2, bins1, bin_n1, bins2);
-	for (int i = 0; i < bin_n2; i++)
-	{
-		for (int j = 0; j < bin_n1; j++)
-		{
-			hall->SetBinContent(i,j,yields_final_all[i][j]);
-			hall->SetBinError  (i,j,errors_final_all[i][j]);
-		}
-	}
+	create_TH2D("pass_systematic", "Pass Systematic", quantity1, quantity2, bin_n1, bin_n2, bins1, bins2, yields_final_pass, errors_final_pass);
+	create_TH2D("all_systematic",  "All Systematic",  quantity1, quantity2, bin_n1, bin_n2, bins1, bins2, yields_final_all,  errors_final_all);
 
 	generatedFile->Write();
 

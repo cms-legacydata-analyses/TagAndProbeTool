@@ -10,19 +10,9 @@ TEfficiency* get_efficiency(TH1D* ALL, TH1D* PASS, string quantity, string MuonI
 	string file_path = directoryToSave + prefix_file_name + quantity + "_" + MuonId + ".root";
 
 	//Set axis title for efficiency plot
-	ALL->GetYaxis()->SetTitle("Efficiency");
-	if (quantity == "Pt")
-	{
-		ALL->GetXaxis()->SetTitle("p_{t} [GeV/c]");
-	}
-	else if (quantity == "Eta")
-	{
-		ALL->GetXaxis()->SetTitle("#eta");
-	}
-	else if (quantity == "Phi")
-	{
-		ALL->GetXaxis()->SetTitle("rad");
-	}
+	if      (quantity == "Pt" ) ALL->GetXaxis()->SetTitle("p_{t} [GeV/c]");
+	else if (quantity == "Eta") ALL->GetXaxis()->SetTitle("#eta");
+	else if (quantity == "Phi") ALL->GetXaxis()->SetTitle("rad");
 	
 	TEfficiency* pEff = new TEfficiency();
 	pEff->SetPassedHistogram(*PASS, "f");

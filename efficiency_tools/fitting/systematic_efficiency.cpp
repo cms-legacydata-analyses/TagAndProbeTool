@@ -26,22 +26,21 @@ void systematic_efficiency()
 {
 	const char* folder_name = "results/efficiencies/Jpsi_Run_2011/";
 
-	//string MuonId   = "trackerMuon";
-	string MuonId   = "standaloneMuon";
+	string MuonId   = "trackerMuon";
+	//string MuonId   = "standaloneMuon";
 	//string MuonId   = "globalMuon";
 
 	string quantity = "Pt";
 	//string quantity = "Eta";
 	//string quantity = "Phi";
 
-	string TEfficiency_path = MuonId+"_"+quantity+"_Efficiency";
-	string append_file_name = quantity+"_"+MuonId+".root";
-	TEfficiency* pEffNominal	= read_TEfficiency(folder_name, (string("nominal_"       )+append_file_name).c_str(), TEfficiency_path.c_str());
-	TEfficiency* pEff2Gauss		= read_TEfficiency(folder_name, (string("2xgaus_"        )+append_file_name).c_str(), TEfficiency_path.c_str());
-	TEfficiency* pEffMassUP		= read_TEfficiency(folder_name, (string("mass_2p75_3p35_")+append_file_name).c_str(), TEfficiency_path.c_str());
-	TEfficiency* pEffMassDown	= read_TEfficiency(folder_name, (string("mass_2p85_3p25_")+append_file_name).c_str(), TEfficiency_path.c_str());
-	TEfficiency* pEffBinUp		= read_TEfficiency(folder_name, (string("binfit105_"     )+append_file_name).c_str(), TEfficiency_path.c_str());
-	TEfficiency* pEffBinDown	= read_TEfficiency(folder_name, (string("binfit95_"      )+append_file_name).c_str(), TEfficiency_path.c_str());
+	string file_name = quantity+"_"+MuonId+".root";
+	TEfficiency* pEffNominal	= read_TEfficiency(folder_name, file_name.c_str(), string(MuonId + "_" + quantity + "_Nominal"  + "_Efficiency").c_str());
+	TEfficiency* pEff2Gauss		= read_TEfficiency(folder_name, file_name.c_str(), string(MuonId + "_" + quantity + "_2xGauss"  + "_Efficiency").c_str());
+	TEfficiency* pEffMassUP		= read_TEfficiency(folder_name, file_name.c_str(), string(MuonId + "_" + quantity + "_MassUp"   + "_Efficiency").c_str());
+	TEfficiency* pEffMassDown	= read_TEfficiency(folder_name, file_name.c_str(), string(MuonId + "_" + quantity + "_MassDown" + "_Efficiency").c_str());
+	TEfficiency* pEffBinUp		= read_TEfficiency(folder_name, file_name.c_str(), string(MuonId + "_" + quantity + "_BinUp"    + "_Efficiency").c_str());
+	TEfficiency* pEffBinDown	= read_TEfficiency(folder_name, file_name.c_str(), string(MuonId + "_" + quantity + "_BinDOwn"  + "_Efficiency").c_str());
 	
 	TCanvas* c1 = new TCanvas("systematic_efficiency", "Systematic Efficiency");
 
@@ -61,8 +60,8 @@ void systematic_efficiency()
 	pEff2Gauss->Draw();
 	gPad->Update();
 	auto graph = pEff2Gauss->GetPaintedGraph();
-	graph->SetMinimum(0.6);
-	graph->SetMaximum(1.2);
+	graph->SetMinimum(0.96);
+	graph->SetMaximum(1.0);
 	gPad->Update();
 
 	pEff2Gauss		->Draw("same");
@@ -73,7 +72,9 @@ void systematic_efficiency()
 
 	pEffNominal     ->Draw("same");
 
-	TLegend* tl = new TLegend(0.70,0.86,0.96,0.92);
+	//TLegend* tl = new TLegend(0.70,0.86,0.96,0.92);
+	//TLegend* tl = new TLegend(0.70,0.16,0.96,0.32);
+	TLegend* tl = new TLegend(0.2,0.86,0.4,0.92);
 	tl->SetTextSize(0.04);
 	tl->AddEntry(pEffNominal, 	"Nominal", 		"elp");
 	tl->AddEntry(pEff2Gauss, 	"2x Gauss", 	"elp");

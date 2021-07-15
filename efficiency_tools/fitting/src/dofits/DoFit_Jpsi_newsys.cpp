@@ -12,12 +12,9 @@ string prefix_file_name = "";
 double* doFit(string condition, string MuonId, const char* savePath = NULL) // RETURNS ARRAY WITH [yield_all, yield_pass, err_all, err_pass]    ->   OUTPUT ARRAY
 {
 	string MuonId_str = "";
-	if (MuonId == "trackerMuon")
-		MuonId_str = "PassingProbeTrackingMuon";
-	if (MuonId == "standaloneMuon")
-		MuonId_str = "PassingProbeStandAloneMuon";
-	if (MuonId == "globalMuon")
-		MuonId_str = "PassingProbeGlobalMuon";
+	if      (MuonId == "trackerMuon")    MuonId_str = "PassingProbeTrackingMuon";
+	else if (MuonId == "standaloneMuon") MuonId_str = "PassingProbeStandAloneMuon";
+	else if (MuonId == "globalMuon")     MuonId_str = "PassingProbeGlobalMuon";
 	
 	TFile *file0       = TFile::Open("DATA/TagAndProbe_Jpsi_Run2011.root");
 	TTree *DataTree    = (TTree*)file0->Get(("tagandprobe"));
@@ -151,8 +148,6 @@ double* doFit(string condition, string MuonId, const char* savePath = NULL) // R
 	}
 		
 	// DELETING ALLOCATED MEMORY
-	//delete[] limits;
-	//
 	delete file0;
 	//
 	delete Data_ALL;
@@ -161,8 +156,8 @@ double* doFit(string condition, string MuonId, const char* savePath = NULL) // R
 	delete dh_ALL;
 	delete dh_PASSING;
 	//
-	//delete cutvar;
-	//delete redeuce;
+	delete cutvar;
+	delete redeuce;
 	//
 	delete signal;
 	//
