@@ -56,14 +56,14 @@ void plot_efficiencies_manual()
 		_mmax = default_max;
 		fit_bins = 100;
 		prefix_file_name = "nominal_";
-		yields_n_errs_Nominal[i] = doFit(conditions, MuonId, quantity, string(path_bins_fit_folder + prefix_file_name).c_str());
+		yields_n_errs_Nominal[i] = doFit(conditions, MuonId, string(path_bins_fit_folder + prefix_file_name).c_str());
 
 		//2Gauss
 		_mmin = default_min;
 		_mmax = default_max;
 		fit_bins = 100;
 		prefix_file_name = "2xgaus_";
-		yields_n_errs_2Gauss[i] = doFit2xGaus(conditions, MuonId, quantity, string(path_bins_fit_folder + prefix_file_name).c_str());
+		yields_n_errs_2Gauss[i] = doFit2xGaus(conditions, MuonId, string(path_bins_fit_folder + prefix_file_name).c_str());
 
 		//MassUp
 		_mmin = default_min - 0.05;
@@ -75,7 +75,7 @@ void plot_efficiencies_manual()
 		replace(mmax_string.begin(), mmax_string.end(), '.', 'p');
 		prefix_file_name  = string("mass_") + mmin_string.substr(0, mmin_string.length()-4) + string("_");
 		prefix_file_name +=                   mmax_string.substr(0, mmax_string.length()-4) + string("_");
-		yields_n_errs_MassUp[i] = doFit(conditions, MuonId, quantity, string(path_bins_fit_folder + prefix_file_name).c_str());
+		yields_n_errs_MassUp[i] = doFit(conditions, MuonId, string(path_bins_fit_folder + prefix_file_name).c_str());
 
 		//MassDown
 		_mmin = default_min + 0.05;
@@ -87,21 +87,21 @@ void plot_efficiencies_manual()
 		replace(mmax_string.begin(), mmax_string.end(), '.', 'p');
 		prefix_file_name  = string("mass_") + mmin_string.substr(0, mmin_string.length()-4) + string("_");
 		prefix_file_name +=                   mmax_string.substr(0, mmax_string.length()-4) + string("_");
-		yields_n_errs_MassDown[i] = doFit(conditions, MuonId, quantity, string(path_bins_fit_folder + prefix_file_name).c_str());
+		yields_n_errs_MassDown[i] = doFit(conditions, MuonId, string(path_bins_fit_folder + prefix_file_name).c_str());
 
 		//BinUp
 		_mmin = default_min;
 		_mmax = default_max;
 		fit_bins = 105;
 		prefix_file_name = "binfit105_";
-		yields_n_errs_BinUp[i] = doFit(conditions, MuonId, quantity, string(path_bins_fit_folder + prefix_file_name).c_str());
+		yields_n_errs_BinUp[i] = doFit(conditions, MuonId, string(path_bins_fit_folder + prefix_file_name).c_str());
 
 		//BinDown
 		_mmin = default_min;
 		_mmax = default_max;
 		fit_bins = 95;
 		prefix_file_name = "binfit95_";
-		yields_n_errs_BinDown[i] = doFit(conditions, MuonId, quantity, string(path_bins_fit_folder + prefix_file_name).c_str());
+		yields_n_errs_BinDown[i] = doFit(conditions, MuonId, string(path_bins_fit_folder + prefix_file_name).c_str());
 
 		//Calculates the result
 		double* result = new double[4];
