@@ -4,7 +4,8 @@ using namespace RooFit;
 const char* output_folder_name = "Upsilon_Run_2011";
 
 //Header of this function
-double _mmin = 9;  double _mmax = 10.8;
+double _mmin = 9;
+double _mmax = 10.8;
 double fit_bins = 0; //Let it 0 if dont want to change
 
 // Information for output at the end of run
@@ -21,23 +22,14 @@ double* doFit(string condition, string MuonId, const char* savePath = NULL) // R
 	TFile *file0       = TFile::Open("DATA/TagAndProbe_Upsilon_Run2011.root");
 	TTree *DataTree    = (TTree*)file0->Get(("tagandprobe"));
 	
-	RooRealVar MuonId_var(MuonId_str.c_str(), MuonId_str.c_str(), 0, 1); //Muon_Id
-	
-	RooRealVar InvariantMass("InvariantMass", "InvariantMass", _mmin, _mmax);
-	if (fit_bins != 0)
-		InvariantMass.setBins(fit_bins);
+	RooCategory MuonId_var(MuonId_str.c_str(), MuonId_str.c_str(), {{"Passing", 1},{"Failing", 0}});
+	RooRealVar  InvariantMass("InvariantMass", "InvariantMass", _mmin, _mmax);
+	RooRealVar  quantityPt   ("ProbeMuon_Pt",  "ProbeMuon_Pt",  0., 40.);
+	RooRealVar  quantityEta  ("ProbeMuon_Eta", "ProbeMuon_Eta", -2.4, 2.4);
+	RooRealVar  quantityPhi  ("ProbeMuon_Phi", "ProbeMuon_Phi", -TMath::Pi(), TMath::Pi());
+
+	if (fit_bins > 0) InvariantMass.setBins(fit_bins);
 	fit_bins = InvariantMass.getBinning().numBins();
-
-	//Now we must choose initial conditions in order to fit our data
-	double *init_conditions = new double[4];
-	init_conditions[0] = 9.46030;
-	init_conditions[1] = 10.02326;
-	init_conditions[2] = 10.3552;
-	init_conditions[3] = 0.08;
-
-	RooRealVar quantityPt("ProbeMuon_Pt", "ProbeMuon_Pt", 0., 40.);
-	RooRealVar quantityEta("ProbeMuon_Eta", "ProbeMuon_Eta", -2.4, 2.4);
-	RooRealVar quantityPhi("ProbeMuon_Phi", "ProbeMuon_Phi", -TMath::Pi(), TMath::Pi());
 
 	RooFormulaVar* redeuce   = new RooFormulaVar("PPTM_cond", condition.c_str(), RooArgList(quantityPt, quantityEta, quantityPhi));
 	RooDataSet *Data_ALL     = new RooDataSet("DATA", "DATA", DataTree, RooArgSet(InvariantMass, MuonId_var, quantityPt, quantityEta, quantityPhi),*redeuce);
@@ -58,6 +50,13 @@ double* doFit(string condition, string MuonId, const char* savePath = NULL) // R
 
 	// BACKGROUND FUNCTION
 	RooChebychev background("background","background", InvariantMass, RooArgList(a0,a1));
+
+	//Now we must choose initial conditions in order to fit our data
+	double *init_conditions = new double[4];
+	init_conditions[0] = 9.46030;
+	init_conditions[1] = 10.02326;
+	init_conditions[2] = 10.3552;
+	init_conditions[3] = 0.08;
 	
 	// GAUSSIAN VARIABLES
 	RooRealVar sigma("sigma","sigma",init_conditions[3]);

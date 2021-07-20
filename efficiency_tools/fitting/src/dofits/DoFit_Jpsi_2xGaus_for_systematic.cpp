@@ -1,5 +1,17 @@
 using namespace RooFit;
 
+
+
+
+
+
+
+
+
+
+
+
+
 double* doFit2xGaus(string condition, string MuonId, const char* savePath = NULL) // RETURNS ARRAY WITH [yield_all, yield_pass, err_all, err_pass]    ->   OUTPUT ARRAY
 {
 	string MuonId_str = "";
@@ -10,16 +22,14 @@ double* doFit2xGaus(string condition, string MuonId, const char* savePath = NULL
 	TFile *file0       = TFile::Open("DATA/TagAndProbe_Jpsi_Run2011.root");
 	TTree *DataTree    = (TTree*)file0->Get(("tagandprobe"));
 	
-	RooRealVar MuonId_var(MuonId_str.c_str(), MuonId_str.c_str(), 0, 1); //Muon_Id
-	
-	RooRealVar InvariantMass("InvariantMass", "InvariantMass", _mmin, _mmax);
-	if (fit_bins != 0)
-		InvariantMass.setBins(fit_bins);
+	RooCategory MuonId_var(MuonId_str.c_str(), MuonId_str.c_str(), {{"Passing", 1},{"Failing", 0}});
+	RooRealVar  InvariantMass("InvariantMass", "InvariantMass", _mmin, _mmax);
+	RooRealVar  quantityPt   ("ProbeMuon_Pt",  "ProbeMuon_Pt",  0., 40.);
+	RooRealVar  quantityEta  ("ProbeMuon_Eta", "ProbeMuon_Eta", -2.4, 2.4);
+	RooRealVar  quantityPhi  ("ProbeMuon_Phi", "ProbeMuon_Phi", -TMath::Pi(), TMath::Pi());
+
+	if (fit_bins > 0) InvariantMass.setBins(fit_bins);
 	fit_bins = InvariantMass.getBinning().numBins();
-	
-	RooRealVar quantityPt("ProbeMuon_Pt", "ProbeMuon_Pt", 0., 40.);
-	RooRealVar quantityEta("ProbeMuon_Eta", "ProbeMuon_Eta", -2.4, 2.4);
-	RooRealVar quantityPhi("ProbeMuon_Phi", "ProbeMuon_Phi", -TMath::Pi(), TMath::Pi());
 
 	RooFormulaVar* redeuce   = new RooFormulaVar("PPTM_cond", condition.c_str(), RooArgList(quantityPt, quantityEta, quantityPhi));
 	RooDataSet *Data_ALL     = new RooDataSet("DATA", "DATA", DataTree, RooArgSet(InvariantMass, MuonId_var, quantityPt, quantityEta, quantityPhi),*redeuce);
