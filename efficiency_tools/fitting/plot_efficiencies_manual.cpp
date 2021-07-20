@@ -18,11 +18,16 @@ string MuonId   = "trackerMuon";
 //string quantity = "Eta";    double bins[] = {-2.4, -1.8, -1.4, -1.2, -1.0, -0.8, -0.5, -0.2, 0, 0.2, 0.5, 0.8, 1.0, 1.2, 1.4, 1.8, 2.4};
 //string quantity = "Phi";    double bins[] = {-3.0, -1.8, -1.6, -1.2, -1.0, -0.7, -0.4, -0.2, 0, 0.2, 0.4, 0.7, 1.0, 1.2, 1.6, 1.8, 3.0};
 
-//string quantity = "Pt";     double bins[] = {0.0, 2.0, 3.4, 4.0, 5.0, 6.0, 8.0, 10.0, 40.};
-string quantity = "Eta";    double bins[] = {0.0, 0.4, 0.6, 0.95, 1.2, 1.4, 1.6, 1.8, 2.1};
+string quantity = "Pt";     double bins[] = {0.0, 2.0, 3.4, 4.0, 5.0, 6.0, 8.0, 10.0, 40.};
+//string quantity = "Eta";    double bins[] = {0.0, 0.4, 0.6, 0.95, 1.2, 1.4, 1.6, 1.8, 2.4};
 
 void plot_efficiencies_manual()
 {
+	//First enable implicit multi-threading globally, so that the implicit parallelisation is on.
+	//The parameter of the call specifies the number of threads to use.
+	//int nthreads = 4;
+	//ROOT::EnableImplicitMT(nthreads);
+
 	//Path where is going to save results png for every bin 
 	const char* path_bins_fit_folder = "results/bins_fit/";
 	create_folder(path_bins_fit_folder, true);

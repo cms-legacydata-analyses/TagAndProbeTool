@@ -41,7 +41,7 @@ void efficiency()
 	create_folder(directoryToSave.c_str());
 
 	//Create file
-	string file_path = directoryToSave + quantity + "_" + MuonId + ".root";
+	string file_path = directoryToSave + prefix_file_name + quantity + "_" + MuonId + ".root";
 	TFile* generatedFile = new TFile(file_path.c_str(),"recreate");
 	
 	//Create histograms
@@ -58,7 +58,7 @@ void efficiency()
 	generatedFile->Write();
 
 	cout << "\n[Settings]\n";
-	cout << output_folder_name << " "<< MuonId << " " << quantity << "\n";
+	cout << output_folder_name << "\n"<< quantity << " " << MuonId << "\n";
 	cout << "Fitting:     " << fit_functions << "\n";
 	cout << "Fit between: " << _mmin << " and " << _mmax << " GeV\n";
 	cout << "Bins:        " << fit_bins << "\n";

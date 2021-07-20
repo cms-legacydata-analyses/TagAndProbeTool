@@ -68,7 +68,7 @@ double* doFit(string condition, string MuonId, const char* savePath = NULL) // R
 	double n_signal_initial_total = 50000;
 	double n_back_initial = 10000;
 	
-	RooRealVar frac1("frac1","frac1",0.5);
+	RooRealVar frac1("frac1","frac1",0.55);
 
 	RooAddPdf* signal;
 	
