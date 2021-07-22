@@ -3,7 +3,7 @@ TEfficiency* get_efficiency(TH1D* ALL, TH1D* PASS, string quantity, string MuonI
 {
 	//Set axis title for efficiency plot
 	ALL->GetYaxis()->SetTitle("Efficiency");
-	if      (quantity == "Pt" ) ALL->GetXaxis()->SetTitle("p_{t} [GeV/c]");
+	if      (quantity == "Pt" ) ALL->GetXaxis()->SetTitle("p_{T} [GeV/c]");
 	else if (quantity == "Eta") ALL->GetXaxis()->SetTitle("#eta");
 	else if (quantity == "Phi") ALL->GetXaxis()->SetTitle("rad");
 	

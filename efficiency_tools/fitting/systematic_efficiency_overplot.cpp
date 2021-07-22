@@ -24,14 +24,14 @@ TEfficiency* read_TEfficiency(const char* folder_path, const char* file_name, co
 
 void systematic_efficiency_overplot()
 {
-	const char* folder_name = "results/efficiencies/Jpsi_Run_2011/";
+	const char* folder_name = "results/efficiencies/systematic_1D/Jpsi_Run_2011/";
 
-	string MuonId   = "trackerMuon";
+	//string MuonId   = "trackerMuon";
 	//string MuonId   = "standaloneMuon";
-	//string MuonId   = "globalMuon";
+	string MuonId   = "globalMuon";
 
-	string quantity = "Pt";
-	//string quantity = "Eta";
+	//string quantity = "Pt";
+	string quantity = "Eta";
 	//string quantity = "Phi";
 
 	string file_name = quantity+"_"+MuonId+".root";
@@ -40,7 +40,7 @@ void systematic_efficiency_overplot()
 	TEfficiency* pEffMassUP		= read_TEfficiency(folder_name, file_name.c_str(), string(MuonId + "_" + quantity + "_MassUp"   + "_Efficiency").c_str());
 	TEfficiency* pEffMassDown	= read_TEfficiency(folder_name, file_name.c_str(), string(MuonId + "_" + quantity + "_MassDown" + "_Efficiency").c_str());
 	TEfficiency* pEffBinUp		= read_TEfficiency(folder_name, file_name.c_str(), string(MuonId + "_" + quantity + "_BinUp"    + "_Efficiency").c_str());
-	TEfficiency* pEffBinDown	= read_TEfficiency(folder_name, file_name.c_str(), string(MuonId + "_" + quantity + "_BinDOwn"  + "_Efficiency").c_str());
+	TEfficiency* pEffBinDown	= read_TEfficiency(folder_name, file_name.c_str(), string(MuonId + "_" + quantity + "_BinDown"  + "_Efficiency").c_str());
 	
 	TCanvas* c1 = new TCanvas("systematic_efficiency", "Systematic Efficiency");
 
@@ -57,11 +57,33 @@ void systematic_efficiency_overplot()
 	pEffBinDown		->SetMarkerColor(kBlue);
 
 	//Set range in y axis
-	pEff2Gauss->Draw();
+	pEffNominal->Draw();
+	pEffNominal->SetTitle((string(pEffNominal->GetTitle()).substr(0, string(pEffNominal->GetTitle()).size()-10)).c_str());
 	gPad->Update();
-	auto graph = pEff2Gauss->GetPaintedGraph();
-	graph->SetMinimum(0.96);
-	graph->SetMaximum(1.0);
+	auto graph = pEffNominal->GetPaintedGraph();
+	graph->SetMinimum(0.66);
+	graph->SetMaximum(1.);
+	if (MuonId == "trackerMuon")
+	{
+		graph->SetMinimum(0.96);
+		graph->SetMaximum(1.);
+
+		if (quantity == "Pt")
+		{
+			graph->SetMinimum(0.966);
+			graph->SetMaximum(1.);
+		}
+	}
+
+
+	if (quantity == "Eta")
+	{
+		{
+			graph->SetMinimum(0.8);
+			graph->SetMaximum(1.);
+		}
+	}
+
 	gPad->Update();
 
 	pEff2Gauss		->Draw("same");
@@ -69,12 +91,13 @@ void systematic_efficiency_overplot()
 	pEffMassDown	->Draw("same");
 	pEffBinUp		->Draw("same");
 	pEffBinDown		->Draw("same");
-
 	pEffNominal     ->Draw("same");
 
 	//TLegend* tl = new TLegend(0.70,0.86,0.96,0.92);
-	//TLegend* tl = new TLegend(0.70,0.16,0.96,0.32);
-	TLegend* tl = new TLegend(0.2,0.86,0.4,0.92);
+	//TLegend* tl = new TLegend(0.2,0.86,0.4,0.92);
+	TLegend* tl = new TLegend(0.15,0.45,0.35, 0.2);
+	if (MuonId == "trackerMuon" && quantity != "Eta")
+		tl->SetY2(0.8);
 	tl->SetTextSize(0.04);
 	tl->AddEntry(pEffNominal, 	"Nominal", 		"elp");
 	tl->AddEntry(pEff2Gauss, 	"2x Gauss", 	"elp");
@@ -82,10 +105,14 @@ void systematic_efficiency_overplot()
 	tl->AddEntry(pEffMassDown, 	"Mass Down", 	"elp");
 	tl->AddEntry(pEffBinUp, 	"Bin Up", 		"elp");
 	tl->AddEntry(pEffBinDown, 	"Bin Down", 	"elp");
-	tl->SetY1(tl->GetY1() - tl->GetTextSize()*tl->GetNRows());
+	tl->SetY1(tl->GetY2() - tl->GetTextSize()*1.2*tl->GetNRows());
 	tl->Draw();
 
-	c1->SetLogx();
+	if (quantity == "Pt")
+		c1->SetLogx();
 
-	c1->SaveAs(string("results/" + quantity + "_" + MuonId + "systematic_efficiency.png").c_str());
+	//if (quantity == "Eta")
+		//c1->SetLogy();
+
+	c1->SaveAs(string("results/" + quantity + "_" + MuonId + "_systematic_efficiency.png").c_str());
 }
