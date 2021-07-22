@@ -1,0 +1,9 @@
+# Generated files in sideband subtraction method efficiency tool
+*.png
+*.pdf
+
+# Efficiency tools fitting method
+results/
+
+# Larger files than github supports
+TagAndProbe_Jpsi_Run2011.root
