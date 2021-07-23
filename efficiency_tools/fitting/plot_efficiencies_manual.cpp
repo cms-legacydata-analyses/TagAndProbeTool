@@ -7,15 +7,15 @@
 #include "src/make_hist.cpp"
 
 //Which Muon Id do you want to study?
-//string MuonId   = "trackerMuon";
+string MuonId   = "trackerMuon";
 //string MuonId   = "standaloneMuon";
-string MuonId   = "globalMuon";
+//string MuonId   = "globalMuon";
 
 //bool should_loop_muon_id  = false;
 
 //Which quantity do you want to use?
-//string quantity = "Pt";     double bins[] = {0., 2.0, 3.4, 4.0, 4.4, 4.7, 5.0, 5.6, 5.8, 6.0, 6.2, 6.4, 6.6, 6.8, 7.3, 9.5, 13.0, 17.0, 40.};
-string quantity = "Eta";    double bins[] = {-2.4, -1.8, -1.4, -1.2, -1.0, -0.8, -0.5, -0.2, 0, 0.2, 0.5, 0.8, 1.0, 1.2, 1.4, 1.8, 2.4};
+//string quantity = "Pt";     double bins[] = {0., 3.0, 3.6, 4.0, 4.4, 4.7, 5.0, 5.6, 5.8, 6.0, 6.2, 6.4, 6.6, 6.8, 7.3, 9.5, 13.0, 17.0, 40.};
+string quantity = "Eta";    double bins[] = {-2.4, -1.4, -1.2, -1.0, -0.8, -0.5, -0.2, 0, 0.2, 0.5, 0.8, 1.0, 1.2, 1.4, 2.4};
 //string quantity = "Phi";    double bins[] = {-3.0, -1.8, -1.6, -1.2, -1.0, -0.7, -0.4, -0.2, 0, 0.2, 0.4, 0.7, 1.0, 1.2, 1.6, 1.8, 3.0};
 
 //string quantity = "Pt";     double bins[] = {0.0, 2.0, 3.4, 4.0, 5.0, 6.0, 8.0, 10.0, 40.};
@@ -29,8 +29,8 @@ void plot_efficiencies_manual()
 	//ROOT::EnableImplicitMT(nthreads);
 
 	//Path where is going to save results png for every bin 
-	const char* path_bins_fit_folder = "results/bins_fit/";
-	create_folder(path_bins_fit_folder, true);
+	string path_bins_fit_folder = string("results/bins_fit/systematic_1D/") + output_folder_name + string("/") + quantity + string("/") + MuonId + string("/");
+	create_folder(path_bins_fit_folder.c_str(), true);
 
 	// Loop for every bin and fit it
 	int bin_n = sizeof(bins)/sizeof(*bins) - 1;
@@ -48,8 +48,8 @@ void plot_efficiencies_manual()
 	for (int i = 0; i < bin_n; i++)
 	{
 		//Creates conditions
-		string conditions = string(    "ProbeMuon_" + quantity + ">" + to_string(bins[i]  ));
-		conditions +=       string(" && ProbeMuon_" + quantity + "<" + to_string(bins[i+1]));
+		string conditions = string(    "ProbeMuon_" + quantity + ">=" + to_string(bins[i]  ));
+		conditions +=       string(" && ProbeMuon_" + quantity + "< " + to_string(bins[i+1]));
 
 		double default_min = _mmin;
 		double default_max = _mmax;
@@ -61,14 +61,14 @@ void plot_efficiencies_manual()
 		_mmax = default_max;
 		fit_bins = 100;
 		prefix_file_name = "nominal_";
-		yields_n_errs_Nominal[i] = doFit(conditions, MuonId, string(path_bins_fit_folder + prefix_file_name).c_str());
+		yields_n_errs_Nominal[i] = doFit(conditions, MuonId, (path_bins_fit_folder + prefix_file_name).c_str());
 
 		//2Gauss
 		_mmin = default_min;
 		_mmax = default_max;
 		fit_bins = 100;
 		prefix_file_name = "2xgaus_";
-		yields_n_errs_2Gauss[i] = doFit2xGaus(conditions, MuonId, string(path_bins_fit_folder + prefix_file_name).c_str());
+		yields_n_errs_2Gauss[i] = doFit2xGaus(conditions, MuonId, (path_bins_fit_folder + prefix_file_name).c_str());
 
 		//MassUp
 		_mmin = default_min - 0.05;
@@ -80,7 +80,7 @@ void plot_efficiencies_manual()
 		replace(mmax_string.begin(), mmax_string.end(), '.', 'p');
 		prefix_file_name  = string("mass_") + mmin_string.substr(0, mmin_string.length()-4) + string("_");
 		prefix_file_name +=                   mmax_string.substr(0, mmax_string.length()-4) + string("_");
-		yields_n_errs_MassUp[i] = doFit(conditions, MuonId, string(path_bins_fit_folder + prefix_file_name).c_str());
+		yields_n_errs_MassUp[i] = doFit(conditions, MuonId, (path_bins_fit_folder + prefix_file_name).c_str());
 
 		//MassDown
 		_mmin = default_min + 0.05;
@@ -92,21 +92,21 @@ void plot_efficiencies_manual()
 		replace(mmax_string.begin(), mmax_string.end(), '.', 'p');
 		prefix_file_name  = string("mass_") + mmin_string.substr(0, mmin_string.length()-4) + string("_");
 		prefix_file_name +=                   mmax_string.substr(0, mmax_string.length()-4) + string("_");
-		yields_n_errs_MassDown[i] = doFit(conditions, MuonId, string(path_bins_fit_folder + prefix_file_name).c_str());
+		yields_n_errs_MassDown[i] = doFit(conditions, MuonId, (path_bins_fit_folder + prefix_file_name).c_str());
 
 		//BinUp
 		_mmin = default_min;
 		_mmax = default_max;
 		fit_bins = 105;
 		prefix_file_name = "binfit105_";
-		yields_n_errs_BinUp[i] = doFit(conditions, MuonId, string(path_bins_fit_folder + prefix_file_name).c_str());
+		yields_n_errs_BinUp[i] = doFit(conditions, MuonId, (path_bins_fit_folder + prefix_file_name).c_str());
 
 		//BinDown
 		_mmin = default_min;
 		_mmax = default_max;
 		fit_bins = 95;
 		prefix_file_name = "binfit95_";
-		yields_n_errs_BinDown[i] = doFit(conditions, MuonId, string(path_bins_fit_folder + prefix_file_name).c_str());
+		yields_n_errs_BinDown[i] = doFit(conditions, MuonId, (path_bins_fit_folder + prefix_file_name).c_str());
 
 		//Calculates the result
 		double* result = new double[4];
@@ -127,21 +127,21 @@ void plot_efficiencies_manual()
 	generatedFile->mkdir("histograms/");
 	generatedFile->   cd("histograms/");
 	
-	TH1D *yield_all           = make_hist("all"          , yields_n_errs         , 0, bin_n, bins);
-	TH1D *yield_nominal_all   = make_hist("all_nominal"  , yields_n_errs_Nominal , 0, bin_n, bins);
-	TH1D *yield_2gaus_all     = make_hist("all_2xGauss"  , yields_n_errs_2Gauss  , 0, bin_n, bins);
-	TH1D *yield_massup_all    = make_hist("all_MassUp"   , yields_n_errs_MassUp  , 0, bin_n, bins);
-	TH1D *yield_massdown_all  = make_hist("all_MassDown" , yields_n_errs_MassDown, 0, bin_n, bins);
-	TH1D *yield_binup_all     = make_hist("all_BinUp"    , yields_n_errs_BinUp   , 0, bin_n, bins);
-	TH1D *yield_bindown_all   = make_hist("all_BinDown"  , yields_n_errs_BinDown , 0, bin_n, bins);
+	TH1D *yield_all           = make_hist("all"          , yields_n_errs         , 0, bins, bin_n, quantity);
+	TH1D *yield_nominal_all   = make_hist("all_nominal"  , yields_n_errs_Nominal , 0, bins, bin_n, quantity);
+	TH1D *yield_2gaus_all     = make_hist("all_2xGauss"  , yields_n_errs_2Gauss  , 0, bins, bin_n, quantity);
+	TH1D *yield_massup_all    = make_hist("all_MassUp"   , yields_n_errs_MassUp  , 0, bins, bin_n, quantity);
+	TH1D *yield_massdown_all  = make_hist("all_MassDown" , yields_n_errs_MassDown, 0, bins, bin_n, quantity);
+	TH1D *yield_binup_all     = make_hist("all_BinUp"    , yields_n_errs_BinUp   , 0, bins, bin_n, quantity);
+	TH1D *yield_bindown_all   = make_hist("all_BinDown"  , yields_n_errs_BinDown , 0, bins, bin_n, quantity);
 
-	TH1D *yield_pass          = make_hist("pass"         , yields_n_errs         , 1, bin_n, bins);
-	TH1D *yield_2gaus_pass    = make_hist("pass_2xGauss" , yields_n_errs_Nominal , 1, bin_n, bins);
-	TH1D *yield_nominal_pass  = make_hist("pass_nominal" , yields_n_errs_2Gauss  , 1, bin_n, bins);
-	TH1D *yield_massup_pass   = make_hist("pass_MassUp"  , yields_n_errs_MassUp  , 1, bin_n, bins);
-	TH1D *yield_massdown_pass = make_hist("pass_MassDown", yields_n_errs_MassDown, 1, bin_n, bins);
-	TH1D *yield_binup_pass    = make_hist("pass_BinDown" , yields_n_errs_BinUp   , 1, bin_n, bins);
-	TH1D *yield_bindown_pass  = make_hist("pass_BinDown" , yields_n_errs_BinDown , 1, bin_n, bins);
+	TH1D *yield_pass          = make_hist("pass"         , yields_n_errs         , 1, bins, bin_n, quantity);
+	TH1D *yield_2gaus_pass    = make_hist("pass_2xGauss" , yields_n_errs_Nominal , 1, bins, bin_n, quantity);
+	TH1D *yield_nominal_pass  = make_hist("pass_nominal" , yields_n_errs_2Gauss  , 1, bins, bin_n, quantity);
+	TH1D *yield_massup_pass   = make_hist("pass_MassUp"  , yields_n_errs_MassUp  , 1, bins, bin_n, quantity);
+	TH1D *yield_massdown_pass = make_hist("pass_MassDown", yields_n_errs_MassDown, 1, bins, bin_n, quantity);
+	TH1D *yield_binup_pass    = make_hist("pass_BinDown" , yields_n_errs_BinUp   , 1, bins, bin_n, quantity);
+	TH1D *yield_bindown_pass  = make_hist("pass_BinDown" , yields_n_errs_BinDown , 1, bins, bin_n, quantity);
 
 	generatedFile->   cd("/");
 	get_efficiency(yield_all         , yield_pass         , quantity, MuonId, ""        , true);

@@ -27,11 +27,11 @@ void systematic_efficiency_overplot()
 	const char* folder_name = "results/efficiencies/systematic_1D/Jpsi_Run_2011/";
 
 	//string MuonId   = "trackerMuon";
-	//string MuonId   = "standaloneMuon";
-	string MuonId   = "globalMuon";
+	string MuonId   = "standaloneMuon";
+	//string MuonId   = "globalMuon";
 
-	//string quantity = "Pt";
-	string quantity = "Eta";
+	string quantity = "Pt";
+	//string quantity = "Eta";
 	//string quantity = "Phi";
 
 	string file_name = quantity+"_"+MuonId+".root";
@@ -63,25 +63,24 @@ void systematic_efficiency_overplot()
 	auto graph = pEffNominal->GetPaintedGraph();
 	graph->SetMinimum(0.66);
 	graph->SetMaximum(1.);
-	if (MuonId == "trackerMuon")
+
+	if (quantity == "Pt")
 	{
-		graph->SetMinimum(0.96);
+		graph->SetMinimum(0.66);
 		graph->SetMaximum(1.);
 
-		if (quantity == "Pt")
+		/*
+		if (MuonId == "trackerMuon")
 		{
-			graph->SetMinimum(0.966);
+			graph->SetMinimum(0.96);
 			graph->SetMaximum(1.);
 		}
+		*/
 	}
-
-
-	if (quantity == "Eta")
+	else if (quantity == "Eta")
 	{
-		{
-			graph->SetMinimum(0.8);
-			graph->SetMaximum(1.);
-		}
+		graph->SetMinimum(0.8);
+		graph->SetMaximum(1.);
 	}
 
 	gPad->Update();

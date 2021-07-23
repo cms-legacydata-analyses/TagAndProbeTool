@@ -1,14 +1,20 @@
-TH1D* make_hist(string name, double** values, int qnt, int bin_n, Double_t* binning, bool draw = false)
+TH1D* make_hist(string name, double** values, int index, double* bins, int nbins, string quantity = "", bool draw = false)
 {
 	//AddBinContent
 	//HISTOGRAM NEEDS TO HAVE VARIABLE BINS
    
-	TH1D* hist = new TH1D(name.c_str(), name.c_str(), bin_n, binning);
+	TH1D* hist = new TH1D(name.c_str(), name.c_str(), nbins, bins);
 
-	for (int i = 0; i < bin_n; i++)
+	hist->GetYaxis()->SetTitle("Events");
+	if      (quantity == "Pt" ) hist->GetXaxis()->SetTitle("p_{T} [GeV/c]");
+	else if (quantity == "Eta") hist->GetXaxis()->SetTitle("#eta");
+	else if (quantity == "Phi") hist->GetXaxis()->SetTitle("rad");
+
+	for (int i = 0; i < nbins; i++)
 	{
-		hist->SetBinContent(i, values[i][qnt]);
-		hist->SetBinError(i, values[i][qnt+2]);
+		hist->SetBinContent(i+1, values[i][index]);
+		hist->SetBinError(i+1, values[i][index+2]);
+		//cout << i << " -> (" << hist->GetBinLowEdge(i+1) << "," << hist->GetBinLowEdge(i+1)+hist->GetBinWidth(i+1) << ") == " << hist->GetBinContent(i+1) << "\n";
 	}
 
 	if (draw)
@@ -20,4 +26,3 @@ TH1D* make_hist(string name, double** values, int qnt, int bin_n, Double_t* binn
 	
 	return hist;
 }
-
