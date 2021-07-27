@@ -117,7 +117,8 @@ double* doFit(string condition, string MuonId, const char* savePath = NULL) // R
 	Data_ALL->plotOn(frame);
 	
 	model->plotOn(frame);
-	model->plotOn(frame,RooFit::Components("signal"),RooFit::LineStyle(kDashed),RooFit::LineColor(kGreen));
+	model->plotOn(frame,RooFit::Components("GS"),RooFit::LineStyle(kDashed),RooFit::LineColor(kGreen));
+	model->plotOn(frame,RooFit::Components("CB"),RooFit::LineStyle(kDashed),RooFit::LineColor(kMagenta - 5));
 	model->plotOn(frame,RooFit::Components("background"),RooFit::LineStyle(kDashed),RooFit::LineColor(kRed));
 	
 	c_all->cd();
@@ -132,7 +133,8 @@ double* doFit(string condition, string MuonId, const char* savePath = NULL) // R
 	Data_PASSING->plotOn(frame_pass);
 	
 	model_pass->plotOn(frame_pass);
-	model_pass->plotOn(frame_pass,RooFit::Components("singal"),RooFit::LineStyle(kDashed),RooFit::LineColor(kGreen));
+	model_pass->plotOn(frame_pass,RooFit::Components("GS"),RooFit::LineStyle(kDashed),RooFit::LineColor(kGreen));
+	model_pass->plotOn(frame_pass,RooFit::Components("CB"),RooFit::LineStyle(kDashed),RooFit::LineColor(kMagenta - 5));
 	model_pass->plotOn(frame_pass,RooFit::Components("background"),RooFit::LineStyle(kDashed),RooFit::LineColor(kRed));
 	
 	frame_pass->Draw();
