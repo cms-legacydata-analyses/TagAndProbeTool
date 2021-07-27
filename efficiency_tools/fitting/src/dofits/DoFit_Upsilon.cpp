@@ -154,8 +154,8 @@ double* doFit(string condition, string MuonId, const char* savePath = NULL) // R
 
 	if (savePath != NULL)
 	{
-		c_pass->SaveAs((string(savePath) + condition + "_ALL.png").c_str());
-		c_all->SaveAs ((string(savePath) + condition + "_PASS.png").c_str());
+		c_pass->SaveAs((string(savePath) + condition + "_PASS.png").c_str());
+		c_all->SaveAs ((string(savePath) + condition + "_ALL.png").c_str());
 	}
 		
 	// DELETING ALLOCATED MEMORY
