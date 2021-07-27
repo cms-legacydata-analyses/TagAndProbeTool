@@ -9,7 +9,7 @@ double _mmax = 3.3;
 double fit_bins = 0; //Let it 0 if dont want to change
 
 // Information for output at the end of run
-const char* fit_functions = "Gaussian + CrystalBall + Chebychev";
+const char* fit_functions = "Gaussian + CrystalBall + Exponential";
 string prefix_file_name = "";
 
 double* doFit(string condition, string MuonId, const char* savePath = NULL) // RETURNS ARRAY WITH [yield_all, yield_pass, err_all, err_pass]
@@ -54,7 +54,7 @@ double* doFit(string condition, string MuonId, const char* savePath = NULL) // R
 	n.setConstant(kTRUE);
 	   
 	//FIT FUNCTIONS
-	RooGaussian gaussian("GS","GS",InvariantMass,mean,sigma);
+	RooGaussian gaussian("GS","GS", InvariantMass, mean, sigma);
 	RooCBShape crystalball("CB", "CB", InvariantMass, mean, sigma_cb, alpha, n);
 
 	// BACKGROUND VARIABLES
@@ -62,7 +62,7 @@ double* doFit(string condition, string MuonId, const char* savePath = NULL) // R
 	RooRealVar a1("a1", "a1", 0, -10, 10);
 
 	// BACKGROUND FUNCTION
-	RooChebychev background("background","background", InvariantMass, RooArgList(a0,a1));
+	RooExponential background("background","background", a0, a1);
 	
 	double n_signal_initial_total = 50000;
 	double n_back_initial = 10000;
@@ -138,9 +138,6 @@ double* doFit(string condition, string MuonId, const char* savePath = NULL) // R
 	model_pass->plotOn(frame_pass,RooFit::Components("background"),RooFit::LineStyle(kDashed),RooFit::LineColor(kRed));
 	
 	frame_pass->Draw();
-	
-	c_pass->SetLogy();
-	c_all->SetLogy();
 
 	if (savePath != NULL)
 	{

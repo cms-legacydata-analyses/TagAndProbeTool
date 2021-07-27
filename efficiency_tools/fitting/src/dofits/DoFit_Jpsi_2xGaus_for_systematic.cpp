@@ -59,7 +59,7 @@ double* doFit2xGaus(string condition, string MuonId, const char* savePath = NULL
 	RooRealVar a1("a1", "a1", 0, -10, 10);
 
 	// BACKGROUND FUNCTION
-	RooChebychev background("background","background", InvariantMass, RooArgList(a0,a1));
+	RooExponential background("background","background", a0, a1);
 	
 	double n_signal_initial_total = 50000;
 	double n_back_initial = 10000;

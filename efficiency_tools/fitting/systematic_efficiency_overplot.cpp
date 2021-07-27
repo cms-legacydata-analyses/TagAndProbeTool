@@ -27,8 +27,8 @@ void systematic_efficiency_overplot()
 	const char* folder_name = "results/efficiencies/systematic_1D/Jpsi_Run_2011/";
 
 	//string MuonId   = "trackerMuon";
-	string MuonId   = "standaloneMuon";
-	//string MuonId   = "globalMuon";
+	//string MuonId   = "standaloneMuon";
+	string MuonId   = "globalMuon";
 
 	string quantity = "Pt";
 	//string quantity = "Eta";
@@ -79,7 +79,7 @@ void systematic_efficiency_overplot()
 	}
 	else if (quantity == "Eta")
 	{
-		graph->SetMinimum(0.8);
+		graph->SetMinimum(0.9);
 		graph->SetMaximum(1.);
 	}
 
