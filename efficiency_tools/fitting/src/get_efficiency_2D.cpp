@@ -1,19 +1,9 @@
 
 TEfficiency* get_efficiency_2D(TH2D* all, TH2D* pass, string xquantity, string yquantity, string MuonId, string prefix_name = "", bool shouldWrite = false)
 {
-	//Copy histograms to change axis titles later
-	TH2D* pass_copy = (TH2D*)pass->Clone();
-	TH2D* all_copy  = (TH2D*)all ->Clone();
-
-	pass_copy->GetYaxis()->SetTitle("Efficiency");
-	all_copy ->GetYaxis()->SetTitle("Efficiency");
-	
 	TEfficiency* pEff = new TEfficiency();
-	pEff->SetPassedHistogram(*pass_copy, "f");
-	pEff->SetTotalHistogram (*all_copy,  "f");
-
-	delete all_copy;
-	delete pass_copy;
+	pEff->SetPassedHistogram(*pass, "f");
+	pEff->SetTotalHistogram (*all,  "f");
 
 	//Set plot config
 	if (prefix_name != "")
@@ -37,7 +27,7 @@ TEfficiency* get_efficiency_2D(TH2D* all, TH2D* pass, string xquantity, string y
 	
 	TCanvas* oi = new TCanvas();
 	oi->cd();
-	pEff->Draw();
+	pEff->Draw("colz");
 	
 	/*
 	gPad->Update();

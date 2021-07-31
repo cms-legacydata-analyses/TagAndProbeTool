@@ -1,5 +1,5 @@
 //Change if you need
-#include "src/dofits/DoFit_Jpsj.cpp"
+#include "src/dofits/DoFit_Jpsi.cpp"
 #include "src/dofits/DoFit_Jpsi_2xGaus_for_systematic.cpp"
 
 #include "src/create_folder.cpp"
@@ -124,10 +124,10 @@ void plot_sys_efficiency_2d()
 			yields_n_errs_BinDown[i][j] = doFit(conditions, MuonId, string(path_bins_fit_folder + prefix_file_name).c_str());
 
 			//Calculates the result
-			yields_final_pass[i][j] = yields_n_errs_Nominal[i][j][0];
-			yields_final_all [i][j] = yields_n_errs_Nominal[i][j][1];
-			errors_final_pass[i][j] = sqrt(pow(yields_n_errs_Nominal[i][j][2],2) + pow(yields_n_errs_2Gauss[i][j][2],2) + pow(yields_n_errs_MassUp[i][j][2],2) + pow(yields_n_errs_MassUp[i][j][2],2) + pow(yields_n_errs_BinUp[i][j][2],2) + pow(yields_n_errs_BinDown[i][j][2],2));
-			errors_final_all [i][j] = sqrt(pow(yields_n_errs_Nominal[i][j][3],2) + pow(yields_n_errs_2Gauss[i][j][3],2) + pow(yields_n_errs_MassUp[i][j][3],2) + pow(yields_n_errs_MassUp[i][j][3],2) + pow(yields_n_errs_BinUp[i][j][3],2) + pow(yields_n_errs_BinDown[i][j][3],2));
+			yields_final_all [i][j] = yields_n_errs_Nominal[i][j][0];
+			yields_final_pass[i][j] = yields_n_errs_Nominal[i][j][1];
+			errors_final_all [i][j] = sqrt(pow(yields_n_errs_Nominal[i][j][2],2) + pow(yields_n_errs_2Gauss[i][j][2],2) + pow(yields_n_errs_MassUp[i][j][2],2) + pow(yields_n_errs_MassUp[i][j][2],2) + pow(yields_n_errs_BinUp[i][j][2],2) + pow(yields_n_errs_BinDown[i][j][2],2));
+			errors_final_pass[i][j] = sqrt(pow(yields_n_errs_Nominal[i][j][3],2) + pow(yields_n_errs_2Gauss[i][j][3],2) + pow(yields_n_errs_MassUp[i][j][3],2) + pow(yields_n_errs_MassUp[i][j][3],2) + pow(yields_n_errs_BinUp[i][j][3],2) + pow(yields_n_errs_BinDown[i][j][3],2));
 
 		}
 	}
@@ -142,20 +142,11 @@ void plot_sys_efficiency_2d()
 	generatedFile->mkdir("histograms/");
 	generatedFile->   cd("histograms/");
 	
-	TH2D *hist_all           = make_TH2D("all_systematic",  "All Systematic",  xquantity, yquantity, nbinsx, nbinsy, xbins, ybins, yields_final_all,  errors_final_all);
-	TH2D* hist_pass          = make_TH2D("pass_systematic", "Pass Systematic", xquantity, yquantity, nbinsx, nbinsy, xbins, ybins, yields_final_pass, errors_final_pass);
-
-	/*
-	TH2D *hist_nominal_all   = make_TH2D("all_nominal"   , "All Nominal",    xquantity, yquantity, nbinsx, nbinsy, xbins, ybins, );
-	TH2D *hist_2gaus_all     = make_TH2D("all_2xGauss"   , "All 2xGauss",    xquantity, yquantity, nbinsx, nbinsy, xbins, ybins, );
-	TH2D *hist_massup_all    = make_TH2D("all_MassUp"    , "All MassUp",     xquantity, yquantity, nbinsx, nbinsy, xbins, ybins, );
-	TH2D *hist_massdown_all  = make_TH2D("all_MassDown"  , "All MassDown",   xquantity, yquantity, nbinsx, nbinsy, xbins, ybins, );
-	TH2D *hist_binup_all     = make_TH2D("all_BinUp"     , "All BinUp",      xquantity, yquantity, nbinsx, nbinsy, xbins, ybins, );
-	TH2D *hist_bindown_all   = make_TH2D("all_BinDown"   , "All BinDown",    xquantity, yquantity, nbinsx, nbinsy, xbins, ybins, );
-	*/
+	TH2D* hist_all  = make_TH2D("all_systematic",  "All Systematic",  xquantity, yquantity, nbinsx, nbinsy, xbins, ybins, yields_final_all,  errors_final_all);
+	TH2D* hist_pass = make_TH2D("pass_systematic", "Pass Systematic", xquantity, yquantity, nbinsx, nbinsy, xbins, ybins, yields_final_pass, errors_final_pass);
 
 	generatedFile->   cd("/");
-	get_efficiency_2D(hist_all         , hist_pass         , xquantity, yquantity, MuonId, ""        , true);
+	get_efficiency_2D(hist_all, hist_pass, xquantity, yquantity, MuonId, "", true);
 
 	generatedFile->Write();
 

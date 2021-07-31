@@ -125,21 +125,21 @@ void plot_sys_efficiency()
 	generatedFile->mkdir("histograms/");
 	generatedFile->   cd("histograms/");
 	
-	TH1D *hist_all           = make_TH1D("all"          , yields_n_errs         , 0, bins, nbins, quantity);
-	TH1D *hist_nominal_all   = make_TH1D("all_nominal"  , yields_n_errs_Nominal , 0, bins, nbins, quantity);
-	TH1D *hist_2gaus_all     = make_TH1D("all_2xGauss"  , yields_n_errs_2Gauss  , 0, bins, nbins, quantity);
-	TH1D *hist_massup_all    = make_TH1D("all_MassUp"   , yields_n_errs_MassUp  , 0, bins, nbins, quantity);
-	TH1D *hist_massdown_all  = make_TH1D("all_MassDown" , yields_n_errs_MassDown, 0, bins, nbins, quantity);
-	TH1D *hist_binup_all     = make_TH1D("all_BinUp"    , yields_n_errs_BinUp   , 0, bins, nbins, quantity);
-	TH1D *hist_bindown_all   = make_TH1D("all_BinDown"  , yields_n_errs_BinDown , 0, bins, nbins, quantity);
+	TH1D* hist_all           = make_TH1D("all"          , yields_n_errs         , 0, bins, nbins, quantity);
+	TH1D* hist_nominal_all   = make_TH1D("all_nominal"  , yields_n_errs_Nominal , 0, bins, nbins, quantity);
+	TH1D* hist_2gaus_all     = make_TH1D("all_2xGauss"  , yields_n_errs_2Gauss  , 0, bins, nbins, quantity);
+	TH1D* hist_massup_all    = make_TH1D("all_MassUp"   , yields_n_errs_MassUp  , 0, bins, nbins, quantity);
+	TH1D* hist_massdown_all  = make_TH1D("all_MassDown" , yields_n_errs_MassDown, 0, bins, nbins, quantity);
+	TH1D* hist_binup_all     = make_TH1D("all_BinUp"    , yields_n_errs_BinUp   , 0, bins, nbins, quantity);
+	TH1D* hist_bindown_all   = make_TH1D("all_BinDown"  , yields_n_errs_BinDown , 0, bins, nbins, quantity);
 
-	TH1D *hist_pass          = make_TH1D("pass"         , yields_n_errs         , 1, bins, nbins, quantity);
-	TH1D *hist_2gaus_pass    = make_TH1D("pass_2xGauss" , yields_n_errs_Nominal , 1, bins, nbins, quantity);
-	TH1D *hist_nominal_pass  = make_TH1D("pass_nominal" , yields_n_errs_2Gauss  , 1, bins, nbins, quantity);
-	TH1D *hist_massup_pass   = make_TH1D("pass_MassUp"  , yields_n_errs_MassUp  , 1, bins, nbins, quantity);
-	TH1D *hist_massdown_pass = make_TH1D("pass_MassDown", yields_n_errs_MassDown, 1, bins, nbins, quantity);
-	TH1D *hist_binup_pass    = make_TH1D("pass_BinDown" , yields_n_errs_BinUp   , 1, bins, nbins, quantity);
-	TH1D *hist_bindown_pass  = make_TH1D("pass_BinDown" , yields_n_errs_BinDown , 1, bins, nbins, quantity);
+	TH1D* hist_pass          = make_TH1D("pass"         , yields_n_errs         , 1, bins, nbins, quantity);
+	TH1D* hist_2gaus_pass    = make_TH1D("pass_2xGauss" , yields_n_errs_Nominal , 1, bins, nbins, quantity);
+	TH1D* hist_nominal_pass  = make_TH1D("pass_nominal" , yields_n_errs_2Gauss  , 1, bins, nbins, quantity);
+	TH1D* hist_massup_pass   = make_TH1D("pass_MassUp"  , yields_n_errs_MassUp  , 1, bins, nbins, quantity);
+	TH1D* hist_massdown_pass = make_TH1D("pass_MassDown", yields_n_errs_MassDown, 1, bins, nbins, quantity);
+	TH1D* hist_binup_pass    = make_TH1D("pass_BinDown" , yields_n_errs_BinUp   , 1, bins, nbins, quantity);
+	TH1D* hist_bindown_pass  = make_TH1D("pass_BinDown" , yields_n_errs_BinDown , 1, bins, nbins, quantity);
 
 	generatedFile->   cd("/");
 	get_efficiency(hist_all         , hist_pass         , quantity, MuonId, ""        , true);
