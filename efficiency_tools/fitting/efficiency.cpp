@@ -3,7 +3,7 @@
 
 #include "src/create_folder.cpp"
 #include "src/get_efficiency.cpp"
-#include "src/make_hist.cpp"
+#include "src/make_TH1D.cpp"
 
 //Which Muon Id do you want to study?
 string MuonId   = "trackerMuon";
@@ -35,7 +35,7 @@ void efficiency()
 	}
 
 	//Path where is going to save efficiency 
-	string directoryToSave = string("results/efficiencies/") + output_folder_name + string("/");
+	string directoryToSave = string("results/efficiencies/efficiency/") + output_folder_name + string("/");
 	create_folder(directoryToSave.c_str());
 
 	//Create file
@@ -45,8 +45,8 @@ void efficiency()
 	//Create histograms
 	generatedFile->mkdir("histograms/");
 	generatedFile->   cd("histograms/");
-	TH1D *yield_all  = make_hist("ALL" , yields_n_errs, 0, bins, nbins, quantity);
-	TH1D *yield_pass = make_hist("PASS", yields_n_errs, 1, bins, nbins, quantity);
+	TH1D *yield_all  = make_TH1D("ALL" , yields_n_errs, 0, bins, nbins, quantity);
+	TH1D *yield_pass = make_TH1D("PASS", yields_n_errs, 1, bins, nbins, quantity);
 	
 	//Create efficiencies
 	generatedFile->   cd("/");

@@ -1,4 +1,4 @@
-TH1D* make_hist(string name, double** values, int index, double* bins, int nbins, string quantity = "", bool draw = false)
+TH1D* make_TH1D(string name, double** values, int index, double* bins, int nbins, string quantity = "", bool draw = false)
 {
 	//AddBinContent
 	//HISTOGRAM NEEDS TO HAVE VARIABLE BINS

@@ -1,35 +1,33 @@
 //Change if you need
-#include "src/dofits/DoFit_Jpsi_newsys.cpp"
+#include "src/dofits/DoFit_Jpsi.cpp"
 #include "src/dofits/DoFit_Jpsi_2xGaus_for_systematic.cpp"
 
 #include "src/create_folder.cpp"
-#include "src/create_TH2D.cpp"
+#include "src/make_TH2D.cpp"
+#include "src/get_efficiency_2D.cpp"
 
 //Which Muon Id do you want to study?
 string MuonId   = "trackerMuon";
 //string MuonId   = "standaloneMuon";
 //string MuonId   = "globalMuon";
 
-//bool should_loop_muon_id  = false;
-
-//Which quantity do you want to use?
-string quantity1 = "Pt";
-//double bins1[] = {0., 2.0, 3.4, 4.0, 4.4, 4.7, 5.0, 5.6, 5.8, 6.0, 6.2, 6.4, 6.6, 6.8, 7.3, 9.5, 13.0, 17.0, 40.};
-double bins1[] = {0.0, 3.4, 4.0, 5.0, 6.0, 8.0, 40.};
-string quantity2 = "Eta";
-double bins2[] = {0.0, 0.4, 0.6, 0.95, 1.2, 1.4, 2.4};
-//double bins2[] = {-2.4, -1.8, -1.4, -1.2, -1.0, -0.8, -0.5, -0.2, 0, 0.2, 0.5, 0.8, 1.0, 1.2, 1.4, 1.8, 2.4};
-//string quantity = "Phi";    double bins[] = {-3.0, -1.8, -1.6, -1.2, -1.0, -0.7, -0.4, -0.2, 0, 0.2, 0.4, 0.7, 1.0, 1.2, 1.6, 1.8, 3.0};
+// Bins to study
+string yquantity = "Pt";
+//double ybins[] = {0.0, 3.4, 4.0, 5.0, 6.0, 8.0, 40.};
+double ybins[] = {0.0, 5.0, 40.};
+string xquantity = "Eta";
+//double xbins[] = {0.0, 0.4, 0.6, 0.95, 1.2, 1.4, 2.4};
+double xbins[] = {0.0, 0.95, 2.4};
 
 void plot_sys_efficiency_2d()
 {
 	//Path where is going to save results png for every bin 
-	const char* path_bins_fit_folder = "results/bins_fit/";
+	const char* path_bins_fit_folder = "results/bins_fit/systematic_2D/";
 	create_folder(path_bins_fit_folder, true);
 
 	// Loop for every bin and fit it
-	const int nbinsy = sizeof(bins1)/sizeof(*bins1) - 1;
-	const int nbinsx = sizeof(bins2)/sizeof(*bins2) - 1;
+	const int nbinsy = sizeof(ybins)/sizeof(*ybins) - 1;
+	const int nbinsx = sizeof(xbins)/sizeof(*xbins) - 1;
 
 	//Creates variables to store values and error of each passed and total bin
 	//Stores [yield_all, yield_pass, err_all, err_pass]
@@ -63,10 +61,10 @@ void plot_sys_efficiency_2d()
 		for (int i = 0; i < nbinsy; i++)
 		{
 			//Creates conditions
-			string conditions = string(    "ProbeMuon_" + quantity1 + ">" + to_string(bins1[i]  ));
-			conditions +=       string(" && ProbeMuon_" + quantity1 + "<" + to_string(bins1[i+1]));
-			conditions +=       string(" && abs(ProbeMuon_" + quantity2 + ")>" + to_string(bins2[j]  ));
-			conditions +=       string(" && abs(ProbeMuon_" + quantity2 + ")<" + to_string(bins2[j+1]));
+			string conditions = string(    "ProbeMuon_" + yquantity + ">=" + to_string(ybins[i]  ));
+			conditions +=       string(" && ProbeMuon_" + yquantity + "< " + to_string(ybins[i+1]));
+			conditions +=       string(" && abs(ProbeMuon_" + xquantity + ")>=" + to_string(xbins[j]  ));
+			conditions +=       string(" && abs(ProbeMuon_" + xquantity + ")< " + to_string(xbins[j+1]));
 
 			const double default_min = _mmin;
 			const double default_max = _mmax;
@@ -135,17 +133,29 @@ void plot_sys_efficiency_2d()
 	}
 
 	//Path where is going to save efficiency
-	string directoryToSave = string("results/efficiencies/") + output_folder_name + string("/");
+	string directoryToSave = string("results/efficiencies/systematic_2D/") + output_folder_name + string("/");
 	create_folder(directoryToSave.c_str());
 
 	//Create file
-	string file_path = directoryToSave + quantity1 + "_" + quantity2 + "_" + MuonId + ".root";
+	string file_path = directoryToSave + xquantity + "_" + yquantity + "_" + MuonId + ".root";
 	TFile* generatedFile = new TFile(file_path.c_str(),"recreate");
 	generatedFile->mkdir("histograms/");
 	generatedFile->   cd("histograms/");
+	
+	TH2D *hist_all           = make_TH2D("all_systematic",  "All Systematic",  xquantity, yquantity, nbinsx, nbinsy, xbins, ybins, yields_final_all,  errors_final_all);
+	TH2D* hist_pass          = make_TH2D("pass_systematic", "Pass Systematic", xquantity, yquantity, nbinsx, nbinsy, xbins, ybins, yields_final_pass, errors_final_pass);
 
-	create_TH2D("pass_systematic", "Pass Systematic", quantity1, quantity2, nbinsy, nbinsx, bins1, bins2, yields_final_pass, errors_final_pass);
-	create_TH2D("all_systematic",  "All Systematic",  quantity1, quantity2, nbinsy, nbinsx, bins1, bins2, yields_final_all,  errors_final_all);
+	/*
+	TH2D *hist_nominal_all   = make_TH2D("all_nominal"   , "All Nominal",    xquantity, yquantity, nbinsx, nbinsy, xbins, ybins, );
+	TH2D *hist_2gaus_all     = make_TH2D("all_2xGauss"   , "All 2xGauss",    xquantity, yquantity, nbinsx, nbinsy, xbins, ybins, );
+	TH2D *hist_massup_all    = make_TH2D("all_MassUp"    , "All MassUp",     xquantity, yquantity, nbinsx, nbinsy, xbins, ybins, );
+	TH2D *hist_massdown_all  = make_TH2D("all_MassDown"  , "All MassDown",   xquantity, yquantity, nbinsx, nbinsy, xbins, ybins, );
+	TH2D *hist_binup_all     = make_TH2D("all_BinUp"     , "All BinUp",      xquantity, yquantity, nbinsx, nbinsy, xbins, ybins, );
+	TH2D *hist_bindown_all   = make_TH2D("all_BinDown"   , "All BinDown",    xquantity, yquantity, nbinsx, nbinsy, xbins, ybins, );
+	*/
+
+	generatedFile->   cd("/");
+	get_efficiency_2D(hist_all         , hist_pass         , xquantity, yquantity, MuonId, ""        , true);
 
 	generatedFile->Write();
 
