@@ -1,5 +1,5 @@
 //Change if you need
-#include "src/dofits/DoFit_Jpsi.cpp"
+#include "src/dofits/DoFit_Jpsj.cpp"
 #include "src/dofits/DoFit_Jpsi_2xGaus_for_systematic.cpp"
 
 #include "src/create_folder.cpp"
@@ -51,20 +51,20 @@ void plot_sys_efficiency_2d()
 	double** errors_final_pass = new double*[nbinsx];
 	double** errors_final_all  = new double*[nbinsx];
 
-	for (int j = 0; j < nbinsx; j++)
+	for (int i = 0; i < nbinsx; i++)
 	{
-		yields_final_pass[j] = new double[nbinsy];
-		yields_final_all [j] = new double[nbinsy];
-		errors_final_pass[j] = new double[nbinsy];
-		errors_final_all [j] = new double[nbinsy];
+		yields_final_pass[i] = new double[nbinsy];
+		yields_final_all [i] = new double[nbinsy];
+		errors_final_pass[i] = new double[nbinsy];
+		errors_final_all [i] = new double[nbinsy];
 
-		for (int i = 0; i < nbinsy; i++)
+		for (int j = 0; j < nbinsy; j++)
 		{
 			//Creates conditions
-			string conditions = string(    "ProbeMuon_" + yquantity + ">=" + to_string(ybins[i]  ));
-			conditions +=       string(" && ProbeMuon_" + yquantity + "< " + to_string(ybins[i+1]));
-			conditions +=       string(" && abs(ProbeMuon_" + xquantity + ")>=" + to_string(xbins[j]  ));
-			conditions +=       string(" && abs(ProbeMuon_" + xquantity + ")< " + to_string(xbins[j+1]));
+			string conditions = string(    "ProbeMuon_" + yquantity + ">=" + to_string(ybins[j]  ));
+			conditions +=       string(" && ProbeMuon_" + yquantity + "< " + to_string(ybins[j+1]));
+			conditions +=       string(" && abs(ProbeMuon_" + xquantity + ")>=" + to_string(xbins[i]  ));
+			conditions +=       string(" && abs(ProbeMuon_" + xquantity + ")< " + to_string(xbins[i+1]));
 
 			const double default_min = _mmin;
 			const double default_max = _mmax;
@@ -76,14 +76,14 @@ void plot_sys_efficiency_2d()
 			_mmax = default_max;
 			fit_bins = 100;
 			prefix_file_name = "nominal_";
-			yields_n_errs_Nominal[j][i] = doFit(conditions, MuonId, string(path_bins_fit_folder + prefix_file_name).c_str());
+			yields_n_errs_Nominal[i][j] = doFit(conditions, MuonId, string(path_bins_fit_folder + prefix_file_name).c_str());
 
 			//2Gauss
 			_mmin = default_min;
 			_mmax = default_max;
 			fit_bins = 100;
 			prefix_file_name = "2xgaus_";
-			yields_n_errs_2Gauss[j][i] = doFit2xGaus(conditions, MuonId, string(path_bins_fit_folder + prefix_file_name).c_str());
+			yields_n_errs_2Gauss[i][j] = doFit2xGaus(conditions, MuonId, string(path_bins_fit_folder + prefix_file_name).c_str());
 
 			//MassUp
 			_mmin = default_min - 0.05;
@@ -95,7 +95,7 @@ void plot_sys_efficiency_2d()
 			replace(mmax_string.begin(), mmax_string.end(), '.', 'p');
 			prefix_file_name  = string("mass_") + mmin_string.substr(0, mmin_string.length()-4) + string("_");
 			prefix_file_name +=                   mmax_string.substr(0, mmax_string.length()-4) + string("_");
-			yields_n_errs_MassUp[j][i] = doFit(conditions, MuonId, string(path_bins_fit_folder + prefix_file_name).c_str());
+			yields_n_errs_MassUp[i][j] = doFit(conditions, MuonId, string(path_bins_fit_folder + prefix_file_name).c_str());
 
 			//MassDown
 			_mmin = default_min + 0.05;
@@ -107,27 +107,27 @@ void plot_sys_efficiency_2d()
 			replace(mmax_string.begin(), mmax_string.end(), '.', 'p');
 			prefix_file_name  = string("mass_") + mmin_string.substr(0, mmin_string.length()-4) + string("_");
 			prefix_file_name +=                   mmax_string.substr(0, mmax_string.length()-4) + string("_");
-			yields_n_errs_MassDown[j][i] = doFit(conditions, MuonId, string(path_bins_fit_folder + prefix_file_name).c_str());
+			yields_n_errs_MassDown[i][j] = doFit(conditions, MuonId, string(path_bins_fit_folder + prefix_file_name).c_str());
 
 			//BinUp
 			_mmin = default_min;
 			_mmax = default_max;
 			fit_bins = 105;
 			prefix_file_name = "binfit105_";
-			yields_n_errs_BinUp[j][i] = doFit(conditions, MuonId, string(path_bins_fit_folder + prefix_file_name).c_str());
+			yields_n_errs_BinUp[i][j] = doFit(conditions, MuonId, string(path_bins_fit_folder + prefix_file_name).c_str());
 
 			//BinDown
 			_mmin = default_min;
 			_mmax = default_max;
 			fit_bins = 95;
 			prefix_file_name = "binfit95_";
-			yields_n_errs_BinDown[j][i] = doFit(conditions, MuonId, string(path_bins_fit_folder + prefix_file_name).c_str());
+			yields_n_errs_BinDown[i][j] = doFit(conditions, MuonId, string(path_bins_fit_folder + prefix_file_name).c_str());
 
 			//Calculates the result
-			yields_final_pass[j][i] = yields_n_errs_Nominal[j][i][0];
-			yields_final_all [j][i] = yields_n_errs_Nominal[j][i][1];
-			errors_final_pass[j][i] = sqrt(pow(yields_n_errs_Nominal[j][i][2],2) + pow(yields_n_errs_2Gauss[j][i][2],2) + pow(yields_n_errs_MassUp[j][i][2],2) + pow(yields_n_errs_MassUp[j][i][2],2) + pow(yields_n_errs_BinUp[j][i][2],2) + pow(yields_n_errs_BinDown[j][i][2],2));
-			errors_final_all [j][i] = sqrt(pow(yields_n_errs_Nominal[j][i][3],2) + pow(yields_n_errs_2Gauss[j][i][3],2) + pow(yields_n_errs_MassUp[j][i][3],2) + pow(yields_n_errs_MassUp[j][i][3],2) + pow(yields_n_errs_BinUp[j][i][3],2) + pow(yields_n_errs_BinDown[j][i][3],2));
+			yields_final_pass[i][j] = yields_n_errs_Nominal[i][j][0];
+			yields_final_all [i][j] = yields_n_errs_Nominal[i][j][1];
+			errors_final_pass[i][j] = sqrt(pow(yields_n_errs_Nominal[i][j][2],2) + pow(yields_n_errs_2Gauss[i][j][2],2) + pow(yields_n_errs_MassUp[i][j][2],2) + pow(yields_n_errs_MassUp[i][j][2],2) + pow(yields_n_errs_BinUp[i][j][2],2) + pow(yields_n_errs_BinDown[i][j][2],2));
+			errors_final_all [i][j] = sqrt(pow(yields_n_errs_Nominal[i][j][3],2) + pow(yields_n_errs_2Gauss[i][j][3],2) + pow(yields_n_errs_MassUp[i][j][3],2) + pow(yields_n_errs_MassUp[i][j][3],2) + pow(yields_n_errs_BinUp[i][j][3],2) + pow(yields_n_errs_BinDown[i][j][3],2));
 
 		}
 	}
