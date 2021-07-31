@@ -7,11 +7,9 @@
 #include "src/make_hist.cpp"
 
 //Which Muon Id do you want to study?
-//string MuonId   = "trackerMuon";
+string MuonId   = "trackerMuon";
 //string MuonId   = "standaloneMuon";
-string MuonId   = "globalMuon";
-
-//bool should_loop_muon_id  = false;
+//string MuonId   = "globalMuon";
 
 //Which quantity do you want to use?
 string quantity = "Pt";     double bins[] = {0., 3.0, 3.6, 4.0, 4.4, 4.7, 5.0, 5.6, 5.8, 6.0, 6.2, 6.4, 6.6, 6.8, 7.3, 9.5, 13.0, 17.0, 40.};
@@ -21,7 +19,7 @@ string quantity = "Pt";     double bins[] = {0., 3.0, 3.6, 4.0, 4.4, 4.7, 5.0, 5
 //string quantity = "Pt";     double bins[] = {0.0, 2.0, 3.4, 4.0, 5.0, 6.0, 8.0, 10.0, 40.};
 //string quantity = "Eta";    double bins[] = {0.0, 0.4, 0.6, 0.95, 1.2, 1.4, 1.6, 1.8, 2.4};
 
-void plot_efficiencies_manual()
+void plot_sys_efficiency()
 {
 	//First enable implicit multi-threading globally, so that the implicit parallelisation is on.
 	//The parameter of the call specifies the number of threads to use.
@@ -33,19 +31,19 @@ void plot_efficiencies_manual()
 	create_folder(path_bins_fit_folder.c_str(), true);
 
 	// Loop for every bin and fit it
-	int bin_n = sizeof(bins)/sizeof(*bins) - 1;
+	int nbins = sizeof(bins)/sizeof(*bins) - 1;
 
 	//Creates variables to store values and error of each passed and total bin
 	//Stores [yield_all, yield_pass, err_all, err_pass]
-	double** yields_n_errs_Nominal  = new double*[bin_n];
-	double** yields_n_errs_2Gauss   = new double*[bin_n];
-	double** yields_n_errs_MassUp   = new double*[bin_n];
-	double** yields_n_errs_MassDown = new double*[bin_n];
-	double** yields_n_errs_BinUp    = new double*[bin_n];
-	double** yields_n_errs_BinDown  = new double*[bin_n];
-	double** yields_n_errs          = new double*[bin_n];
+	double** yields_n_errs_Nominal  = new double*[nbins];
+	double** yields_n_errs_2Gauss   = new double*[nbins];
+	double** yields_n_errs_MassUp   = new double*[nbins];
+	double** yields_n_errs_MassDown = new double*[nbins];
+	double** yields_n_errs_BinUp    = new double*[nbins];
+	double** yields_n_errs_BinDown  = new double*[nbins];
+	double** yields_n_errs          = new double*[nbins];
 
-	for (int i = 0; i < bin_n; i++)
+	for (int i = 0; i < nbins; i++)
 	{
 		//Creates conditions
 		string conditions = string(    "ProbeMuon_" + quantity + ">=" + to_string(bins[i]  ));
@@ -127,21 +125,21 @@ void plot_efficiencies_manual()
 	generatedFile->mkdir("histograms/");
 	generatedFile->   cd("histograms/");
 	
-	TH1D *yield_all           = make_hist("all"          , yields_n_errs         , 0, bins, bin_n, quantity);
-	TH1D *yield_nominal_all   = make_hist("all_nominal"  , yields_n_errs_Nominal , 0, bins, bin_n, quantity);
-	TH1D *yield_2gaus_all     = make_hist("all_2xGauss"  , yields_n_errs_2Gauss  , 0, bins, bin_n, quantity);
-	TH1D *yield_massup_all    = make_hist("all_MassUp"   , yields_n_errs_MassUp  , 0, bins, bin_n, quantity);
-	TH1D *yield_massdown_all  = make_hist("all_MassDown" , yields_n_errs_MassDown, 0, bins, bin_n, quantity);
-	TH1D *yield_binup_all     = make_hist("all_BinUp"    , yields_n_errs_BinUp   , 0, bins, bin_n, quantity);
-	TH1D *yield_bindown_all   = make_hist("all_BinDown"  , yields_n_errs_BinDown , 0, bins, bin_n, quantity);
+	TH1D *yield_all           = make_hist("all"          , yields_n_errs         , 0, bins, nbins, quantity);
+	TH1D *yield_nominal_all   = make_hist("all_nominal"  , yields_n_errs_Nominal , 0, bins, nbins, quantity);
+	TH1D *yield_2gaus_all     = make_hist("all_2xGauss"  , yields_n_errs_2Gauss  , 0, bins, nbins, quantity);
+	TH1D *yield_massup_all    = make_hist("all_MassUp"   , yields_n_errs_MassUp  , 0, bins, nbins, quantity);
+	TH1D *yield_massdown_all  = make_hist("all_MassDown" , yields_n_errs_MassDown, 0, bins, nbins, quantity);
+	TH1D *yield_binup_all     = make_hist("all_BinUp"    , yields_n_errs_BinUp   , 0, bins, nbins, quantity);
+	TH1D *yield_bindown_all   = make_hist("all_BinDown"  , yields_n_errs_BinDown , 0, bins, nbins, quantity);
 
-	TH1D *yield_pass          = make_hist("pass"         , yields_n_errs         , 1, bins, bin_n, quantity);
-	TH1D *yield_2gaus_pass    = make_hist("pass_2xGauss" , yields_n_errs_Nominal , 1, bins, bin_n, quantity);
-	TH1D *yield_nominal_pass  = make_hist("pass_nominal" , yields_n_errs_2Gauss  , 1, bins, bin_n, quantity);
-	TH1D *yield_massup_pass   = make_hist("pass_MassUp"  , yields_n_errs_MassUp  , 1, bins, bin_n, quantity);
-	TH1D *yield_massdown_pass = make_hist("pass_MassDown", yields_n_errs_MassDown, 1, bins, bin_n, quantity);
-	TH1D *yield_binup_pass    = make_hist("pass_BinDown" , yields_n_errs_BinUp   , 1, bins, bin_n, quantity);
-	TH1D *yield_bindown_pass  = make_hist("pass_BinDown" , yields_n_errs_BinDown , 1, bins, bin_n, quantity);
+	TH1D *yield_pass          = make_hist("pass"         , yields_n_errs         , 1, bins, nbins, quantity);
+	TH1D *yield_2gaus_pass    = make_hist("pass_2xGauss" , yields_n_errs_Nominal , 1, bins, nbins, quantity);
+	TH1D *yield_nominal_pass  = make_hist("pass_nominal" , yields_n_errs_2Gauss  , 1, bins, nbins, quantity);
+	TH1D *yield_massup_pass   = make_hist("pass_MassUp"  , yields_n_errs_MassUp  , 1, bins, nbins, quantity);
+	TH1D *yield_massdown_pass = make_hist("pass_MassDown", yields_n_errs_MassDown, 1, bins, nbins, quantity);
+	TH1D *yield_binup_pass    = make_hist("pass_BinDown" , yields_n_errs_BinUp   , 1, bins, nbins, quantity);
+	TH1D *yield_bindown_pass  = make_hist("pass_BinDown" , yields_n_errs_BinDown , 1, bins, nbins, quantity);
 
 	generatedFile->   cd("/");
 	get_efficiency(yield_all         , yield_pass         , quantity, MuonId, ""        , true);

@@ -28,39 +28,39 @@ void plot_sys_efficiency_2d()
 	create_folder(path_bins_fit_folder, true);
 
 	// Loop for every bin and fit it
-	const int bin_n1 = sizeof(bins1)/sizeof(*bins1) - 1;
-	const int bin_n2 = sizeof(bins2)/sizeof(*bins2) - 1;
+	const int nbinsy = sizeof(bins1)/sizeof(*bins1) - 1;
+	const int nbinsx = sizeof(bins2)/sizeof(*bins2) - 1;
 
 	//Creates variables to store values and error of each passed and total bin
 	//Stores [yield_all, yield_pass, err_all, err_pass]
-	double* yields_n_errs_Nominal  [bin_n2][bin_n1] = {0};
-	double* yields_n_errs_2Gauss   [bin_n2][bin_n1] = {0};
-	double* yields_n_errs_MassUp   [bin_n2][bin_n1] = {0};
-	double* yields_n_errs_MassDown [bin_n2][bin_n1] = {0};
-	double* yields_n_errs_BinUp    [bin_n2][bin_n1] = {0};
-	double* yields_n_errs_BinDown  [bin_n2][bin_n1] = {0};
+	double* yields_n_errs_Nominal  [nbinsx][nbinsy] = {0};
+	double* yields_n_errs_2Gauss   [nbinsx][nbinsy] = {0};
+	double* yields_n_errs_MassUp   [nbinsx][nbinsy] = {0};
+	double* yields_n_errs_MassDown [nbinsx][nbinsy] = {0};
+	double* yields_n_errs_BinUp    [nbinsx][nbinsy] = {0};
+	double* yields_n_errs_BinDown  [nbinsx][nbinsy] = {0};
 
 
 	/*
-	double yields_final_pass[bin_n2][bin_n1];
-	double yields_final_all [bin_n2][bin_n1];
-	double errors_final_pass[bin_n2][bin_n1];
-	double errors_final_all [bin_n2][bin_n1];
+	double yields_final_pass[nbinsx][nbinsy];
+	double yields_final_all [nbinsx][nbinsy];
+	double errors_final_pass[nbinsx][nbinsy];
+	double errors_final_all [nbinsx][nbinsy];
 	*/
 
-	double** yields_final_pass = new double*[bin_n2];
-	double** yields_final_all  = new double*[bin_n2];
-	double** errors_final_pass = new double*[bin_n2];
-	double** errors_final_all  = new double*[bin_n2];
+	double** yields_final_pass = new double*[nbinsx];
+	double** yields_final_all  = new double*[nbinsx];
+	double** errors_final_pass = new double*[nbinsx];
+	double** errors_final_all  = new double*[nbinsx];
 
-	for (int j = 0; j < bin_n2; j++)
+	for (int j = 0; j < nbinsx; j++)
 	{
-		yields_final_pass[j] = new double[bin_n1];
-		yields_final_all [j] = new double[bin_n1];
-		errors_final_pass[j] = new double[bin_n1];
-		errors_final_all [j] = new double[bin_n1];
+		yields_final_pass[j] = new double[nbinsy];
+		yields_final_all [j] = new double[nbinsy];
+		errors_final_pass[j] = new double[nbinsy];
+		errors_final_all [j] = new double[nbinsy];
 
-		for (int i = 0; i < bin_n1; i++)
+		for (int i = 0; i < nbinsy; i++)
 		{
 			//Creates conditions
 			string conditions = string(    "ProbeMuon_" + quantity1 + ">" + to_string(bins1[i]  ));
@@ -144,8 +144,8 @@ void plot_sys_efficiency_2d()
 	generatedFile->mkdir("histograms/");
 	generatedFile->   cd("histograms/");
 
-	create_TH2D("pass_systematic", "Pass Systematic", quantity1, quantity2, bin_n1, bin_n2, bins1, bins2, yields_final_pass, errors_final_pass);
-	create_TH2D("all_systematic",  "All Systematic",  quantity1, quantity2, bin_n1, bin_n2, bins1, bins2, yields_final_all,  errors_final_all);
+	create_TH2D("pass_systematic", "Pass Systematic", quantity1, quantity2, nbinsy, nbinsx, bins1, bins2, yields_final_pass, errors_final_pass);
+	create_TH2D("all_systematic",  "All Systematic",  quantity1, quantity2, nbinsy, nbinsx, bins1, bins2, yields_final_all,  errors_final_all);
 
 	generatedFile->Write();
 

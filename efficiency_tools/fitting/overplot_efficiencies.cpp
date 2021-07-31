@@ -22,25 +22,26 @@ TEfficiency* read_TEfficiency(const char* folder_path, const char* file_name, co
 	return pEff0;
 }
 
-void systematic_efficiency_overplot()
+void overplot_efficiencies()
 {
-	const char* folder_name = "results/efficiencies/systematic_1D/Jpsi_Run_2011/";
+	const char*  input_folder_name = "results/efficiencies/systematic_1D/Jpsi_Run_2011/";
+	const char* output_folder_name = "results/overplots/";
 
-	//string MuonId   = "trackerMuon";
+	string MuonId   = "trackerMuon";
 	//string MuonId   = "standaloneMuon";
-	string MuonId   = "globalMuon";
+	//string MuonId   = "globalMuon";
 
 	string quantity = "Pt";
 	//string quantity = "Eta";
 	//string quantity = "Phi";
 
 	string file_name = quantity+"_"+MuonId+".root";
-	TEfficiency* pEffNominal	= read_TEfficiency(folder_name, file_name.c_str(), string(MuonId + "_" + quantity + "_Nominal"  + "_Efficiency").c_str());
-	TEfficiency* pEff2Gauss		= read_TEfficiency(folder_name, file_name.c_str(), string(MuonId + "_" + quantity + "_2xGauss"  + "_Efficiency").c_str());
-	TEfficiency* pEffMassUP		= read_TEfficiency(folder_name, file_name.c_str(), string(MuonId + "_" + quantity + "_MassUp"   + "_Efficiency").c_str());
-	TEfficiency* pEffMassDown	= read_TEfficiency(folder_name, file_name.c_str(), string(MuonId + "_" + quantity + "_MassDown" + "_Efficiency").c_str());
-	TEfficiency* pEffBinUp		= read_TEfficiency(folder_name, file_name.c_str(), string(MuonId + "_" + quantity + "_BinUp"    + "_Efficiency").c_str());
-	TEfficiency* pEffBinDown	= read_TEfficiency(folder_name, file_name.c_str(), string(MuonId + "_" + quantity + "_BinDown"  + "_Efficiency").c_str());
+	TEfficiency* pEffNominal	= read_TEfficiency(input_folder_name, file_name.c_str(), string(MuonId + "_" + quantity + "_Nominal"  + "_Efficiency").c_str());
+	TEfficiency* pEff2Gauss		= read_TEfficiency(input_folder_name, file_name.c_str(), string(MuonId + "_" + quantity + "_2xGauss"  + "_Efficiency").c_str());
+	TEfficiency* pEffMassUP		= read_TEfficiency(input_folder_name, file_name.c_str(), string(MuonId + "_" + quantity + "_MassUp"   + "_Efficiency").c_str());
+	TEfficiency* pEffMassDown	= read_TEfficiency(input_folder_name, file_name.c_str(), string(MuonId + "_" + quantity + "_MassDown" + "_Efficiency").c_str());
+	TEfficiency* pEffBinUp		= read_TEfficiency(input_folder_name, file_name.c_str(), string(MuonId + "_" + quantity + "_BinUp"    + "_Efficiency").c_str());
+	TEfficiency* pEffBinDown	= read_TEfficiency(input_folder_name, file_name.c_str(), string(MuonId + "_" + quantity + "_BinDown"  + "_Efficiency").c_str());
 	
 	TCanvas* c1 = new TCanvas("systematic_efficiency", "Systematic Efficiency");
 
@@ -68,14 +69,6 @@ void systematic_efficiency_overplot()
 	{
 		graph->SetMinimum(0.66);
 		graph->SetMaximum(1.);
-
-		/*
-		if (MuonId == "trackerMuon")
-		{
-			graph->SetMinimum(0.96);
-			graph->SetMaximum(1.);
-		}
-		*/
 	}
 	else if (quantity == "Eta")
 	{
@@ -113,5 +106,6 @@ void systematic_efficiency_overplot()
 	//if (quantity == "Eta")
 		//c1->SetLogy();
 
-	c1->SaveAs(string("results/" + quantity + "_" + MuonId + "_systematic_efficiency.png").c_str());
+	create_folder(output_folder_name);
+	c1->SaveAs(string(output_folder_name + quantity + "_" + MuonId + "_systematic_efficiency.png").c_str());
 }
