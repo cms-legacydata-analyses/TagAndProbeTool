@@ -1,19 +1,8 @@
 
-TH2D* make_TH2D(const char* name, const char* title, string xquantity, string yquantity, int nbinsx, int nbinsy,
-	double* xbins, double* ybins, double** binscontent, double** binserrors)
+TH2D* create_TH2D(const char* name, const char* title, string xquantity, string yquantity, int nbinsx, int nbinsy,
+	double* xbins, double* ybins)
 {
 	TH2D* hist2d = new TH2D(name, title, nbinsx, xbins, nbinsy, ybins);
-
-	for (int i = 0; i < nbinsx; i++)
-	{
-		for (int j = 0; j < nbinsy; j++)
-		{
-			hist2d->SetBinContent(i+1,j+1,binscontent[i][j]);
-			hist2d->SetBinError  (i+1,j+1,binserrors [i][j]);
-
-			//cout << i << "," << j << " -> " <<  binscontent[i][j] << endl;
-		}
-	}
 
 	//Set x axis title for plot
 	if      (xquantity == "Pt" ) hist2d->GetXaxis()->SetTitle("p_{t} [GeV/c]");
