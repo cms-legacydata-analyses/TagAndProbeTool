@@ -1,7 +1,7 @@
 using namespace RooFit;
 
 //We start by declaring the nature of our dataset. (Is the data real or simulated?)
-const char* output_folder_name = "Jpsi_Run_MC";
+const char* output_folder_name = "Jpsi_MC_2020";
 
 //Header of this function
 double _mmin = 2.8;
@@ -57,16 +57,14 @@ double* doFit(string condition, string MuonId, const char* savePath = NULL) // R
 	RooGaussian gaussian("GS","GS",InvariantMass,mean,sigma);
 	RooCBShape crystalball("CB", "CB", InvariantMass, mean, sigma_cb, alpha, n);
 	
-	double n_signal_initial_total = 50000;
-	
 	RooRealVar frac1("frac1","frac1",0.5);
 
 	RooAddPdf* signal;
 	
 	signal      = new RooAddPdf("signal", "signal", RooArgList(gaussian, crystalball), RooArgList(frac1));
 	
-	RooRealVar n_signal_total("n_signal_total","n_signal_total",n_signal_initial_total,0.,Data_ALL->sumEntries());
-	RooRealVar n_signal_total_pass("n_signal_total_pass","n_signal_total_pass",n_signal_initial_total,0.,Data_PASSING->sumEntries());
+	RooRealVar n_signal_total("n_signal_total","n_signal_total",Data_ALL->sumEntries()/2,0.,Data_ALL->sumEntries());
+	RooRealVar n_signal_total_pass("n_signal_total_pass","n_signal_total_pass",Data_PASSING->sumEntries()/2,0.,Data_PASSING->sumEntries());
 	
 	RooAddPdf* model;
 	RooAddPdf* model_pass;
@@ -77,7 +75,7 @@ double* doFit(string condition, string MuonId, const char* savePath = NULL) // R
 	// SIMULTANEOUS FIT
 	RooCategory sample("sample","sample") ;
 	sample.defineType("All") ;
-	sample.defineType("PASSING") ;
+	sample.defineType("Passing") ;
 	
 	RooDataHist combData("combData","combined data",InvariantMass,Index(sample),Import("ALL",*dh_ALL),Import("PASSING",*dh_PASSING));
 	

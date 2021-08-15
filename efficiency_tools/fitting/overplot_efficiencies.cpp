@@ -42,7 +42,7 @@ void overplot_efficiencies()
 	TEfficiency* pEffMassDown	= read_TEfficiency(input_folder_name, file_name.c_str(), string(MuonId + "_" + quantity + "_MassDown" + "_Efficiency").c_str());
 	TEfficiency* pEffBinUp		= read_TEfficiency(input_folder_name, file_name.c_str(), string(MuonId + "_" + quantity + "_BinUp"    + "_Efficiency").c_str());
 	TEfficiency* pEffBinDown	= read_TEfficiency(input_folder_name, file_name.c_str(), string(MuonId + "_" + quantity + "_BinDown"  + "_Efficiency").c_str());
-	
+
 	TCanvas* c1 = new TCanvas("systematic_efficiency", "Systematic Efficiency");
 
 	pEff2Gauss		->SetLineColor(kGreen+1);

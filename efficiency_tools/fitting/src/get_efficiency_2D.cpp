@@ -1,6 +1,9 @@
 
 TEfficiency* get_efficiency_2D(TH2D* all, TH2D* pass, string xquantity, string yquantity, string MuonId, string prefix_name = "", bool shouldWrite = false)
 {
+	pass->SetDefaultSumw2();
+	all ->SetDefaultSumw2();
+
 	TEfficiency* pEff = new TEfficiency();
 	pEff->SetPassedHistogram(*pass, "f");
 	pEff->SetTotalHistogram (*all,  "f");
@@ -17,17 +20,23 @@ TEfficiency* get_efficiency_2D(TH2D* all, TH2D* pass, string xquantity, string y
 		pEff->SetTitle(string("Efficiency for " + MuonId).c_str());
 	}
 
+	/*
 	pEff->SetLineColor(kBlack);
 	pEff->SetMarkerStyle(21);
 	pEff->SetMarkerSize(0.5);
 	pEff->SetMarkerColor(kBlack);
+	*/
+	pEff->SetStatisticOption(TEfficiency::kBBayesian);
+	pEff->SetConfidenceLevel(0.68);
+	
+	TCanvas* c1 = new TCanvas();
+	c1->cd();
+	pEff->Draw("colztexte");
+
+	c1->SetLogx();
 	
 	if (shouldWrite)
 		pEff->Write();
-	
-	TCanvas* oi = new TCanvas();
-	oi->cd();
-	pEff->Draw("colz");
 	
 	/*
 	gPad->Update();

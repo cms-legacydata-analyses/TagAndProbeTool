@@ -45,24 +45,20 @@ double* doFit(string condition, string MuonId, const char* savePath = NULL) // R
 	
 	RooPlot *frame = InvariantMass.frame(RooFit::Title("Invariant Mass"));
 	   
-	// GAUSSIAN VARIABLES
-	RooRealVar mean("mean","mean",3.094, 3.07, 3.1);
-	RooRealVar sigma1("sigma1","sigma1",0.05*(_mmax-_mmin),0.,0.5*(_mmax-_mmin));
-	RooRealVar sigma2("sigma2","sigma2", 0.038);
+	//SIGNAL VARIABLES
+	RooRealVar mean("mean", "mean",3.094, 3.07, 3.1);
+	RooRealVar sigma1("sigma1", "sigma1", 0.05*(_mmax-_mmin), 0., 0.5*(_mmax-_mmin));
+	RooRealVar sigma2("sigma2", "sigma2", 0.038);
 	   
 	//FIT FUNCTIONS
-	RooGaussian gaussian1("GS1","GS1",InvariantMass,mean,sigma1);
-	RooGaussian gaussian2("GS2","GS2",InvariantMass,mean,sigma2);
+	RooGaussian gaussian1("GS1", "GS1", InvariantMass, mean, sigma1);
+	RooGaussian gaussian2("GS2", "GS2", InvariantMass, mean, sigma2);
 
-	// BACKGROUND VARIABLES
-	RooRealVar a0("a0", "a0", 0, -10, 10);
-	RooRealVar a1("a1", "a1", 0, -10, 10);
+	//BACKGROUND VARIABLES
+	RooRealVar a0("a0", "a0", 0, -10, 0, "");
 
-	// BACKGROUND FUNCTION
-	RooExponential background("background","background", a0, a1);
-	
-	double n_signal_initial_total = 50000;
-	double n_back_initial = 10000;
+	//BACKGROUND FUNCTION
+	RooExponential background("background","background", InvariantMass, a0);
 	
 	RooRealVar frac1("frac1","frac1",0.5);
 
@@ -70,22 +66,22 @@ double* doFit(string condition, string MuonId, const char* savePath = NULL) // R
 	
 	signal      = new RooAddPdf("signal", "signal", RooArgList(gaussian1, gaussian2), RooArgList(frac1));
 	
-	RooRealVar n_signal_total("n_signal_total","n_signal_total",n_signal_initial_total,0.,Data_ALL->sumEntries());
-	RooRealVar n_signal_total_pass("n_signal_total_pass","n_signal_total_pass",n_signal_initial_total,0.,Data_PASSING->sumEntries());
+	RooRealVar n_signal_total("n_signal_total","n_signal_total",Data_ALL->sumEntries()/2,0.,Data_ALL->sumEntries());
+	RooRealVar n_signal_total_pass("n_signal_total_pass","n_signal_total_pass",Data_PASSING->sumEntries()/2,0.,Data_PASSING->sumEntries());
 
-	RooRealVar n_back("n_back","n_back",n_back_initial,0.,Data_ALL->sumEntries());
-	RooRealVar n_back_pass("n_back_pass","n_back_pass",n_back_initial,0.,Data_PASSING->sumEntries());
+	RooRealVar n_back("n_back","n_back",Data_ALL->sumEntries()/2,0.,Data_ALL->sumEntries());
+	RooRealVar n_back_pass("n_back_pass","n_back_pass",Data_PASSING->sumEntries()/2,0.,Data_PASSING->sumEntries());
 	
 	RooAddPdf* model;
 	RooAddPdf* model_pass;
 	
-	model      = new RooAddPdf("model","model", RooArgList(*signal, background),RooArgList(n_signal_total, n_back));
+	model      = new RooAddPdf("model", "model", RooArgList(*signal, background),RooArgList(n_signal_total, n_back));
 	model_pass = new RooAddPdf("model_pass", "model_pass", RooArgList(*signal, background),RooArgList(n_signal_total_pass, n_back_pass));
 	
 	// SIMULTANEOUS FIT
 	RooCategory sample("sample","sample") ;
 	sample.defineType("All") ;
-	sample.defineType("PASSING") ;
+	sample.defineType("Passing") ;
 	
 	RooDataHist combData("combData","combined data",InvariantMass,Index(sample),Import("ALL",*dh_ALL),Import("PASSING",*dh_PASSING));
 	
