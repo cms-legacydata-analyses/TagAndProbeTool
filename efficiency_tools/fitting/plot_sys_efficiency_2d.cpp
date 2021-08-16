@@ -1,16 +1,18 @@
 //Change if you need
-#include "src/dofits/DoFit_Run_psi.cpp"
-#include "src/dofits/DoFit_Run_Jpsi_2xGaus_for_systematic.cpp"
+//#include "src/dofits/DoFit_Jpsi_Run.h"
+//#include "src/dofits/DoFit_Jpsi_Run_2xGaus.h"
+#include "src/dofits/DoFit_Jpsi_MC.h"
+#include "src/dofits/DoFit_Jpsi_MC_2xGaus.h"
 
-#include "src/create_folder.cpp"
-#include "src/create_TH2D.cpp"
-#include "src/get_efficiency_TH2D.cpp"
-#include "src/yields_n_errs_to_TH2Ds_bin.cpp"
+#include "src/create_folder.h"
+#include "src/create_TH2D.h"
+#include "src/get_efficiency_TH2D.h"
+#include "src/yields_n_errs_to_TH2Ds_bin.h"
 
 //Which Muon Id do you want to study?
-//string MuonId   = "trackerMuon";
+string MuonId   = "trackerMuon";
 //string MuonId   = "standaloneMuon";
-string MuonId   = "globalMuon";
+//string MuonId   = "globalMuon";
 
 // Bins to study
 string xquantity = "Pt";
@@ -25,12 +27,12 @@ double ybins[] = {0.0, 0.4, 0.6, 0.95, 1.2, 1.4, 2.4};
 void plot_sys_efficiency_2d()
 {
 	//Path where is going to save fit results png for every bin 
-	const char* path_bins_fit_folder = "results/bins_fit/systematic_2D/";
-	create_folder(path_bins_fit_folder, true);
+	string path_bins_fit_folder = string("results/bins_fit/systematic_2D/") + output_folder_name + "/"+ MuonId + "/";
+	create_folder(path_bins_fit_folder.c_str(), true);
 
 
 	//Path where is going to save the efficiency results
-	string directoryToSave = string("results/efficiencies/systematic_2D/") + output_folder_name + string("/");
+	string directoryToSave = string("results/efficiencies/systematic_2D/") + output_folder_name + "/";
 	create_folder(directoryToSave.c_str());
 
 	//Get number of bins
@@ -38,7 +40,7 @@ void plot_sys_efficiency_2d()
 	const int nbinsx = sizeof(xbins)/sizeof(*xbins) - 1;
 
 
-	string file_path = directoryToSave + xquantity + "_" + yquantity + "_" + MuonId + ".root";
+	string file_path = directoryToSave + yquantity + "_" + xquantity + "_" + MuonId + ".root";
 	TFile* generatedFile = new TFile(file_path.c_str(),"recreate");
 	generatedFile->mkdir("histograms/");
 	generatedFile->   cd("histograms/");
@@ -175,7 +177,7 @@ void plot_sys_efficiency_2d()
 			yields_n_errs_to_TH2Ds_bin(hist_all_final, hist_pass_final, i+1, j+1, yields_n_errs_final);
 
 
-			delete   yields_n_errs;
+			delete yields_n_errs;
 		}
 	}
 

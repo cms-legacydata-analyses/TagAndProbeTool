@@ -1,25 +1,34 @@
-using namespace RooFit;
-
+#ifndef DOFIT_HEADER
+#define DOFIT_HEADER
 //We start by declaring the nature of our dataset. (Is the data real or simulated?)
-const char* output_folder_name = "Jpsi_Run_2011";
+const char* output_folder_name = "Jpsi_MC_2020";
 
 //Header of this function
 double _mmin = 2.8;
 double _mmax = 3.3;
 double fit_bins = 0; //Let it 0 if dont want to change
 
-// Information for output at the end of run
-const char* fit_functions = "Gaussian + CrystalBall + Exponential";
+//Information for output at the end of run
+const char* fit_functions = "2xGaussians + Exponential";
 string prefix_file_name = "";
+#endif
+using namespace RooFit;
 
-double* doFit(string condition, string MuonId, const char* savePath = NULL) // RETURNS ARRAY WITH [yield_all, yield_pass, err_all, err_pass]
+//Returns array with [yield_all, yield_pass, err_all, err_pass]
+#ifdef DEFAULT_FUCTION_NAME_USED
+	double* doFit2xGaus
+#else
+	#define DEFAULT_FUCTION_NAME_USED
+	double* doFit
+#endif
+(string condition, string MuonId, const char* savePath = NULL)
 {
 	string MuonId_str = "";
 	if      (MuonId == "trackerMuon")    MuonId_str = "PassingProbeTrackingMuon";
 	else if (MuonId == "standaloneMuon") MuonId_str = "PassingProbeStandAloneMuon";
 	else if (MuonId == "globalMuon")     MuonId_str = "PassingProbeGlobalMuon";
 	
-	TFile *file0       = TFile::Open("DATA/TagAndProbe_Jpsi_Run2011.root");
+	TFile *file0       = TFile::Open("DATA/TagAndProbe_Jpsi_MC.root");
 	TTree *DataTree    = (TTree*)file0->Get(("tagandprobe"));
 	
 	RooCategory MuonId_var(MuonId_str.c_str(), MuonId_str.c_str(), {{"Passing", 1},{"Failing", 0}});
@@ -47,15 +56,12 @@ double* doFit(string condition, string MuonId, const char* savePath = NULL) // R
 	   
 	//SIGNAL VARIABLES
 	RooRealVar mean("mean", "mean", 3.094, 3.07, 3.2);
-	RooRealVar sigma_gs("sigma_gs", "sigma_gs", 0.05*(_mmax-_mmin), 0., 0.5*(_mmax-_mmin));
-	RooRealVar sigma_cb("sigma_cb", "sigma_cb", 0.038);
-	RooRealVar alpha("alpha", "alpha", 1.71);
-	RooRealVar n("n", "n", 3.96);
-	n.setConstant(kTRUE);
+	RooRealVar sigma1("sigma1", "sigma1", 0.05*(_mmax-_mmin), 0., 0.5*(_mmax-_mmin));
+	RooRealVar sigma2("sigma2", "sigma2", 0.038);
 	   
 	//FIT FUNCTIONS
-	RooGaussian   gaussian("GS", "GS", InvariantMass, mean, sigma_gs);
-	RooCBShape crystalball("CB", "CB", InvariantMass, mean, sigma_cb, alpha, n);
+	RooGaussian gaussian1("GS1", "GS1", InvariantMass, mean, sigma1);
+	RooGaussian gaussian2("GS2", "GS2", InvariantMass, mean, sigma2);
 
 	//BACKGROUND VARIABLES
 	RooRealVar a0("a0", "a0", 0, -10, 0, "");
@@ -63,11 +69,11 @@ double* doFit(string condition, string MuonId, const char* savePath = NULL) // R
 	//BACKGROUND FUNCTION
 	RooExponential background("background","background", InvariantMass, a0);
 	
-	RooRealVar frac1("frac1","frac1",0.55);
+	RooRealVar frac1("frac1","frac1",0.5);
 
 	RooAddPdf* signal;
 	
-	signal      = new RooAddPdf("signal", "signal", RooArgList(gaussian, crystalball), RooArgList(frac1));
+	signal      = new RooAddPdf("signal", "signal", RooArgList(gaussian1, gaussian2), RooArgList(frac1));
 	
 	RooRealVar n_signal_total("n_signal_total","n_signal_total",Data_ALL->sumEntries()/2,0.,Data_ALL->sumEntries());
 	RooRealVar n_signal_total_pass("n_signal_total_pass","n_signal_total_pass",Data_PASSING->sumEntries()/2,0.,Data_PASSING->sumEntries());
@@ -78,7 +84,7 @@ double* doFit(string condition, string MuonId, const char* savePath = NULL) // R
 	RooAddPdf* model;
 	RooAddPdf* model_pass;
 	
-	model      = new RooAddPdf("model", "model", RooArgList(*signal, background), RooArgList(n_signal_total, n_back));
+	model      = new RooAddPdf("model", "model", RooArgList(*signal, background),RooArgList(n_signal_total, n_back));
 	model_pass = new RooAddPdf("model_pass", "model_pass", RooArgList(*signal, background),RooArgList(n_signal_total_pass, n_back_pass));
 	
 	// SIMULTANEOUS FIT
@@ -113,8 +119,8 @@ double* doFit(string condition, string MuonId, const char* savePath = NULL) // R
 	Data_ALL->plotOn(frame);
 	
 	model->plotOn(frame);
-	model->plotOn(frame,RooFit::Components("GS"),RooFit::LineStyle(kDashed),RooFit::LineColor(kGreen));
-	model->plotOn(frame,RooFit::Components("CB"),RooFit::LineStyle(kDashed),RooFit::LineColor(kMagenta - 5));
+	model->plotOn(frame,RooFit::Components("GS1"),RooFit::LineStyle(kDashed),RooFit::LineColor(kGreen));
+	model->plotOn(frame,RooFit::Components("GS2"),RooFit::LineStyle(kDashed),RooFit::LineColor(kMagenta - 5));
 	model->plotOn(frame,RooFit::Components("background"),RooFit::LineStyle(kDashed),RooFit::LineColor(kRed));
 	
 	c_all->cd();
@@ -129,24 +135,18 @@ double* doFit(string condition, string MuonId, const char* savePath = NULL) // R
 	Data_PASSING->plotOn(frame_pass);
 	
 	model_pass->plotOn(frame_pass);
-	model_pass->plotOn(frame_pass,RooFit::Components("GS"),RooFit::LineStyle(kDashed),RooFit::LineColor(kGreen));
-	model_pass->plotOn(frame_pass,RooFit::Components("CB"),RooFit::LineStyle(kDashed),RooFit::LineColor(kMagenta - 5));
+	model_pass->plotOn(frame_pass,RooFit::Components("GS1"),RooFit::LineStyle(kDashed),RooFit::LineColor(kGreen));
+	model_pass->plotOn(frame_pass,RooFit::Components("GS2"),RooFit::LineStyle(kDashed),RooFit::LineColor(kMagenta - 5));
 	model_pass->plotOn(frame_pass,RooFit::Components("background"),RooFit::LineStyle(kDashed),RooFit::LineColor(kRed));
 	
 	frame_pass->Draw();
-
-	TLegend* tl = new TLegend(0.70,0.86,0.96,0.92);
-	tl->AddEntry(frame_pass->findObject("GS"), "Signal",   "f");
-	//tl->SetTextSize(0.04);
-	tl->Draw();
 
 	if (savePath != NULL)
 	{
 		c_pass->SaveAs((string(savePath) + condition + "_PASS.png").c_str());
 		c_all->SaveAs ((string(savePath) + condition + "_ALL.png").c_str());
 	}
-	
-	/*	
+		
 	// DELETING ALLOCATED MEMORY
 	delete file0;
 	//
@@ -167,7 +167,6 @@ double* doFit(string condition, string MuonId, const char* savePath = NULL) // R
 	delete model;
 	delete model_pass;
 	delete fitres;
-	*/
 	
 	return output;
 }

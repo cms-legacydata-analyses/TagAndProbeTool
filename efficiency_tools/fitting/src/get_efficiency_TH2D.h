@@ -2,7 +2,6 @@
 TH2D* get_efficiency_TH2D(TH2D* hall, TH2D* hpass, string xquantity, string yquantity, string MuonId, string prefix_name = "")
 {
 	TH2D* heff  = (TH2D*)hall ->Clone();
-	heff->GetYaxis()->SetTitle("Efficiency");
 
 	//Set eery bin content and error
 	for (int i=1; i<=hall->GetNbinsX(); i++)
@@ -25,12 +24,12 @@ TH2D* get_efficiency_TH2D(TH2D* hall, TH2D* hpass, string xquantity, string yqua
 	//Set plot config
 	if (prefix_name != "")
 	{
-		heff->SetName(string(MuonId + "_" + xquantity + "_" + yquantity + "_" + prefix_name + "_Efficiency").c_str());
+		heff->SetName(string(MuonId + "_" + yquantity + "_" + xquantity + "_" + prefix_name + "_Efficiency").c_str());
 		heff->SetTitle(string("Efficiency for " + MuonId + " (" + prefix_name + ")").c_str());
 	}
 	else
 	{
-		heff->SetName(string(MuonId + "_" + xquantity + "_" + yquantity + "_Efficiency").c_str());
+		heff->SetName(string(MuonId + "_" + yquantity + "_" + xquantity + "_Efficiency").c_str());
 		heff->SetTitle(string("Efficiency for " + MuonId).c_str());
 	}
 

@@ -11,12 +11,12 @@ TEfficiency* get_efficiency_2D(TH2D* all, TH2D* pass, string xquantity, string y
 	//Set plot config
 	if (prefix_name != "")
 	{
-		pEff->SetName(string(MuonId + "_" + xquantity + "_" + yquantity + "_" + prefix_name + "_Efficiency").c_str());
+		pEff->SetName(string(MuonId + "_" + yquantity + "_" + xquantity + "_" + prefix_name + "_Efficiency").c_str());
 		pEff->SetTitle(string("Efficiency for " + MuonId + " (" + prefix_name + ")").c_str());
 	}
 	else
 	{
-		pEff->SetName(string(MuonId + "_" + xquantity + "_" + yquantity + "_Efficiency").c_str());
+		pEff->SetName(string(MuonId + "_" + yquantity + "_" + xquantity + "_Efficiency").c_str());
 		pEff->SetTitle(string("Efficiency for " + MuonId).c_str());
 	}
 

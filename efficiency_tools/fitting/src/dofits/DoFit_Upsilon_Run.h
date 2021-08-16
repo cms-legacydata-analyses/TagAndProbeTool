@@ -1,5 +1,5 @@
-using namespace RooFit;
-
+#ifndef DOFIT_HEADER
+#define DOFIT_HEADER
 //We start by declaring the nature of our dataset. (Is the data real or simulated?)
 const char* output_folder_name = "Upsilon_Run_2011";
 
@@ -8,11 +8,15 @@ double _mmin = 9;
 double _mmax = 10.8;
 double fit_bins = 0; //Let it 0 if dont want to change
 
-// Information for output at the end of run
+//Information for output at the end of run
 const char* fit_functions = "CrystallBall + 2xGaussians + Chebychev";
 string prefix_file_name = "";
+#endif
+using namespace RooFit;
 
-double* doFit(string condition, string MuonId, const char* savePath = NULL) // RETURNS ARRAY WITH [yield_all, yield_pass, err_all, err_pass]
+//Returns array with [yield_all, yield_pass, err_all, err_pass]
+#define DEFAULT_FUCTION_NAME_USED
+double* doFit(string condition, string MuonId, const char* savePath = NULL)
 {
 	string MuonId_str = "";
 	if      (MuonId == "trackerMuon")    MuonId_str = "PassingProbeTrackingMuon";
