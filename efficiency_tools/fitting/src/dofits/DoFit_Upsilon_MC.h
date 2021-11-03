@@ -23,32 +23,38 @@ double* doFit(string condition, string MuonId, const char* savePath = NULL)
 	else if (MuonId == "standaloneMuon") MuonId_str = "PassingProbeStandAloneMuon";
 	else if (MuonId == "globalMuon")     MuonId_str = "PassingProbeGlobalMuon";
 	
-	TFile *file0       = TFile::Open("DATA/TagAndProbe_Upsilon_MC.root");
-	TTree *DataTree    = (TTree*)file0->Get(("tagandprobe"));
+	TFile* file0    = TFile::Open("DATA/TagAndProbe_Upsilon_MC.root");
+	TTree* DataTree = (TTree*)file0->Get(("tagandprobe"));
 	
 	RooCategory MuonId_var(MuonId_str.c_str(), MuonId_str.c_str(), {{"Passing", 1},{"Failing", 0}});
 	RooRealVar  InvariantMass("InvariantMass", "InvariantMass", _mmin, _mmax);
-	RooRealVar  quantityPt   ("ProbeMuon_Pt",  "ProbeMuon_Pt",  0., 40.);
-	RooRealVar  quantityEta  ("ProbeMuon_Eta", "ProbeMuon_Eta", -2.4, 2.4);
-	RooRealVar  quantityPhi  ("ProbeMuon_Phi", "ProbeMuon_Phi", -TMath::Pi(), TMath::Pi());
+	RooRealVar  ProbeMuon_Pt ("ProbeMuon_Pt",  "ProbeMuon_Pt",  0., 40.);
+	RooRealVar  ProbeMuon_Eta("ProbeMuon_Eta", "ProbeMuon_Eta", -2.4, 2.4);
+	RooRealVar  ProbeMuon_Phi("ProbeMuon_Phi", "ProbeMuon_Phi", -TMath::Pi(), TMath::Pi());
+	RooRealVar  TagMuon_Pt   ("TagMuon_Pt",    "TagMuon_Pt",    0., 40.);
+	RooRealVar  TagMuon_Eta  ("TagMuon_Eta",   "TagMuon_Eta",   -2.4, 2.4);
+	RooRealVar  TagMuon_Phi  ("TagMuon_Phi",   "TagMuon_Phi",   -TMath::Pi(), TMath::Pi());
 
 	if (fit_bins > 0) InvariantMass.setBins(fit_bins);
 	fit_bins = InvariantMass.getBinning().numBins();
 
-	RooFormulaVar* redeuce   = new RooFormulaVar("PPTM_cond", condition.c_str(), RooArgList(quantityPt, quantityEta, quantityPhi));
-	RooDataSet *Data_ALL     = new RooDataSet("DATA", "DATA", DataTree, RooArgSet(InvariantMass, MuonId_var, quantityPt, quantityEta, quantityPhi),*redeuce);
+	RooFormulaVar* fv_CUT   = new RooFormulaVar("tag_cut", "TagMuon_Pt >= 7.0 && fabs(TagMuon_Eta) <= 2.4", RooArgList(TagMuon_Pt, TagMuon_Eta, TagMuon_Phi));
+	RooDataSet*    Data_CUT = new RooDataSet("data_cut", "data_cut", DataTree, RooArgSet(InvariantMass, MuonId_var, ProbeMuon_Pt, ProbeMuon_Eta, ProbeMuon_Phi), *fv_CUT);
 
-	RooFormulaVar* cutvar    = new RooFormulaVar("PPTM_mounid", (MuonId_str + "==1").c_str(), RooArgList(MuonId_var));
-	RooDataSet *Data_PASSING = new RooDataSet("DATA_PASS", "DATA_PASS", Data_ALL, RooArgSet(InvariantMass, MuonId_var, quantityPt, quantityEta, quantityPhi), *cutvar);
+	RooFormulaVar* fv_ALL   = new RooFormulaVar("probe_on_bin", condition.c_str(), RooArgList(ProbeMuon_Pt, ProbeMuon_Eta, ProbeMuon_Phi));
+	RooDataSet*    Data_ALL = new RooDataSet("data_all", "data_all", Data_CUT, RooArgSet(InvariantMass, MuonId_var, ProbeMuon_Pt, ProbeMuon_Eta, ProbeMuon_Phi), *fv_ALL);
+
+	RooFormulaVar* fv_PASS      = new RooFormulaVar("passing_probe_on_bin", (MuonId_str + "==1").c_str(), RooArgList(MuonId_var));
+	RooDataSet*    Data_PASSING = new RooDataSet("data_pass", "data_pass", Data_ALL, RooArgSet(InvariantMass, MuonId_var, ProbeMuon_Pt, ProbeMuon_Eta, ProbeMuon_Phi), *fv_PASS);
 	
 	RooDataHist* dh_ALL     = new RooDataHist(Data_ALL->GetName(),    Data_ALL->GetTitle(),     RooArgSet(InvariantMass), *Data_ALL);
 	RooDataHist* dh_PASSING = new RooDataHist(Data_PASSING->GetName(),Data_PASSING->GetTitle(), RooArgSet(InvariantMass), *Data_PASSING);
 	
 	TCanvas* c_all  = new TCanvas;
 	TCanvas* c_pass = new TCanvas;
-	
-	RooPlot *frame = InvariantMass.frame(RooFit::Title("Invariant Mass"));
-	   
+
+	RooPlot* frame = InvariantMass.frame(RooFit::Title("Invariant Mass"));
+
 	// GAUSSIAN VARIABLES
 	RooRealVar mean("mean","mean",9.46030, 9.3, 9.6);
 	RooRealVar sigma("sigma","sigma",0.05, 0., 0.18);
@@ -62,18 +68,13 @@ double* doFit(string condition, string MuonId, const char* savePath = NULL)
 	
 	RooRealVar frac1("frac1","frac1",0.5);
 
-	RooAddPdf* signal;
-	
-	signal      = new RooAddPdf("signal", "signal", RooArgList(gaussian, crystalball), RooArgList(frac1));
+	RooAddPdf* signal = new RooAddPdf("signal", "signal", RooArgList(gaussian, crystalball), RooArgList(frac1));
 	
 	RooRealVar n_signal_total("n_signal_total","n_signal_total",Data_ALL->sumEntries()/2,0.,Data_ALL->sumEntries());
 	RooRealVar n_signal_total_pass("n_signal_total_pass","n_signal_total_pass",Data_PASSING->sumEntries()/2,0.,Data_PASSING->sumEntries());
 	
-	RooAddPdf* model;
-	RooAddPdf* model_pass;
-	
-	model      = new RooAddPdf("model","model", RooArgList(*signal),RooArgList(n_signal_total));
-	model_pass = new RooAddPdf("model_pass", "model_pass", RooArgList(*signal),RooArgList(n_signal_total_pass));
+	RooAddPdf* model      = new RooAddPdf("model","model", RooArgList(*signal),RooArgList(n_signal_total));
+	RooAddPdf* model_pass = new RooAddPdf("model_pass", "model_pass", RooArgList(*signal),RooArgList(n_signal_total_pass));
 	
 	// SIMULTANEOUS FIT
 	RooCategory sample("sample","sample") ;
@@ -93,14 +94,14 @@ double* doFit(string condition, string MuonId, const char* savePath = NULL)
 	// OUTPUT ARRAY
 	double* output = new double[4];
 	
-	RooRealVar* yield_ALL = (RooRealVar*) fitres->floatParsFinal().find("n_signal_total");
-	RooRealVar* yield_PASS = (RooRealVar*) fitres->floatParsFinal().find("n_signal_total_pass");
+	RooRealVar* yield_all = (RooRealVar*) fitres->floatParsFinal().find("n_signal_total");
+	RooRealVar* yield_pass = (RooRealVar*) fitres->floatParsFinal().find("n_signal_total_pass");
 	
-	output[0] = yield_ALL->getVal();
-	output[1] = yield_PASS->getVal();
+	output[0] = yield_all->getVal();
+	output[1] = yield_pass->getVal();
 	
-	output[2] = yield_ALL->getError();
-	output[3] = yield_PASS->getError();
+	output[2] = yield_all->getError();
+	output[3] = yield_pass->getError();
 	
 	frame->SetTitle("ALL");
 	frame->SetXTitle("#mu^{+}#mu^{-} invariant mass [GeV/c^{2}]");
@@ -113,7 +114,7 @@ double* doFit(string condition, string MuonId, const char* savePath = NULL)
 	c_all->cd();
 	frame->Draw("");
 	
-	RooPlot *frame_pass = InvariantMass.frame(RooFit::Title("Invariant Mass"));
+	RooPlot* frame_pass = InvariantMass.frame(RooFit::Title("Invariant Mass"));
 	
 	c_pass->cd();
 	
@@ -133,25 +134,26 @@ double* doFit(string condition, string MuonId, const char* savePath = NULL)
 		c_all->SaveAs ((string(savePath) + condition + "_ALL.png").c_str());
 	}
 		
-	// DELETING ALLOCATED MEMORY
+
+	// Deleting allocated memory
 	delete file0;
-	//
+
+	delete fv_CUT;
+	delete fv_ALL;
+	delete fv_PASS;
+	delete Data_CUT;
 	delete Data_ALL;
 	delete Data_PASSING;
-	//
 	delete dh_ALL;
 	delete dh_PASSING;
-	//
-	delete cutvar;
-	delete redeuce;
-	//
-	delete signal;
-	//
+
 	delete c_all;
 	delete c_pass;
-	//
+
 	delete model;
 	delete model_pass;
+
+	delete signal;
 	delete fitres;
 	
 	return output;

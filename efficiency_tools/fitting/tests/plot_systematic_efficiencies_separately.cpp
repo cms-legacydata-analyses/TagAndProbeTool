@@ -10,8 +10,8 @@ void plot_systematic_efficiencies()
 	};
 	const char* legend[3][2] = {
 		{"Gaus+CB, 100 bins, 2.8 #Leftrightarrow 3.3", 	"2x Gaussian"},
-		{"Mass 2.75 #Leftrightarrow 3.35",                       	"Mass 2.85 #Leftrightarrow 3.25"},
-		{"Mass 95 bins",                             				"Mass 105 bins"}
+		{"Mass 2.75 #Leftrightarrow 3.35",              "Mass 2.85 #Leftrightarrow 3.25"},
+		{"Mass 95 bins",                             	"Mass 105 bins"}
 	};
 
 	TCanvas* c1 = new TCanvas("systematic_efficiencies", "Systematic Efficiencies", 800, 800);
