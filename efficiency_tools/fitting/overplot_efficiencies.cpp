@@ -1,4 +1,4 @@
-#include "../src/create_folder.h"
+#include "src/create_folder.h"
 
 TEfficiency* read_TEfficiency(const char* folder_path, const char* file_name, const char* TEfficiency_path)
 {
