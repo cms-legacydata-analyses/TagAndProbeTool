@@ -26,7 +26,9 @@ double* doFit(string condition, string MuonId, const char* savePath = NULL)
 	TFile* file0    = TFile::Open("DATA/TagAndProbe_Upsilon_Run2011.root");
 	TTree* DataTree = (TTree*)file0->Get(("tagandprobe"));
 	
-	RooCategory MuonId_var(MuonId_str.c_str(), MuonId_str.c_str(), {{"Passing", 1},{"Failing", 0}});
+	RooCategory MuonId_var(MuonId_str.c_str(), MuonId_str.c_str());
+	MuonId_var.defineType("Passing", 1);
+	MuonId_var.defineType("Failing", 0);
 	RooRealVar  InvariantMass("InvariantMass", "InvariantMass", _mmin, _mmax);
 	RooRealVar  ProbeMuon_Pt ("ProbeMuon_Pt",  "ProbeMuon_Pt",  0., 40.);
 	RooRealVar  ProbeMuon_Eta("ProbeMuon_Eta", "ProbeMuon_Eta", -2.4, 2.4);

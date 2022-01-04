@@ -2,8 +2,8 @@
 *.png
 *.pdf
 
-# Efficiency tools fitting method
+# Generated files in fitting method efficiency tool
 results/
 
-# Larger files than github supports
-TagAndProbe_Jpsi_Run2011.root
+# Used files in fitting method efficiency tool
+DATA/*.root
