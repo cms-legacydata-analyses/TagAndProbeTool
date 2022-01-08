@@ -18,6 +18,10 @@ using namespace RooFit;
 #define DEFAULT_FUCTION_NAME_USED
 double* doFit(string condition, string MuonId, const char* savePath = NULL)
 {
+	cout << "----- Fitting data on bin -----\n";
+	cout << "Conditions: " << condition << "\n";
+	cout << "------------------------\n";
+
 	string MuonId_str = "";
 	if      (MuonId == "trackerMuon")    MuonId_str = "PassingProbeTrackingMuon";
 	else if (MuonId == "standaloneMuon") MuonId_str = "PassingProbeStandAloneMuon";
@@ -135,7 +139,8 @@ double* doFit(string condition, string MuonId, const char* savePath = NULL)
 		c_pass->SaveAs((string(savePath) + condition + "_PASS.png").c_str());
 		c_all->SaveAs ((string(savePath) + condition + "_ALL.png").c_str());
 	}
-		
+
+	cout << "------------------------\n";
 
 	// Deleting allocated memory
 	delete file0;
