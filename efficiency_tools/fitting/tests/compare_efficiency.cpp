@@ -113,7 +113,7 @@ void compare_plot(TFile *file0, TFile *file1, const char* path, string quantity)
     txCOD->DrawLatex(0.14,0.85,Form("#bf{CMS Open Data}"));
 
     //Results stored in...
-    const char* directoryToSave = "results/efficiencies/efficiency/Comparison Run2011 vs MC/";
+    const char* directoryToSave = "results/efficiencies/efficiency/Comparison_Run2011_vs_MC/";
 
     //Check if dir exists
     if (gSystem->AccessPathName(directoryToSave))
