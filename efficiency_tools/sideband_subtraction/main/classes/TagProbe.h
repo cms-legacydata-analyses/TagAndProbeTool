@@ -14,7 +14,7 @@ public:
 	const char* tagOrProbe = NULL;
 
 	PtEtaPhi Pt  {resonance, particleName, canvasWatermark, directoryToSave, particleType, ObjMass, tagOrProbe,
-		"Pt",  "p_{t}", "GeV/c", "Transverse Momentum", 50,  0.00, 80.00};
+		"Pt",  "p_{T}", "GeV/c", "Transverse Momentum", 50,  0.00, 80.00};
 	PtEtaPhi Eta {resonance, particleName, canvasWatermark, directoryToSave, particleType, ObjMass, tagOrProbe,
 		"Eta", "#eta",  "", 	 "Pseudorapidity",      50, -2.50,  2.50};
 	PtEtaPhi Phi {resonance, particleName, canvasWatermark, directoryToSave, particleType, ObjMass, tagOrProbe,
