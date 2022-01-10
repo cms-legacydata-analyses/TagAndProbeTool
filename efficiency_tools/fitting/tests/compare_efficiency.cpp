@@ -1,13 +1,12 @@
 /*
 !--------------------------------
-!Purpose: Compare efficiency of files
+!Purpose: Compare efficiency of two .root files
 !--------------------------------
 !author: Allan Jales
 !--------------------------------
 */
 
-//This code has been adjusted for this tutorial
-
+//This code has been adjusted for tag and probe tutorial
 void compare_plot(TFile *file0, TFile *file1, const char* path, string quantity)
 {
     TEfficiency* pEff0 = (TEfficiency*)file0->Get(path);
@@ -114,7 +113,7 @@ void compare_plot(TFile *file0, TFile *file1, const char* path, string quantity)
     txCOD->DrawLatex(0.14,0.85,Form("#bf{CMS Open Data}"));
 
     //Results stored in...
-    const char* directoryToSave = "Comparison Run2011 vs MC/";
+    const char* directoryToSave = "results/efficiencies/efficiency/Comparison Run2011 vs MC/";
 
     //Check if dir exists
     if (gSystem->AccessPathName(directoryToSave))
@@ -141,7 +140,7 @@ void compare_plot(TFile *file0, TFile *file1, const char* path, string quantity)
 }
 
 //Compare efficiency
-void compare_efficiency(string quantity, string run2011, string MC)
+void compare_efficiency(string quantity, string muon_id, string run2011, string MC)
 {
     TFile *file0 = TFile::Open(run2011.c_str());
     TFile *file1 = TFile::Open(MC.c_str());
@@ -152,5 +151,5 @@ void compare_efficiency(string quantity, string run2011, string MC)
         abort();
     }
 
-    compare_plot(file0, file1, "Efficiency", quantity);
+    compare_plot(file0, file1, "trackerMuon_Pt_Efficiency", quantity);
 }
