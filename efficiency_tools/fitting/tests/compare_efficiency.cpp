@@ -140,7 +140,7 @@ void compare_plot(TFile *file0, TFile *file1, const char* path, string quantity)
 }
 
 //Compare efficiency
-void compare_efficiency(string quantity, string muon_id, string run2011, string MC)
+void compare_efficiency(string muon_id, string quantity, string run2011, string MC)
 {
     TFile *file0 = TFile::Open(run2011.c_str());
     TFile *file1 = TFile::Open(MC.c_str());
@@ -151,5 +151,7 @@ void compare_efficiency(string quantity, string muon_id, string run2011, string 
         abort();
     }
 
-    compare_plot(file0, file1, "trackerMuon_Pt_Efficiency", quantity);
+    string path = muon_id + "_" + quantity + "_Efficiency";
+
+    compare_plot(file0, file1, path.c_str(), quantity);
 }
