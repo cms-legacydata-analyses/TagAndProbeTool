@@ -20,7 +20,7 @@ double* doFit(string condition, string MuonId, const char* savePath = NULL)
 {
 	cout << "----- Fitting data on bin -----\n";
 	cout << "Conditions: " << condition << "\n";
-	cout << "------------------------\n";
+	cout << "-------------------------------\n";
 	
 	string MuonId_str = "";
 	if      (MuonId == "trackerMuon")    MuonId_str = "PassingProbeTrackingMuon";
@@ -171,7 +171,7 @@ double* doFit(string condition, string MuonId, const char* savePath = NULL)
 		c_all->SaveAs ((string(savePath) + condition + "_ALL.png").c_str());
 	}
 
-	cout << "------------------------\n";
+	cout << "-------------------------------\n";
 
 	// Deleting allocated memory
 	delete file0;
