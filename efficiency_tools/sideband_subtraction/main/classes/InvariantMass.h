@@ -390,13 +390,13 @@ public:
 	{
 		string canvasName 	= "InvariantMass_" + string(particleType);
 		string canvasTitle	= "Invariant Mass " + string(particleType);
-		string saveAs 		= string(directoryToSave) + "InvariantMass_" + string(particleType) + ".pdf";
+		string saveAs 		= string(directoryToSave) + "InvariantMass_" + string(particleType) + ".png";
 
 		if (drawRegions)
 		{
 			canvasName 	= "InvariantMass_" + string(particleType) + "_region";
 			canvasTitle	= "Invariant Mass " + string(particleType) + " with Regions";
-			saveAs 		= string(directoryToSave) + "InvariantMass_" + string(particleType) + "_region" + ".pdf";
+			saveAs 		= string(directoryToSave) + "InvariantMass_" + string(particleType) + "_region" + ".png";
 		}
 
 		//Create canvas

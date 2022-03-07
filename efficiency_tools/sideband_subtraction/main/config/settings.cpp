@@ -12,9 +12,9 @@ const char *files[] = {"../data_histoall.root",
 
 const char* directoriesToSave[] = {"../results/result/",
 									"../results/Jpsi_Run_2011/",
-									"../results/Jpsi_MC_2020_sbs/",
+									"../results/Jpsi_MC_2020/",
 									"../results/Upsilon_Run_2011/",
-									"../results/Upsilon_MC_2020_sbs/"};
+									"../results/Upsilon_MC_2020/"};
 
 //MAIN OPTIONS
 

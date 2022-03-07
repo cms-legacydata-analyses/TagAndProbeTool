@@ -1,0 +1,9 @@
+# Generated files in sideband subtraction method efficiency tool
+*.png
+*.pdf
+
+# Generated files in fitting method efficiency tool
+results/
+
+# Used files in fitting method efficiency tool
+DATA/*.root
